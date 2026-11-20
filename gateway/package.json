@@ -5,7 +5,9 @@
   "description": "WebSocket gateway: Kafka EMA results/advisories -> subscribed browser clients",
   "main": "src/index.js",
   "scripts": {
-    "test": "node --test"
+    "start": "node src/index.js",
+    "test": "node --test",
+    "smoke": "node scripts/smoke.js"
   },
   "engines": {
     "node": ">=20"

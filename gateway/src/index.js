@@ -1,0 +1,70 @@
+'use strict';
+
+// Entry point: wires config, gateway core, data source, server and metrics.
+const fs = require('node:fs');
+const { loadConfig } = require('./config');
+const { createLogger } = require('./logger');
+const { SubscriptionRegistry } = require('./subscriptions');
+const { HistoryStore } = require('./history');
+const { Metrics, CSV_HEADER, csvRow } = require('./metrics');
+const { Gateway } = require('./gateway');
+const { createServer } = require('./server');
+const { FakeSource } = require('./fake');
+
+async function main() {
+  const config = loadConfig();
+  const log = createLogger(config.logLevel);
+
+  const registry = new SubscriptionRegistry({ maxTickersPerClient: config.maxTickersPerClient });
+  const history = new HistoryStore(config.historyLimit);
+  const metrics = new Metrics();
+  const gateway = new Gateway({
+    registry, history, metrics, log,
+    slowClientBytes: config.slowClientBytes,
+    killClientBytes: config.killClientBytes,
+  });
+
+  const server = createServer({ gateway, maxClients: config.maxClients, heartbeatMs: config.heartbeatMs, log });
+  const port = await server.listen(config.port);
+  log.info('gateway listening', { http: `http://localhost:${port}/`, ws: `ws://localhost:${port}/`, source: config.source });
+
+  let source;
+  if (config.source === 'fake') {
+    source = new FakeSource({ ...config.fake, onMessage: (text) => gateway.ingest(text) });
+    source.start();
+    log.info('fake source started', { tickers: source.tickers.length, intervalMs: config.fake.intervalMs });
+  } else {
+    throw new Error('SOURCE=kafka is not implemented yet (next step); use SOURCE=fake');
+  }
+
+  if (config.metricsCsv && !fs.existsSync(config.metricsCsv)) fs.writeFileSync(config.metricsCsv, CSV_HEADER);
+  const metricsTimer = setInterval(() => {
+    const r = metrics.report();
+    const conn = registry.stats();
+    const l = r.latencyMs;
+    log.info('metrics', {
+      in_per_s: r.inPerSec, fwd_per_s: r.forwardedPerSec, dropped: r.dropped, invalid: r.invalid,
+      clients: conn.clients, tickers: conn.tickers,
+      lat_ms: l.p50 === null ? 'n/a' : `p50=${l.p50},p95=${l.p95},p99=${l.p99},max=${l.max}`,
+    });
+    if (config.metricsCsv) fs.appendFile(config.metricsCsv, csvRow(r, conn), () => {});
+  }, config.metricsIntervalMs);
+
+  let stopping = false;
+  const shutdown = async (signal) => {
+    if (stopping) return;
+    stopping = true;
+    log.info('shutting down', { signal });
+    clearInterval(metricsTimer);
+    if (source) await source.stop();
+    await server.close();
+    process.exit(0);
+  };
+  process.on('SIGINT', shutdown); // Ctrl+C (works on Windows too)
+  process.on('SIGTERM', shutdown); // docker stop
+}
+
+main().catch((err) => {
+  console.error(`${new Date().toISOString()} ERROR gateway failed to start: ${err.message}`);
+  process.exit(1);
+});
