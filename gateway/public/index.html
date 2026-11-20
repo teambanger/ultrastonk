@@ -109,10 +109,14 @@ function entry(ticker) {
 
 function addEvent(e, live) {
   const d = entry(e.ticker);
-  const s = (d.series[e.type] ||= []);
-  s.push({ t: e.timestamp_emit, v: e.value });
-  if (s.length > MAX_POINTS) s.shift();
-  d.last[e.type] = e.value;
+  // Signals may come without a value: draw them at the last known price.
+  const v = typeof e.value === 'number' ? e.value : d.last.price;
+  if (typeof v === 'number') {
+    const s = (d.series[e.type] ||= []);
+    s.push({ t: e.timestamp_emit, v });
+    if (s.length > MAX_POINTS) s.shift();
+  }
+  if (typeof e.value === 'number') d.last[e.type] = e.value;
   d.count++;
   if (e.type === 'BUY' || e.type === 'SELL') d.signal = { type: e.type, t: e.timestamp_emit };
   if (live) d.latency = Date.now() - e.timestamp_emit;

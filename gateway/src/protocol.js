@@ -6,6 +6,8 @@
 // Kafka -> gateway (EventProcessed, one message per value, from the Excalidraw board):
 //   { "timestamp_emit": 1636354800021, "ticker": "A2ASZ7.ETR", "type": "EMA38", "value": 12.34 }
 //   `type` is opaque: any non-empty string passes (price, EMA38, EMA100, BUY, SELL, ...).
+//   `value` is required (finite number) for the numeric types below; for any other
+//   type (BUY, SELL, ...) it may be missing or null, but if present it must be a number.
 // Browser -> gateway:
 //   { "type": "subscribe",   "tickers": ["A2ASZ7.ETR", ...] }
 //   { "type": "unsubscribe", "tickers": [...] }
@@ -17,6 +19,7 @@
 const TICKER_RE = /^[A-Za-z0-9._-]{1,32}$/; // STOCK.EXCHANGE, e.g. "A2ASZ7.ETR"
 const MAX_TYPE_LENGTH = 32;
 const MAX_TICKERS_PER_REQUEST = 500;
+const VALUE_REQUIRED_TYPES = new Set(['price', 'EMA38', 'EMA99', 'EMA100']);
 
 const isTicker = (v) => typeof v === 'string' && TICKER_RE.test(v);
 
@@ -57,7 +60,9 @@ function eventError(e) {
   if (!Number.isSafeInteger(e.timestamp_emit) || e.timestamp_emit < 0) return 'bad timestamp_emit';
   if (!isTicker(e.ticker)) return 'bad ticker';
   if (typeof e.type !== 'string' || e.type.length === 0 || e.type.length > MAX_TYPE_LENGTH) return 'bad type';
-  if (typeof e.value !== 'number' || !Number.isFinite(e.value)) return 'bad value';
+  const hasValue = e.value !== undefined && e.value !== null;
+  if (hasValue && (typeof e.value !== 'number' || !Number.isFinite(e.value))) return 'bad value';
+  if (!hasValue && VALUE_REQUIRED_TYPES.has(e.type)) return `value required for type ${e.type}`;
   return null;
 }
 

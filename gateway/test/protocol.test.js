@@ -50,6 +50,29 @@ test('type is opaque: any non-empty string passes', () => {
   }
 });
 
+test('value is required (numeric) for price, EMA38, EMA99, EMA100', () => {
+  for (const type of ['price', 'EMA38', 'EMA99', 'EMA100']) {
+    const { value, ...noValue } = { ...ev, type };
+    assert.equal(parseEvent(JSON.stringify(noValue)).ok, false, `${type} without value`);
+    assert.equal(parseEvent(JSON.stringify({ ...ev, type, value: null })).ok, false, `${type} null`);
+  }
+});
+
+test('value is optional for BUY, SELL and any other type, but numeric if present', () => {
+  for (const type of ['BUY', 'SELL', 'something-new']) {
+    const { value, ...noValue } = { ...ev, type };
+    assert.equal(parseEvent(JSON.stringify(noValue)).ok, true, `${type} without value`);
+    assert.equal(parseEvent(JSON.stringify({ ...ev, type, value: null })).ok, true, `${type} null`);
+    assert.equal(parseEvent(JSON.stringify({ ...ev, type, value: 10.5 })).ok, true, `${type} number`);
+    assert.equal(parseEvent(JSON.stringify({ ...ev, type, value: 'x' })).ok, false, `${type} string`);
+  }
+});
+
+test('type match is case-sensitive: "Price" counts as an "other" type', () => {
+  const { value, ...noValue } = { ...ev, type: 'Price' };
+  assert.equal(parseEvent(JSON.stringify(noValue)).ok, true);
+});
+
 test('malformed EventProcessed records are rejected', () => {
   const bad = [
     'nope',
