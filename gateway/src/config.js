@@ -42,6 +42,9 @@ function loadConfig(env = process.env) {
       topic: str(env, 'KAFKA_TOPIC', 'event-processed'),
       groupId: str(env, 'KAFKA_GROUP_ID', 'ultrastonk-gateway'),
       clientId: str(env, 'KAFKA_CLIENT_ID', 'ultrastonk-gateway'),
+      // Only used the first time a group starts (no committed offsets yet):
+      // false = only new messages, true = replay the whole topic.
+      fromBeginning: str(env, 'KAFKA_FROM_BEGINNING', 'false').toLowerCase() === 'true',
     },
     fake: {
       tickers: list(env, 'FAKE_TICKERS', 'A2ASZ7.ETR,RDSA.NL,AIR.FR,SAP.ETR,ASML.NL'),

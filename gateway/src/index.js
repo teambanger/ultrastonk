@@ -10,6 +10,7 @@ const { Metrics, CSV_HEADER, csvRow } = require('./metrics');
 const { Gateway } = require('./gateway');
 const { createServer } = require('./server');
 const { FakeSource } = require('./fake');
+const { KafkaSource } = require('./kafka-source');
 
 async function main() {
   const config = loadConfig();
@@ -24,17 +25,21 @@ async function main() {
     killClientBytes: config.killClientBytes,
   });
 
-  const server = createServer({ gateway, maxClients: config.maxClients, heartbeatMs: config.heartbeatMs, log });
+  let source;
+  const server = createServer({
+    gateway, maxClients: config.maxClients, heartbeatMs: config.heartbeatMs, log,
+    sourceStatus: () => ({ type: config.source, status: source ? source.status : 'stopped' }),
+  });
   const port = await server.listen(config.port);
   log.info('gateway listening', { http: `http://localhost:${port}/`, ws: `ws://localhost:${port}/`, source: config.source });
 
-  let source;
   if (config.source === 'fake') {
     source = new FakeSource({ ...config.fake, onMessage: (text) => gateway.ingest(text) });
     source.start();
     log.info('fake source started', { tickers: source.tickers.length, intervalMs: config.fake.intervalMs });
   } else {
-    throw new Error('SOURCE=kafka is not implemented yet (next step); use SOURCE=fake');
+    source = new KafkaSource({ ...config.kafka, log, onMessage: (value) => gateway.ingest(value) });
+    source.start(); // retries in the background until Kafka is reachable
   }
 
   if (config.metricsCsv && !fs.existsSync(config.metricsCsv)) fs.writeFileSync(config.metricsCsv, CSV_HEADER);

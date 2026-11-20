@@ -10,6 +10,9 @@
 // Env: KAFKA_BROKERS (default localhost:9092), KAFKA_TOPIC (default event-processed)
 const { Kafka, logLevel, Partitioners } = require('kafkajs');
 const { FakeSource } = require('../src/fake');
+const { hideKafkajsTimeoutWarning } = require('../src/kafka-source');
+
+hideKafkajsTimeoutWarning();
 
 function arg(name, def) {
   const i = process.argv.indexOf(`--${name}`);

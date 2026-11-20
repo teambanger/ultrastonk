@@ -73,7 +73,8 @@ Settings are environment variables (PowerShell: `$env:NAME = "value"` before `np
 | `SOURCE` | `fake` | `fake` (built-in generator) or `kafka` |
 | `KAFKA_BROKERS` | `localhost:9092` | comma-separated; `kafka:29092` inside docker compose |
 | `KAFKA_TOPIC` | `event-processed` | input topic |
-| `KAFKA_GROUP_ID` | `ultrastonk-gateway` | consumer group |
+| `KAFKA_GROUP_ID` | `ultrastonk-gateway` | consumer group (each gateway instance needs its own to see every message) |
+| `KAFKA_FROM_BEGINNING` | `false` | first start of a new group: `false` = only new messages, `true` = replay the topic |
 | `HISTORY_LIMIT` | `500` | events kept per ticker |
 | `METRICS_INTERVAL_MS` | `10000` | metrics log period |
 | `METRICS_CSV` | (off) | file to append metrics rows to (for the report) |
@@ -104,12 +105,21 @@ docker logs ultrastonk-kafka-1 2>&1 | Select-String "Kafka Server started"
 cd gateway
 npm run kafka:check
 
-# 5. Publish test events (Ctrl+C to stop):
-npm run kafka:publish
+# 5. Run the gateway on Kafka, and in a second terminal publish test events:
+$env:SOURCE = "kafka"; npm start          # terminal 1, then open http://localhost:8080
+npm run kafka:publish                     # terminal 2 (Ctrl+C to stop)
+
+# 5b. Or all-in-one automated check (gateway + client + publisher, prints PASS/FAIL):
+npm run kafka:e2e
 
 # 6. Stop Kafka:
 docker compose -p ultrastonk down
 ```
+
+Kafka client: **kafkajs** (tested against `apache/kafka:4.0.0`: admin, keyed produce and
+consumer groups all work). On Node 23+ it prints a harmless `TimeoutNegativeWarning`, which the
+gateway filters out. If the gateway starts before Kafka, it keeps retrying every 5 s while the
+WebSocket side stays up; `/health` shows `source.status` (`connecting` / `running`).
 
 Useful: list topics / peek at messages inside the container:
 

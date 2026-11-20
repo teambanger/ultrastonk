@@ -4,6 +4,9 @@
 //   connect (admin) -> list/create topic -> produce -> consume in a consumer group
 // Usage: node scripts/kafka-check.js      (env: KAFKA_BROKERS, KAFKA_TOPIC)
 const { Kafka, logLevel, Partitioners } = require('kafkajs');
+const { hideKafkajsTimeoutWarning } = require('../src/kafka-source');
+
+hideKafkajsTimeoutWarning();
 
 const brokers = (process.env.KAFKA_BROKERS || 'localhost:9092').split(',');
 const topic = process.env.KAFKA_TOPIC || 'event-processed';

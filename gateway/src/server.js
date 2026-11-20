@@ -15,7 +15,7 @@ const MAX_CLIENT_MESSAGE_BYTES = 64 * 1024;
  *   GET /health  -> JSON status
  *   WebSocket    -> ws://host:PORT/  (any path)
  */
-function createServer({ gateway, maxClients = 1000, heartbeatMs = 30000, log = silentLogger }) {
+function createServer({ gateway, maxClients = 1000, heartbeatMs = 30000, log = silentLogger, sourceStatus = () => null }) {
   let nextId = 1;
 
   const httpServer = http.createServer((req, res) => {
@@ -25,6 +25,7 @@ function createServer({ gateway, maxClients = 1000, heartbeatMs = 30000, log = s
       res.end(JSON.stringify({
         status: 'ok',
         uptimeSec: Math.round(process.uptime()),
+        source: sourceStatus(),
         ...gateway.registry.stats(),
         historyTickers: gateway.history.tickerCount(),
         totals: gateway.metrics.totals,
