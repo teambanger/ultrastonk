@@ -1,0 +1,9 @@
+node_modules
+test
+scripts
+bench-results
+*.csv
+*.md
+Dockerfile
+docker-compose*.yml
+.git*

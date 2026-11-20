@@ -1,0 +1,37 @@
+# Gateway service, kept separate from the team's root docker-compose.yml.
+# It joins the network that the team's compose project creates (default name
+# "ultrastonk_default" when started with `-p ultrastonk` or from the repo root),
+# so it reaches Kafka at kafka:29092 (the in-network PLAINTEXT listener).
+#
+# Run (PowerShell, from the repo root; Kafka must already be up):
+#   docker compose -f gateway/docker-compose.gateway.yml up -d --build
+#   docker compose -f gateway/docker-compose.gateway.yml logs -f gateway
+#   docker compose -f gateway/docker-compose.gateway.yml down
+#
+# To merge into the root compose file later: copy the `gateway` service,
+# change `build: .` to `build: ./gateway`, drop the `networks` sections and
+# add `depends_on: [kafka]`.
+
+name: ultrastonk-gateway
+
+services:
+  gateway:
+    build: .
+    image: ultrastonk-gateway:latest
+    ports:
+      - "8080:8080"            # test page + WebSocket: http://localhost:8080
+    environment:
+      SOURCE: kafka
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_TOPIC: event-processed
+      KAFKA_GROUP_ID: ultrastonk-gateway
+      HISTORY_LIMIT: "500"
+      METRICS_INTERVAL_MS: "10000"
+      LOG_LEVEL: info
+    restart: unless-stopped
+    networks: [kafka-net]
+
+networks:
+  kafka-net:
+    external: true
+    name: ${KAFKA_NETWORK:-ultrastonk_default}

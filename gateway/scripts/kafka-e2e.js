@@ -5,6 +5,8 @@
 //   3. run the test publisher: 10 windows + 3 invalid records
 //   4. check the client got RDSA.NL's events and /health counted everything
 // Usage: node scripts/kafka-e2e.js   (or npm run kafka:e2e)
+// Against an already running gateway (e.g. the Docker container), skip step 1:
+//   $env:GATEWAY_URL = "localhost:8080"; npm run kafka:e2e
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 const WebSocket = require('ws');
@@ -30,14 +32,20 @@ function startChild(name, args, env) {
   return child;
 }
 
+const getHealth = async (host) => (await fetch(`http://${host}/health`)).json();
+
 async function main() {
-  const gateway = startChild('gateway', ['src/index.js'], {
+  const external = process.env.GATEWAY_URL;
+  const host = external || `localhost:${PORT}`;
+  const gateway = external ? null : startChild('gateway', ['src/index.js'], {
     SOURCE: 'kafka', PORT: String(PORT), KAFKA_GROUP_ID: `gateway-e2e-${Date.now()}`, METRICS_INTERVAL_MS: '2000',
   });
   try {
-    await gateway.waitFor(/kafka group joined/, 30000);
+    if (gateway) await gateway.waitFor(/kafka group joined/, 30000);
+    const before = await getHealth(host);
+    if (!before.source || before.source.status !== 'running') throw new Error(`gateway source not running: ${JSON.stringify(before.source)}`);
 
-    const ws = new WebSocket(`ws://localhost:${PORT}/`);
+    const ws = new WebSocket(`ws://${host}/`);
     const received = [];
     ws.on('message', (d) => received.push(JSON.parse(d)));
     await new Promise((r, j) => { ws.once('open', r); ws.once('error', j); });
@@ -48,14 +56,16 @@ async function main() {
     const published = Number(done.match(/(\d+) messages/)[1]);
     await new Promise((r) => setTimeout(r, 1500)); // let the last messages arrive
 
-    const health = await (await fetch(`http://localhost:${PORT}/health`)).json();
+    const health = await getHealth(host);
     ws.close();
 
+    const consumed = health.totals.in - before.totals.in; // deltas: an external gateway may have older counts
+    const invalid = health.totals.invalid - before.totals.invalid;
     const live = received.filter((m) => m.ticker === TICKER && m.type !== 'history');
     const otherTickers = received.filter((m) => m.ticker && m.ticker !== TICKER).length;
     const checks = [
-      ['gateway consumed every valid message', health.totals.in === published - 3, `${health.totals.in} of ${published - 3}`],
-      ['3 invalid records rejected', health.totals.invalid === 3, health.totals.invalid],
+      ['gateway consumed every valid message', consumed === published - 3, `${consumed} of ${published - 3}`],
+      ['3 invalid records rejected', invalid === 3, invalid],
       [`client got >= ${3 * WINDOWS} live ${TICKER} events`, live.length >= 3 * WINDOWS, live.length],
       ['client got nothing for other tickers', otherTickers === 0, otherTickers],
       ['events arrive in timestamp order', live.every((m, i) => i === 0 || m.timestamp_emit >= live[i - 1].timestamp_emit), ''],
@@ -70,7 +80,7 @@ async function main() {
     console.log(`\nRESULT: FAILED: ${err.message}`);
     process.exitCode = 1;
   } finally {
-    gateway.kill();
+    if (gateway) gateway.kill();
   }
 }
 
