@@ -1,0 +1,7 @@
+# Keep the build context small and stale IDE/build output out of the image.
+target/
+.idea/
+.settings/
+.project
+.classpath
+bin/

@@ -1,0 +1,57 @@
+# Usage from the repo root:
+#   docker compose up --build --exit-code-from emitter emitter
+#   #   docker compose down
+#
+# Inspect the stream from the host:
+#   kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+#     --topic raw-trade-events --from-beginning --max-messages 20 \
+#     --property print.timestamp=true --property print.partition=true \
+#     --property print.key=true
+
+services:
+  kafka:
+    image: apache/kafka:4.0.0
+    ports:
+      - "9092:9092"          # host listener (console consumers, kafka-tools)
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://:29092,PLAINTEXT_HOST://:9092,CONTROLLER://:29093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  # Creates the raw-trade-events topic. retention.ms=-1 is REQUIRED while the
+  # emitter runs with RECORD_TIMESTAMP=event (its default): records carry
+  # November 2021 event times, so the broker's default 7-day retention would
+  # drop the replay immediately (see the EventEmitter javadoc).
+  kafka-init:
+    image: apache/kafka:4.0.0
+    depends_on: [kafka]
+    # NOTE: command must be a list so the whole loop arrives as ONE argument
+    # to `bash -c`. As a plain string, compose word-splits it and bash would
+    # only see `until` as the script (exit 2, "unexpected end of file").
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - "until /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create --if-not-exists --topic raw-trade-events --partitions 8 --config retention.ms=-1; do echo waiting for kafka; sleep 2; done"
+
+  emitter:
+    build: ./event-emitter
+    environment:
+      KAFKA_SERVER: kafka:29092
+      CSV_PATH: /data/src/debs2022-gc-trading-day-08-11-21.csv
+      SPEED_MULTIPLIER: "1000"    # 100x real time
+      # MAX_SLEEP_MS: "2000"    # uncomment to skip the overnight session gap
+      # PRICE_FILTER: "last-nonzero"  # dont enable for final report runs 
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+
