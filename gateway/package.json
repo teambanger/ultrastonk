@@ -10,7 +10,8 @@
     "smoke": "node scripts/smoke.js",
     "kafka:check": "node scripts/kafka-check.js",
     "kafka:publish": "node scripts/publish-test-events.js",
-    "kafka:e2e": "node scripts/kafka-e2e.js"
+    "kafka:e2e": "node scripts/kafka-e2e.js",
+    "bench": "node scripts/bench.js"
   },
   "engines": {
     "node": ">=20"

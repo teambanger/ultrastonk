@@ -61,7 +61,7 @@ class FakeTicker {
 }
 
 class FakeSource {
-  /** onMessage(text) receives JSON strings, exactly like Kafka record values. */
+  /** onMessage(text, event) receives JSON strings, exactly like Kafka record values (event = parsed copy). */
   constructor({ tickers, extraTickers = 0, intervalMs = 1000, seed = 42, now = Date.now, onMessage }) {
     const rand = mulberry32(seed);
     const all = [...tickers];
@@ -72,7 +72,7 @@ class FakeSource {
 
   tick() {
     const ts = this.now();
-    for (const t of this.tickers) for (const e of t.next(ts)) this.onMessage(JSON.stringify(e));
+    for (const t of this.tickers) for (const e of t.next(ts)) this.onMessage(JSON.stringify(e), e);
   }
 
   start() {

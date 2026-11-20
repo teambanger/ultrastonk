@@ -22,6 +22,7 @@ class Metrics {
     this.intervalStart = this.now();
     this.counts = { in: 0, invalid: 0, forwarded: 0, dropped: 0 };
     this.latencies = [];
+    this.latencySeen = 0;
   }
 
   inc(name, n = 1) {
@@ -29,8 +30,15 @@ class Metrics {
     this.totals[name] += n;
   }
 
+  /** Reservoir sampling: above MAX_SAMPLES every event still has an equal chance to be kept. */
   latency(ms) {
-    if (this.latencies.length < MAX_SAMPLES) this.latencies.push(ms);
+    this.latencySeen++;
+    if (this.latencies.length < MAX_SAMPLES) {
+      this.latencies.push(ms);
+    } else {
+      const j = Math.floor(Math.random() * this.latencySeen);
+      if (j < MAX_SAMPLES) this.latencies[j] = ms;
+    }
   }
 
   report() {
@@ -60,13 +68,37 @@ class Metrics {
 const round = (x) => Math.round(x * 10) / 10;
 
 const CSV_HEADER =
-  'time,seconds,in_per_sec,forwarded_per_sec,in,invalid,forwarded,dropped,clients,tickers,lat_samples,lat_min,lat_avg,lat_p50,lat_p95,lat_p99,lat_max\n';
+  'time,seconds,in_per_sec,forwarded_per_sec,in,invalid,forwarded,dropped,clients,tickers,lat_samples,lat_min,lat_avg,lat_p50,lat_p95,lat_p99,lat_max,cpu_pct,rss_mb,heap_mb\n';
 
+/** extra = { clients, tickers, cpuPct, rssMb, heapMb } */
 function csvRow(r, extra, time = new Date()) {
   const l = r.latencyMs;
   return [time.toISOString(), r.seconds, r.inPerSec, r.forwardedPerSec, r.in, r.invalid, r.forwarded, r.dropped,
-    extra.clients, extra.tickers, r.latencySamples, l.min, l.avg, l.p50, l.p95, l.p99, l.max]
-    .map((v) => (v === null ? '' : v)).join(',') + '\n';
+    extra.clients, extra.tickers, r.latencySamples, l.min, l.avg, l.p50, l.p95, l.p99, l.max,
+    extra.cpuPct, extra.rssMb, extra.heapMb]
+    .map((v) => (v === null || v === undefined ? '' : v)).join(',') + '\n';
 }
 
-module.exports = { Metrics, CSV_HEADER, csvRow };
+/**
+ * CPU use of this process since the previous call, in % of one core
+ * (can exceed 100 when libuv threads work in parallel), plus memory in MB.
+ */
+function processSampler(now = Date.now) {
+  let lastCpu = process.cpuUsage();
+  let lastTime = now();
+  return () => {
+    const cpu = process.cpuUsage(lastCpu);
+    const t = now();
+    const wallMs = Math.max(t - lastTime, 1);
+    lastCpu = process.cpuUsage();
+    lastTime = t;
+    const mem = process.memoryUsage();
+    return {
+      cpuPct: round(((cpu.user + cpu.system) / 1000 / wallMs) * 100),
+      rssMb: round(mem.rss / 1048576),
+      heapMb: round(mem.heapUsed / 1048576),
+    };
+  };
+}
+
+module.exports = { Metrics, CSV_HEADER, csvRow, processSampler };

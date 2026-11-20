@@ -6,7 +6,7 @@ const { loadConfig } = require('./config');
 const { createLogger } = require('./logger');
 const { SubscriptionRegistry } = require('./subscriptions');
 const { HistoryStore } = require('./history');
-const { Metrics, CSV_HEADER, csvRow } = require('./metrics');
+const { Metrics, CSV_HEADER, csvRow, processSampler } = require('./metrics');
 const { Gateway } = require('./gateway');
 const { createServer } = require('./server');
 const { FakeSource } = require('./fake');
@@ -43,16 +43,19 @@ async function main() {
   }
 
   if (config.metricsCsv && !fs.existsSync(config.metricsCsv)) fs.writeFileSync(config.metricsCsv, CSV_HEADER);
+  const sampleProcess = processSampler();
   const metricsTimer = setInterval(() => {
     const r = metrics.report();
     const conn = registry.stats();
+    const proc = sampleProcess();
     const l = r.latencyMs;
     log.info('metrics', {
       in_per_s: r.inPerSec, fwd_per_s: r.forwardedPerSec, dropped: r.dropped, invalid: r.invalid,
       clients: conn.clients, tickers: conn.tickers,
       lat_ms: l.p50 === null ? 'n/a' : `p50=${l.p50},p95=${l.p95},p99=${l.p99},max=${l.max}`,
+      cpu_pct: proc.cpuPct, rss_mb: proc.rssMb,
     });
-    if (config.metricsCsv) fs.appendFile(config.metricsCsv, csvRow(r, conn), () => {});
+    if (config.metricsCsv) fs.appendFile(config.metricsCsv, csvRow(r, { ...conn, ...proc }), () => {});
   }, config.metricsIntervalMs);
 
   let stopping = false;

@@ -29,6 +29,7 @@ function createServer({ gateway, maxClients = 1000, heartbeatMs = 30000, log = s
         ...gateway.registry.stats(),
         historyTickers: gateway.history.tickerCount(),
         totals: gateway.metrics.totals,
+        memoryMb: Math.round(process.memoryUsage().rss / 1048576),
       }));
     } else if (req.method === 'GET' && (url === '/' || url === '/index.html')) {
       fs.readFile(PAGE, (err, body) => {
