@@ -26,15 +26,15 @@ test('removeClient cleans up everything (no memory leak)', () => {
   reg.subscribe(a, ['X', 'Y']);
   reg.subscribe(b, ['Y']);
   reg.removeClient(a);
-  assert.deepEqual(reg.stats(), { clients: 1, symbols: 1 });
+  assert.deepEqual(reg.stats(), { clients: 1, tickers: 1 });
   reg.removeClient(b);
   reg.removeClient(b); // twice is harmless
-  assert.deepEqual(reg.stats(), { clients: 0, symbols: 0 });
+  assert.deepEqual(reg.stats(), { clients: 0, tickers: 0 });
 });
 
-test('per-client symbol limit', () => {
-  const reg = new SubscriptionRegistry({ maxSymbolsPerClient: 2 });
+test('per-client ticker limit', () => {
+  const reg = new SubscriptionRegistry({ maxTickersPerClient: 2 });
   const a = {};
   assert.deepEqual(reg.subscribe(a, ['A', 'B', 'C']), ['A', 'B']);
-  assert.equal(reg.symbolsOf(a).size, 2);
+  assert.equal(reg.tickersOf(a).size, 2);
 });

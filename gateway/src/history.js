@@ -1,57 +1,39 @@
 'use strict';
 
 /**
- * Last N EMA results and last N advisories per symbol, kept sorted by window.
- * Sent to a client when it subscribes, so its chart is not empty.
- * A result for a window we already have replaces the old one (no duplicates),
- * which also makes the store safe if Kafka re-delivers messages.
+ * Last N events per ticker, ordered by timestamp_emit (oldest first).
+ * Sent to a client when it subscribes, so its view is not empty.
+ * No deduplication: one EventProcessed message = one entry, as on the board.
  */
 class HistoryStore {
-  constructor(limit = 100) {
+  constructor(limit = 500) {
     this.limit = limit;
-    this.ema = new Map(); // symbol -> array of messages, ascending window
-    this.advisories = new Map();
+    this.byTicker = new Map(); // ticker -> array of events
   }
 
-  addEma(msg) {
-    insert(this.ema, msg, this.limit);
+  add(event) {
+    let list = this.byTicker.get(event.ticker);
+    if (!list) {
+      list = [];
+      this.byTicker.set(event.ticker, list);
+    }
+    // Usual case: newest arrives last, so scan from the end. Events with an
+    // equal timestamp keep arrival order (price, EMA38, EMA100 of one window).
+    let i = list.length;
+    while (i > 0 && list[i - 1].timestamp_emit > event.timestamp_emit) i--;
+    if (i === 0 && list.length >= this.limit) return; // older than everything kept
+    list.splice(i, 0, event);
+    if (list.length > this.limit) list.shift(); // drop the oldest
   }
 
-  addAdvisory(msg) {
-    insert(this.advisories, msg, this.limit);
+  /** Copy of the stored events for a ticker (empty array if unknown). */
+  get(ticker) {
+    return [...(this.byTicker.get(ticker) || [])];
   }
 
-  /** The history message sent to a client on subscribe. */
-  snapshot(symbol) {
-    return {
-      type: 'history',
-      symbol,
-      ema: [...(this.ema.get(symbol) || [])],
-      advisories: [...(this.advisories.get(symbol) || [])],
-    };
+  tickerCount() {
+    return this.byTicker.size;
   }
-
-  symbolCount() {
-    return this.ema.size;
-  }
-}
-
-function insert(map, msg, limit) {
-  let list = map.get(msg.symbol);
-  if (!list) {
-    list = [];
-    map.set(msg.symbol, list);
-  }
-  // Usual case: newest window arrives last, so scan from the end.
-  let i = list.length;
-  while (i > 0 && list[i - 1].window > msg.window) i--;
-  if (i > 0 && list[i - 1].window === msg.window) {
-    list[i - 1] = msg; // same window again: replace
-    return;
-  }
-  if (list.length >= limit && i === 0) return; // older than everything we keep
-  list.splice(i, 0, msg);
-  if (list.length > limit) list.shift(); // drop the oldest
 }
 
 module.exports = { HistoryStore };

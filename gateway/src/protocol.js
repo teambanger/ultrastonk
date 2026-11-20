@@ -1,18 +1,28 @@
 'use strict';
 
 // Message formats and validation. This is the ONE place that knows the JSON
-// shapes, so if the processor's output format changes, only this file changes.
+// shapes, so if the team changes the format, only this file changes.
+//
+// Kafka -> gateway (EventProcessed, one message per value, from the Excalidraw board):
+//   { "timestamp_emit": 1636354800021, "ticker": "A2ASZ7.ETR", "type": "EMA38", "value": 12.34 }
+//   `type` is opaque: any non-empty string passes (price, EMA38, EMA100, BUY, SELL, ...).
+// Browser -> gateway:
+//   { "type": "subscribe",   "tickers": ["A2ASZ7.ETR", ...] }
+//   { "type": "unsubscribe", "tickers": [...] }
+// Gateway -> browser:
+//   EventProcessed messages, forwarded unchanged
+//   { "type": "history", "ticker": "...", "events": [EventProcessed, ...] }  (on subscribe)
+//   { "type": "error", "error": "..." }                                    (bad request)
 
-const SYMBOL_RE = /^[A-Za-z0-9._-]{1,32}$/; // e.g. "A2ASZ7.ETR", "RDSA.NL"
-const MAX_SYMBOLS_PER_REQUEST = 500;
-const SIGNALS = new Set(['BUY', 'SELL']);
+const TICKER_RE = /^[A-Za-z0-9._-]{1,32}$/; // STOCK.EXCHANGE, e.g. "A2ASZ7.ETR"
+const MAX_TYPE_LENGTH = 32;
+const MAX_TICKERS_PER_REQUEST = 500;
 
-const isFiniteNumber = (v) => typeof v === 'number' && Number.isFinite(v);
-const isWindow = (v) => Number.isSafeInteger(v) && v >= 0;
+const isTicker = (v) => typeof v === 'string' && TICKER_RE.test(v);
 
 /**
  * Parse a message from a browser. Returns { ok: true, msg } or { ok: false, error }.
- * msg = { type: 'subscribe' | 'unsubscribe', symbols: string[] } (deduplicated).
+ * msg = { type: 'subscribe' | 'unsubscribe', tickers: string[] } (deduplicated).
  */
 function parseClientMessage(raw) {
   let data;
@@ -27,53 +37,55 @@ function parseClientMessage(raw) {
   if (data.type !== 'subscribe' && data.type !== 'unsubscribe') {
     return { ok: false, error: 'type must be "subscribe" or "unsubscribe"' };
   }
-  if (!Array.isArray(data.symbols) || data.symbols.length === 0) {
-    return { ok: false, error: 'symbols must be a non-empty array' };
+  if (!Array.isArray(data.tickers) || data.tickers.length === 0) {
+    return { ok: false, error: 'tickers must be a non-empty array' };
   }
-  if (data.symbols.length > MAX_SYMBOLS_PER_REQUEST) {
-    return { ok: false, error: `at most ${MAX_SYMBOLS_PER_REQUEST} symbols per request` };
+  if (data.tickers.length > MAX_TICKERS_PER_REQUEST) {
+    return { ok: false, error: `at most ${MAX_TICKERS_PER_REQUEST} tickers per request` };
   }
-  const symbols = [];
-  for (const s of data.symbols) {
-    if (typeof s !== 'string' || !SYMBOL_RE.test(s)) {
-      return { ok: false, error: `invalid symbol: ${JSON.stringify(s).slice(0, 40)}` };
-    }
-    symbols.push(s);
+  for (const t of data.tickers) {
+    if (!isTicker(t)) return { ok: false, error: `invalid ticker: ${String(JSON.stringify(t)).slice(0, 40)}` };
   }
-  return { ok: true, msg: { type: data.type, symbols: [...new Set(symbols)] } };
+  return { ok: true, msg: { type: data.type, tickers: [...new Set(data.tickers)] } };
 }
 
 /**
- * Validate an EMA result coming from Kafka (topic ema-results) and return the
- * message we send to browsers, or null if the record is malformed.
+ * Validate an EventProcessed object. Returns null if valid, otherwise a reason string.
  */
-function toEmaMessage(data) {
-  if (!data || typeof data !== 'object') return null;
-  const { symbol, window, windowStart, close, ema38, ema100, producedAt } = data;
-  if (typeof symbol !== 'string' || !SYMBOL_RE.test(symbol)) return null;
-  if (!isWindow(window)) return null;
-  if (![windowStart, close, ema38, ema100].every(isFiniteNumber)) return null;
-  const msg = { type: 'ema', symbol, window, windowStart, close, ema38, ema100 };
-  if (isFiniteNumber(producedAt)) msg.producedAt = producedAt;
-  return msg;
+function eventError(e) {
+  if (e === null || typeof e !== 'object' || Array.isArray(e)) return 'not a JSON object';
+  if (!Number.isSafeInteger(e.timestamp_emit) || e.timestamp_emit < 0) return 'bad timestamp_emit';
+  if (!isTicker(e.ticker)) return 'bad ticker';
+  if (typeof e.type !== 'string' || e.type.length === 0 || e.type.length > MAX_TYPE_LENGTH) return 'bad type';
+  if (typeof e.value !== 'number' || !Number.isFinite(e.value)) return 'bad value';
+  return null;
 }
 
-/** Same as toEmaMessage, for the advisories topic. */
-function toAdvisoryMessage(data) {
-  if (!data || typeof data !== 'object') return null;
-  const { symbol, window, signal, ema38, ema100, producedAt } = data;
-  if (typeof symbol !== 'string' || !SYMBOL_RE.test(symbol)) return null;
-  if (!isWindow(window)) return null;
-  if (!SIGNALS.has(signal)) return null;
-  if (![ema38, ema100].every(isFiniteNumber)) return null;
-  const msg = { type: 'advisory', symbol, window, signal, ema38, ema100 };
-  if (isFiniteNumber(producedAt)) msg.producedAt = producedAt;
-  return msg;
+/**
+ * Parse an EventProcessed record as it arrives from Kafka (string or Buffer).
+ * Returns { ok: true, event, json } where `json` is the original text (forwarded
+ * unchanged, no re-serialisation), or { ok: false, error }.
+ */
+function parseEvent(raw) {
+  const json = typeof raw === 'string' ? raw : raw.toString('utf8');
+  let event;
+  try {
+    event = JSON.parse(json);
+  } catch {
+    return { ok: false, error: 'invalid JSON' };
+  }
+  const error = eventError(event);
+  return error ? { ok: false, error } : { ok: true, event, json };
 }
+
+const historyMessage = (ticker, events) => ({ type: 'history', ticker, events });
+const errorMessage = (error) => ({ type: 'error', error });
 
 module.exports = {
   parseClientMessage,
-  toEmaMessage,
-  toAdvisoryMessage,
-  MAX_SYMBOLS_PER_REQUEST,
+  parseEvent,
+  eventError,
+  historyMessage,
+  errorMessage,
+  MAX_TICKERS_PER_REQUEST,
 };

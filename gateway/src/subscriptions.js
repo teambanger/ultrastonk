@@ -2,51 +2,52 @@
 
 /**
  * Who is subscribed to what. Two maps kept in sync:
- *   client -> Set<symbol>   (to clean up when a client disconnects)
- *   symbol -> Set<client>   (to find recipients fast when a result arrives)
+ *   client -> Set<ticker>   (to clean up when a client disconnects)
+ *   ticker -> Set<client>   (to find recipients fast when an event arrives)
  * A "client" is any object (in the server it is the WebSocket).
  */
 class SubscriptionRegistry {
-  constructor({ maxSymbolsPerClient = 1000 } = {}) {
-    this.maxSymbolsPerClient = maxSymbolsPerClient;
+  constructor({ maxTickersPerClient = 1000 } = {}) {
+    this.maxTickersPerClient = maxTickersPerClient;
     this.byClient = new Map();
-    this.bySymbol = new Map();
+    this.byTicker = new Map();
   }
 
-  /** Returns the symbols that were newly added (already-subscribed ones are skipped). */
-  subscribe(client, symbols) {
+  /** Returns the tickers that were newly added (already-subscribed ones are skipped). */
+  subscribe(client, tickers) {
     let mine = this.byClient.get(client);
     if (!mine) {
       mine = new Set();
       this.byClient.set(client, mine);
     }
     const added = [];
-    for (const symbol of symbols) {
-      if (mine.has(symbol)) continue;
-      if (mine.size >= this.maxSymbolsPerClient) break;
-      mine.add(symbol);
-      let clients = this.bySymbol.get(symbol);
+    for (const ticker of tickers) {
+      if (mine.has(ticker)) continue;
+      if (mine.size >= this.maxTickersPerClient) break;
+      mine.add(ticker);
+      let clients = this.byTicker.get(ticker);
       if (!clients) {
         clients = new Set();
-        this.bySymbol.set(symbol, clients);
+        this.byTicker.set(ticker, clients);
       }
       clients.add(client);
-      added.push(symbol);
+      added.push(ticker);
     }
+    if (mine.size === 0) this.byClient.delete(client);
     return added;
   }
 
-  /** Returns the symbols that were actually removed. */
-  unsubscribe(client, symbols) {
+  /** Returns the tickers that were actually removed. */
+  unsubscribe(client, tickers) {
     const mine = this.byClient.get(client);
     if (!mine) return [];
     const removed = [];
-    for (const symbol of symbols) {
-      if (!mine.delete(symbol)) continue;
-      const clients = this.bySymbol.get(symbol);
+    for (const ticker of tickers) {
+      if (!mine.delete(ticker)) continue;
+      const clients = this.byTicker.get(ticker);
       clients.delete(client);
-      if (clients.size === 0) this.bySymbol.delete(symbol);
-      removed.push(symbol);
+      if (clients.size === 0) this.byTicker.delete(ticker);
+      removed.push(ticker);
     }
     if (mine.size === 0) this.byClient.delete(client);
     return removed;
@@ -55,21 +56,20 @@ class SubscriptionRegistry {
   /** Call on disconnect: drops every subscription of this client. */
   removeClient(client) {
     const mine = this.byClient.get(client);
-    if (!mine) return;
-    this.unsubscribe(client, [...mine]);
+    if (mine) this.unsubscribe(client, [...mine]);
   }
 
-  /** Clients subscribed to a symbol (empty set if none). Do not modify the result. */
-  subscribersOf(symbol) {
-    return this.bySymbol.get(symbol) || EMPTY;
+  /** Clients subscribed to a ticker (empty set if none). Do not modify the result. */
+  subscribersOf(ticker) {
+    return this.byTicker.get(ticker) || EMPTY;
   }
 
-  symbolsOf(client) {
+  tickersOf(client) {
     return this.byClient.get(client) || EMPTY;
   }
 
   stats() {
-    return { clients: this.byClient.size, symbols: this.bySymbol.size };
+    return { clients: this.byClient.size, tickers: this.byTicker.size };
   }
 }
 
