@@ -12,6 +12,19 @@ The synthetic workload weights symbols by `1 / rank**skew`, spans FR/NL/ETR, sen
 
 Set `--skew 0` for uniform traffic and increase skew to expose hot-key limits. Increase `--symbols`, `--rates`, and `--parallelism` independently. Keep other parameters fixed when attributing a difference to one factor.
 
+Repeat `--resource-profile NAME=SERVICE:CPU:MEMORY,...` to cross the matrix with container limits. Supported services are `taskmanager`, `jobmanager`, `kafka`, `gateway` (with `--gateway`), and the `benchmark` driver. Use `-` for an unset CPU or memory limit and `NAME=` for an uncapped comparison. A TaskManager limit applies to **each** worker; adding workers increases the total budget. To compare fixed total budgets, compare runs where worker count times per-worker quota is constant. Keep Flink's configured process size below the container cap for capacity tests; smaller caps can turn the run into a startup/OOM test instead.
+
+```bash
+python3 benchmarks/matrix.py --gateway --monitoring --duration 60 --parallelism 1,2 \
+  --rates 1000,3000,6000 --dedup NONE --late DROP \
+  --resource-profile 'half=taskmanager:0.5:2g,kafka:2:2g,gateway:1:512m' \
+  --resource-profile 'one=taskmanager:1:2g,kafka:2:2g,gateway:1:512m'
+```
+
+Compare profiles and worker counts at the same offered rate and policy. Use the progress samples to distinguish producer shortfall from growth in expected-minus-committed prices or committed-minus-WebSocket prices. Check the resource time series for CPU throttling and memory pressure. Checkpoint batching can cause temporary backlog spikes, so repeat longer runs around the highest passing and first failing loads; a delivery ratio at one offered load is not a capacity estimate. Treat missing telemetry as inconclusive for bottleneck attribution.
+
+`--monitoring` starts Prometheus, Kafka Exporter, and the resource exporter. Add `--dashboards` only when the live dashboards or centralized log search are useful; compare runs with the same instrumentation enabled.
+
 Use `--qualities baseline,duplicates,late,mixed` to cross the same strategy/resource grid with four input-quality conditions. Baseline disables both injections, duplicates enables only the configured duplicate rate, late enables only timestamp backdating, and mixed enables both. Each condition is labeled in the CSV and grouped separately in the report. Malformed values, real delayed publication, corrections, and tombstones have dedicated dummy-emitter presets and deterministic integration tests.
 
 The driver consumes transactional output concurrently and checks the complete measured raw-price multiset against `NONE`, `EXACT`, or first-wins `TIMESTAMP` semantics. Price is varied per original record so exact duplicates can be distinguished from new events. Expected dedup identities remain valid for the full experiment: the matrix sets TTL longer than warmup, measurement, and drain. When running the driver directly, keep `DEDUP_TTL_MS` longer than the run.
@@ -26,10 +39,11 @@ Per-run files:
 
 | Artifact | Contents |
 |---|---|
-| `RUN.json` | Settings, workload arguments, counts, correctness, latency, drain, and sampled Flink REST state |
+| `RUN.json` | Settings, workload arguments, counts, correctness, latency, drain, and time-aligned producer/Kafka/WebSocket progress and REST samples |
 | `RUN.driver.log` | Driver stdout/stderr, including failures |
 | `RUN.containers.log` | Flink logs and, in gateway mode, gateway logs |
 | `RUN.resources.jsonl` | Docker resource snapshot after the run |
+| `RUN.limits.json` | Requested profile and Docker-inspected CPU quotas, memory limits, and OOM state |
 | `RUN.prometheus.json` | Flink, Kafka, and resource-exporter time series over the run, when `--monitoring` is set |
 | `SESSION-manifest.json` | Project, arguments, runtime versions, and source/configuration hashes |
 | `SESSION-matrix.csv` | Comparison rows, written after every run |

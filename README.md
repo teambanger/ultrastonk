@@ -43,7 +43,7 @@ KAFKA_PORT=19092 FLINK_UI_PORT=18081 GATEWAY_PORT=18080 \
   --profile emitter up -d --build
 ```
 
-With metrics, dashboards, alerts, and searchable logs:
+With metrics, dashboards, and searchable logs:
 
 ```bash
 docker compose -f compose.yaml -f deploy/compose.monitoring.yaml up -d --build

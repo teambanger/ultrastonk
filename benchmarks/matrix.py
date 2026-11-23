@@ -18,7 +18,28 @@ import urllib.parse
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
-MONITORING_SERVICES = ("prometheus", "kafka-exporter", "resource-exporter", "loki", "alloy", "grafana")
+MONITORING_SERVICES = ("prometheus", "kafka-exporter", "resource-exporter")
+LIMITABLE_SERVICES = {"kafka", "jobmanager", "taskmanager", "gateway", "benchmark"}
+
+
+def resource_profiles(specs, gateway):
+    profiles = {}
+    for spec in specs or ["default="]:
+        name, separator, limits = spec.partition("=")
+        if not separator or not re.fullmatch(r"[a-zA-Z0-9_-]+", name) or name in profiles:
+            raise ValueError(f"expected a unique resource profile NAME=SERVICE:CPU:MEMORY,...: {spec!r}")
+        profile = profiles[name] = {}
+        for limit in limits.split(",") if limits else []:
+            match = re.fullmatch(r"([a-z-]+):([0-9]+(?:\.[0-9]+)?|-):([1-9][0-9]*[kmg]|-)", limit)
+            if not match:
+                raise ValueError(f"invalid limit {limit!r}; use SERVICE:CPU:MEMORY (e.g. taskmanager:0.5:2g)")
+            service, cpu, memory = match.groups()
+            if service not in LIMITABLE_SERVICES or service in profile or (service == "gateway" and not gateway):
+                raise ValueError(f"duplicate or unavailable service in resource profile: {service}")
+            if (cpu != "-" and float(cpu) <= 0) or cpu == memory == "-":
+                raise ValueError(f"expected a positive CPU quota or memory cap: {limit!r}")
+            profile[service] = ({"cpus": cpu} if cpu != "-" else {}) | ({"mem_limit": memory} if memory != "-" else {})
+    return profiles
 
 
 def docker_list(*args):
@@ -59,6 +80,9 @@ def main():
     parser.add_argument("--project", help="unused Compose project name (default: ultrastonk-benchmark-<session>)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--monitoring", action="store_true")
+    parser.add_argument("--dashboards", action="store_true", help="also start Grafana and centralized logs")
+    parser.add_argument("--resource-profile", action="append", metavar="NAME=SERVICE:CPU:MEMORY,...",
+                        help="repeat to sweep per-container limits; '-' leaves a limit unset, NAME= is uncapped")
     parser.add_argument("--gateway", action="store_true", help="benchmark through one live WebSocket subscriber")
     parser.add_argument("--keep-running", action="store_true")
     parser.add_argument("--kafka-port", type=int, help="publish Kafka on this host port (default: internal only)")
@@ -66,6 +90,11 @@ def main():
     parser.add_argument("--prometheus-port", type=int, default=0, help="Prometheus host port (default: Docker-assigned)")
     parser.add_argument("--grafana-port", type=int, default=0, help="Grafana host port (default: Docker-assigned)")
     args = parser.parse_args()
+    args.monitoring |= args.dashboards
+    try:
+        args.resource_profiles = resource_profiles(args.resource_profile, args.gateway)
+    except ValueError as error:
+        parser.error(str(error))
     if args.project is not None and (args.project == "ultrastonk" or args.project.startswith("ultrastonk-verify-")
                                      or not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,79}", args.project)):
         parser.error("use a separate, valid Compose project name outside the ultrastonk-verify-* namespace")
@@ -108,17 +137,25 @@ def run_matrix(args, qualities, session):
         compose += ["-f", "deploy/compose.monitoring.yaml"]
     # Keep a benchmark build from replacing another project's local Flink image tag.
     flink_image = f"ultrastonk-matrix-flink:{args.project}"
-    override = f"services:\n  jobmanager:\n    image: {flink_image}\n  taskmanager:\n    image: {flink_image}\n"
+    overrides = {service: {"image": flink_image} for service in ("jobmanager", "taskmanager")}
     if args.kafka_port is None:
-        # Kafka clients run inside Compose; don't bind a host port unless explicitly requested.
-        override += "  kafka:\n    ports: !reset []\n"
+        overrides["kafka"] = {"ports": None}
     if args.gateway:
         subscriptions = args.symbols * (2 if args.warmup else 1)
-        override += f"  gateway:\n    environment:\n      MAX_TICKERS_PER_CLIENT: '{subscriptions}'\n"
+        overrides["gateway"] = {"environment": {"MAX_TICKERS_PER_CLIENT": str(subscriptions)}}
     compose += ["-f", "-", "--profile", "benchmark"]
     gateway_services = ("gateway",) if args.gateway else ()
+    monitoring_services = MONITORING_SERVICES if args.monitoring else ()
+    if args.dashboards:
+        monitoring_services += ("loki", "alloy", "grafana")
+    limits = {}
 
     def command(*parts, check=True, capture=False):
+        override = "services:\n"
+        for service in sorted(overrides.keys() | limits.keys()):
+            override += f"  {service}:\n"
+            for key, value in (overrides.get(service, {}) | limits.get(service, {})).items():
+                override += f"    {key}: " + ("!reset []" if key == "ports" else json.dumps(value)) + "\n"
         return subprocess.run(compose + list(parts), cwd=ROOT, env=env, check=check,
                               input=override, text=True, capture_output=capture)
 
@@ -153,13 +190,14 @@ def run_matrix(args, qualities, session):
         manifest[key] = completed.stdout.strip() if completed.returncode == 0 else "unavailable"
     (results_dir / (session + "-manifest.json")).write_text(json.dumps(manifest, indent=2) + "\n")
     combinations = list(itertools.product(qualities, args.dedup.split(","), args.late.split(","),
-                                         args.parallelism.split(","), args.rates.split(","), range(args.repetitions)))
+                                          args.parallelism.split(","), args.rates.split(","), args.resource_profiles,
+                                          range(args.repetitions)))
     # Randomize execution order to reduce confounding by thermal/cache drift.
     random.Random(args.seed).shuffle(combinations)
     rows = []
     try:
         command("build", "jobmanager", "benchmark", *gateway_services, *(["resource-exporter"] if args.monitoring else []))
-        for index, (quality, dedup, late, parallelism, rate, repetition) in enumerate(combinations):
+        for index, (quality, dedup, late, parallelism, rate, profile, repetition) in enumerate(combinations):
             run_id = f"{session}-{index:03d}"
             env.update({"DEDUP_STRATEGY": dedup, "LATE_EVENT_STRATEGY": late, "FLINK_PARALLELISM": parallelism,
                         "EXPECTED_TASKMANAGERS": parallelism,
@@ -168,12 +206,13 @@ def run_matrix(args, qualities, session):
                         "KAFKA_TRANSACTION_PREFIX": f"bench-{run_id}-", "GATEWAY_KAFKA_GROUP_ID": f"bench-gateway-{run_id}"})
             if index:
                 command("stop", "jobmanager", "taskmanager", *gateway_services)
+            limits = args.resource_profiles[profile]
             command("up", "-d", "--scale", "taskmanager=" + parallelism,
-                     "kafka", "kafka-init", "jobmanager", "taskmanager", *gateway_services,
-                     *(MONITORING_SERVICES if args.monitoring else ()))
-            print(f"Run {index + 1}/{len(combinations)}: quality={quality}, {dedup}/{late}, p={parallelism}, rate={rate}, repetition={repetition}", flush=True)
+                     "kafka", "kafka-init", "jobmanager", "taskmanager", *gateway_services, *monitoring_services)
+            print(f"Run {index + 1}/{len(combinations)}: {quality}, {dedup}/{late}, p={parallelism}, rate={rate}, profile={profile}, repetition={repetition}", flush=True)
             started = time.time()
-            completed = command("run", "--rm", "--no-deps", "benchmark", "--run-id", run_id,
+            driver_name = f"{args.project}-driver-{run_id}"
+            completed = command("run", "--name", driver_name, "--no-deps", "benchmark", "--run-id", run_id,
                     "--duration", str(args.duration), "--warmup", str(args.warmup), "--rate", rate,
                     "--symbols", str(args.symbols), "--skew", str(args.skew), "--seed", str(args.seed + repetition),
                     "--duplicate-rate", str(args.duplicate_rate if quality in {"duplicates", "mixed"} else 0),
@@ -181,6 +220,16 @@ def run_matrix(args, qualities, session):
                     "--late-delay-ms", str(args.late_delay_ms), *(["--gateway"] if args.gateway else []),
                     check=False, capture=True)
             (results_dir / (run_id + ".driver.log")).write_text(completed.stdout + completed.stderr)
+            containers = command("ps", "--all", "--quiet", capture=True).stdout.split()
+            applied = [json.loads(line) for line in docker_list("inspect", "--format",
+                       '[{{json .Name}},{{json .HostConfig.NanoCpus}},{{json .HostConfig.Memory}},{{json .State.OOMKilled}}]',
+                       *containers)] if containers else []
+            (results_dir / (run_id + ".limits.json")).write_text(json.dumps({
+                "profile": profile, "requested": limits,
+                "containers": [{"name": name, "nano_cpus": cpu, "memory_bytes": memory, "oom_killed": oom}
+                               for name, cpu, memory, oom in applied]}, indent=2) + "\n")
+            if any(name == f"/{driver_name}" for name, *_ in applied):
+                docker_list("rm", driver_name)
             log = command("logs", "--no-color", "jobmanager", "taskmanager", *gateway_services, capture=True)
             (results_dir / (run_id + ".containers.log")).write_text(log.stdout)
             containers = command("ps", "--quiet", capture=True).stdout.split()
@@ -201,7 +250,7 @@ def run_matrix(args, qualities, session):
             measured = result.get("measurement", {})
             latency = measured.get("visible_roundtrip_ms", {})
             rows.append({"run_id": run_id, "quality": quality, "dedup": dedup, "late": late, "parallelism": parallelism,
-                "target_rate": rate, "repetition": repetition, "exit_code": completed.returncode,
+                 "target_rate": rate, "resource_profile": profile, "repetition": repetition, "exit_code": completed.returncode,
                 "price_correctness_passed": result.get("price_correctness_passed", False),
                 **{k: v for k, v in measured.items() if not isinstance(v, dict)},
                 **{"latency_" + k + "_ms": latency.get(k) for k in ["p50", "p95", "p99", "max"]}})

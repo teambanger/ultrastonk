@@ -13,6 +13,15 @@ BENCHMARKS = Path(__file__).resolve().parents[1]
 
 
 class MatrixSafetyTests(unittest.TestCase):
+    def test_resource_profiles_parse_and_reject_unsafe_overrides(self):
+        self.assertEqual(matrix.resource_profiles(["open=", "tight=taskmanager:0.5:2g,gateway:-:512m"], True),
+                         {"open": {}, "tight": {"taskmanager": {"cpus": "0.5", "mem_limit": "2g"},
+                                                 "gateway": {"mem_limit": "512m"}}})
+        for spec in ("x=taskmanager:0:2g", "x=gateway:1:1g", "x=taskmanager:1:2g,taskmanager:2:2g",
+                     "x=kafka:-:-", "x=unknown:1:1g"):
+            with self.subTest(spec=spec), self.assertRaises(ValueError):
+                matrix.resource_profiles([spec], False)
+
     def test_existing_explicit_project_is_not_built_stopped_or_removed(self):
         for resource in ("ps", "network", "volume"):
             with self.subTest(resource=resource):

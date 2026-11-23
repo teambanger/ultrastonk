@@ -216,8 +216,10 @@ def main():
     def telemetry():
         while not sample_stop.is_set():
             sample = {"timestamp": time.time()}
-            for name, url in {"jobs": "http://jobmanager:8081/jobs/overview",
-                              "workers": "http://jobmanager:8081/taskmanagers"}.items():
+            endpoints = {"jobs": "http://jobmanager:8081/jobs/overview", "workers": "http://jobmanager:8081/taskmanagers"}
+            if socket:
+                endpoints["gateway"] = "http://gateway:8080/health"
+            for name, url in endpoints.items():
                 try:
                     sample[name] = request_json(url)
                 except Exception as exc:
@@ -227,9 +229,13 @@ def main():
     telemetry_thread = threading.Thread(target=telemetry, daemon=True)
     telemetry_thread.start()
     delivery_errors = []
+    progress = []
+
     def delivered(error, message):
         if error:
             delivery_errors.append(str(error))
+        else:
+            counters["acknowledged_input"] += 1
     def publish(event, measured):
         key = signature(event)
         if measured:
@@ -238,6 +244,7 @@ def main():
                 identity = key if dedup == "EXACT" else key[:2]
                 if dedup == "NONE" or identity not in seen:
                     expected[key] += 1
+                    counters["expected_prices_so_far"] += 1
                     seen.add(identity)
         raw = json.dumps(event, separators=(",", ":")).encode()
         while True:
@@ -245,6 +252,7 @@ def main():
                 producer.produce(input_topic, key=event["ticker"], value=raw, on_delivery=delivered)
                 break
             except BufferError:
+                counters["producer_queue_full"] += 1
                 producer.poll(.01)
         counters["input_records" if measured else "warmup_records"] += 1
     started = time.monotonic()
@@ -252,8 +260,24 @@ def main():
     deadline = measured_start + args.duration
     next_sample = started
     sequence = 0
+    next_progress = measured_start
+
+    def sample_progress(now):
+        with lock:
+            progress.append({"epoch_seconds": time.time(), "elapsed_seconds": now - measured_start,
+                             "originals": counters["measured_originals"],
+                             "input_enqueued": counters["input_records"] + counters["warmup_records"],
+                             "input_acknowledged": counters["acknowledged_input"],
+                             "producer_queue_full": counters["producer_queue_full"],
+                             "expected_measured_prices": counters["expected_prices_so_far"],
+                             "committed_measured_prices": counters["price"],
+                             **({"websocket_measured_prices": counters["websocket_price"]} if socket else {})})
+
     while time.monotonic() < deadline:
         now = time.monotonic()
+        if now >= next_progress:
+            sample_progress(now)
+            next_progress = now + 1
         if now < next_sample:
             time.sleep(min(.001, next_sample - now))
             producer.poll(0)
@@ -270,6 +294,8 @@ def main():
         # Warmup symbols are disjoint so they do not enter measured result counts/state.
         if not measured:
             event["ticker"] = "W" + event["ticker"]
+        else:
+            counters["measured_originals"] += 1
         publish(event, measured)
         if rng.random() < args.duplicate_rate:
             publish(event, measured)
@@ -277,6 +303,8 @@ def main():
                 counters["injected_duplicates"] += 1
         next_sample += 1 / args.rate
         producer.poll(0)
+    load_finished = time.monotonic()
+    sample_progress(load_finished)
     if producer.flush(30):
         delivery_errors.append("producer flush timed out")
     produced_at = time.monotonic()
@@ -304,6 +332,7 @@ def main():
         socket.close()
     sample_stop.set()
     telemetry_thread.join(6)
+    sample_progress(time.monotonic())
     missing = expected - actual
     extra = actual - expected
     final_arrival = last_arrival.get("kafka", produced_at)
@@ -313,13 +342,15 @@ def main():
               "measurement": {"input_records": counters["input_records"], "observed_prices": sum(actual.values()),
                   "expected_prices": sum(expected.values()), "missing_prices": sum(missing.values()),
                   "unexpected_prices": sum(extra.values()), "producer_seconds": produced_at - measured_start,
-                  "drain_seconds": max(0, final_arrival - produced_at),
+                   "drain_seconds": max(0, final_arrival - produced_at),
+                   "achieved_originals_per_second": counters["measured_originals"] / max(.001, load_finished - measured_start),
                   "input_records_per_second": counters["input_records"] / max(.001, produced_at - measured_start),
                   "committed_prices_per_second": sum(actual.values()) / max(.001, final_arrival - measured_start),
                    "visible_roundtrip_ms": quantiles(latency_samples["kafka"]), "event_age_at_visibility_ms": quantiles(event_age_sample)},
               "counters": dict(counters), "errors": errors + delivery_errors,
               "price_correctness_passed": not missing and not extra and not errors and not delivery_errors,
               "telemetry": stats_samples,
+              "progress": progress,
               "missing_examples": [[list(k), v] for k, v in list(missing.items())[:10]],
               "extra_examples": [[list(k), v] for k, v in list(extra.items())[:10]]}
     if socket:
@@ -342,7 +373,7 @@ def main():
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
     (output / (args.run_id + ".json")).write_text(json.dumps(result, indent=2) + "\n")
-    print(json.dumps({k: v for k, v in result.items() if k not in {"telemetry", "missing_examples", "extra_examples"}}, indent=2))
+    print(json.dumps({k: v for k, v in result.items() if k not in {"telemetry", "progress", "missing_examples", "extra_examples"}}, indent=2))
     if not result["price_correctness_passed"] or not result.get("gateway_correctness_passed", True):
         raise SystemExit(1)
 

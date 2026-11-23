@@ -30,9 +30,9 @@ Sink histograms do not include Kafka acknowledgement, checkpoint commit, or gate
 
 The dashboard includes task busy/backpressure time, JVM heap, JVM CPU, GC, checkpoint duration/size/failures, restarts, source consumer lag, and scrape health. Flink also exposes native connector metrics and latency markers. Kafka Exporter reports partition offsets, broker/topic metadata, and consumer lag; it does not expose all Kafka JVM/JMX internals. Benchmark runs preserve Docker resource snapshots, while the optional Prometheus export captures Flink resource time series throughout the run.
 
-Alert rules cover unavailable Flink endpoints, high durable consumer lag, checkpoint failures, and invalid input. They are evaluated and visible in Prometheus; no external notification receiver is configured. The thresholds are starting points for experiments, not measured service objectives.
+The benchmark captures metrics with `--monitoring`; `--dashboards` additionally starts Grafana, Alloy, and Loki. Deployment alerts are not part of the experiment stack.
 
-Loki's WAL is persisted under `/loki/wal`. It stops accepting writes when its storage filesystem exceeds `LOKI_WAL_DISK_FULL_THRESHOLD` (default 0.9). Provision adequate free disk space; log readiness and data availability must be checked separately from metric scrape health. `monitoring/check.py` verifies Grafana, required scrape targets, and the presence of stored Flink logs. A WAL disk-pressure alert exposes this failure mode.
+Loki's WAL is persisted under `/loki/wal`. It stops accepting writes when its storage filesystem exceeds `LOKI_WAL_DISK_FULL_THRESHOLD` (default 0.9). Provision adequate free disk space; log readiness and data availability must be checked separately from metric scrape health. `monitoring/check.py` verifies Grafana, required scrape targets, and the presence of stored Flink logs.
 
 ## Structured logs
 
