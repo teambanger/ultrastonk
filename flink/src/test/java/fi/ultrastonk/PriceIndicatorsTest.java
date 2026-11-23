@@ -26,6 +26,26 @@ class PriceIndicatorsTest {
                 .map(x -> (EventProcessed) ((StreamRecord<?>) x).getValue()).toList();
     }
 
+    @Test void equalityFromBelowEmitsNoAdvisoryThenUpwardDepartureEmitsBuy() throws Exception {
+        try (var h = harness()) {
+            h.open();
+            for (int i = 0; i < 33; i++) {
+                double close = i == 0 ? 39 : i <= 30 ? 0.01 : i == 31 ? 0.6744287344315342 : 1000;
+                send(h, i * 300000L + 1000, "AAA.FR", close);
+                h.processWatermark(new Watermark((i + 1) * 300000L - 1));
+            }
+            long equalityTime = 31 * 300000L + 1000;
+            long departureTime = 32 * 300000L + 1000;
+            var equality = events(h).stream().filter(e -> e.timestamp_emit == equalityTime).toList();
+            assertEquals(List.of("price", "EMA38", "EMA100"), equality.stream().map(e -> e.type).toList());
+            assertEquals(0.433211324148742, equality.get(1).value);
+            assertEquals(equality.get(1).value, equality.get(2).value);
+            var departure = events(h).stream().filter(e -> e.timestamp_emit == departureTime).toList();
+            assertEquals(List.of("price", "EMA38", "EMA100", "BUY"), departure.stream().map(e -> e.type).toList());
+            assertEquals(1000.0, departure.get(3).value);
+        }
+    }
+
     @Test void emitsOnlyOnCrossoverIncludingInitialEquality() throws Exception {
         try (var h = harness()) {
             h.open();
@@ -41,6 +61,29 @@ class PriceIndicatorsTest {
             assertEquals(List.of(301000L, 9301000L, 9901000L), signals.stream().map(e -> e.timestamp_emit).toList());
             assertEquals(List.of(39.0, 0.01, 1000.0), signals.stream().map(e -> e.value).toList());
             assertEquals(1, events(h).stream().filter(e -> e.ticker.equals("ZERO.FR") && e.type.equals("BUY")).count());
+        }
+    }
+
+    @Test void equalityEmitsNoAdvisoryButDepartureDownwardEmitsSell() throws Exception {
+        try (var h = harness()) {
+            h.open();
+            for (int i = 0; i < 30; i++) {
+                send(h, i * 300000L + 1000, "AAA.FR", i == 0 ? 39 : 0.01);
+                h.processWatermark(new Watermark((i + 1) * 300000L - 1));
+            }
+            send(h, 9001000, "AAA.FR", 0.26939267788804794);
+            h.processWatermark(new Watermark(9299999));
+            var equalityWindow = events(h).stream().filter(e -> e.timestamp_emit == 9001000).toList();
+            assertEquals(List.of("price", "EMA38", "EMA100"), equalityWindow.stream().map(e -> e.type).toList());
+            assertEquals(0.4334747338241805, equalityWindow.get(1).value);
+            assertEquals(equalityWindow.get(1).value, equalityWindow.get(2).value);
+
+            send(h, 9301000, "AAA.FR", 0.01);
+            h.processWatermark(new Watermark(9599999));
+            var departure = events(h).stream().filter(e -> e.timestamp_emit == 9301000).toList();
+            assertEquals(List.of("price", "EMA38", "EMA100", "SELL"), departure.stream().map(e -> e.type).toList());
+            assertTrue(departure.get(1).value < departure.get(2).value);
+            assertEquals(0.01, departure.get(3).value);
         }
     }
 
