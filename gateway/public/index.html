@@ -53,6 +53,12 @@
   <tbody id="rows"></tbody>
 </table>
 </div>
+<div class="wrap">
+<table>
+  <thead><tr><th>Ticker</th><th>Signal</th><th>Signal EMA38</th><th>Signal EMA100</th><th>Trigger window (UTC)</th></tr></thead>
+  <tbody id="signalRows"></tbody>
+</table>
+</div>
 
 <div class="legend row">
   <b id="chartTitle">Click a row to chart it</b>
@@ -94,7 +100,7 @@ function connect() {
     log(m.data);
     if (msg.type === 'history' && Array.isArray(msg.events)) {
       const d = entry(msg.ticker);
-      d.series = Object.create(null); d.last = Object.create(null); d.signal = null; d.emaByTime.clear(); d.count = 0;
+      d.series = Object.create(null); d.last = Object.create(null); d.signal = null; d.signals = []; d.emaByTime.clear(); d.count = 0;
       for (const e of msg.events) addEvent(e, false);
     } else if (msg.type === 'error' && !msg.ticker) {
       // shown in the log only
@@ -108,7 +114,7 @@ function connect() {
 function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
 
 function entry(ticker) {
-  if (!data.has(ticker)) data.set(ticker, { series: Object.create(null), last: Object.create(null), signal: null, emaByTime: new Map(), latency: null, count: 0 });
+  if (!data.has(ticker)) data.set(ticker, { series: Object.create(null), last: Object.create(null), signal: null, signals: [], emaByTime: new Map(), latency: null, count: 0 });
   return data.get(ticker);
 }
 
@@ -126,10 +132,14 @@ function addEvent(e, live) {
     if (!d.emaByTime.has(e.timestamp_emit)) d.emaByTime.set(e.timestamp_emit, {});
     d.emaByTime.get(e.timestamp_emit)[e.type] = e.value;
     if (d.emaByTime.size > MAX_POINTS) d.emaByTime.delete(d.emaByTime.keys().next().value);
-    if (d.signal && d.signal.t === e.timestamp_emit) d.signal[e.type] = e.value;
+    for (const signal of d.signals) if (signal.t === e.timestamp_emit) signal[e.type] = e.value;
   }
   d.count++;
-  if (e.type === 'BUY' || e.type === 'SELL') d.signal = { type: e.type, t: e.timestamp_emit, ...d.emaByTime.get(e.timestamp_emit) };
+  if (e.type === 'BUY' || e.type === 'SELL') {
+    d.signal = { type: e.type, t: e.timestamp_emit, ...d.emaByTime.get(e.timestamp_emit) };
+    d.signals.push(d.signal);
+    if (d.signals.length > MAX_POINTS) d.signals.shift();
+  }
   if (live) d.latency = Date.now() - e.timestamp_emit;
   if (!selected) selected = e.ticker;
 }
@@ -143,18 +153,23 @@ let pending = false;
 function scheduleRender() { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; render(); }); } }
 
 const fmt = (v) => (v === undefined ? '–' : Number(v).toFixed(4));
+function signalWindow(signal) {
+  const size = Number($('windowSize').value);
+  const start = signal && Number.isSafeInteger(size) && size > 0 ? Math.floor(signal.t / size) * size : null;
+  return start === null || !Number.isFinite(new Date(start + size).getTime()) ? '–' : `${new Date(start).toISOString()} – ${new Date(start + size).toISOString()}`;
+}
 function render() {
   const rows = [...data.entries()].filter(([t]) => subscribed.has(t)).map(([t, d]) => {
     const sig = d.signal ? `<span class="${d.signal.type}">${d.signal.type}</span> ${new Date(d.signal.t).toLocaleTimeString()}` : '–';
-    const size = Number($('windowSize').value);
-    const start = d.signal && Number.isSafeInteger(size) && size > 0 ? Math.floor(d.signal.t / size) * size : null;
-    const window = start === null || !Number.isFinite(new Date(start + size).getTime()) ? '–' : `${new Date(start).toISOString()} – ${new Date(start + size).toISOString()}`;
+    const window = signalWindow(d.signal);
     return `<tr data-t="${t}" class="${t === selected ? 'sel' : ''}"><td>${t}</td><td>${fmt(d.last.price)}</td>`
       + `<td>${fmt(d.last.EMA38)}</td><td>${fmt(d.last.EMA100)}</td><td>${sig}</td>`
       + `<td>${fmt(d.signal?.EMA38)}</td><td>${fmt(d.signal?.EMA100)}</td><td>${window}</td>`
       + `<td>${d.latency ?? '–'}</td><td>${d.count}</td></tr>`;
   });
   $('rows').innerHTML = rows.join('');
+  $('signalRows').innerHTML = [...data.entries()].filter(([t]) => subscribed.has(t)).flatMap(([t, d]) =>
+    d.signals.slice(-10).reverse().map((s) => `<tr><td>${t}</td><td class="${s.type}">${s.type}</td><td>${fmt(s.EMA38)}</td><td>${fmt(s.EMA100)}</td><td>${signalWindow(s)}</td></tr>`)).join('');
   drawChart();
 }
 

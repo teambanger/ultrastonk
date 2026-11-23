@@ -8,7 +8,7 @@ const vm = require('node:vm');
 test('browser displays the window and matching EMA values for live and history advisories', () => {
   const html = fs.readFileSync(require.resolve('../public/index.html'), 'utf8');
   const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
-  const elements = Object.fromEntries(['url', 'tickers', 'sub', 'unsub', 'status', 'rows', 'chart', 'chartTitle', 'log', 'windowSize'].map((id) => [id, {
+  const elements = Object.fromEntries(['url', 'tickers', 'sub', 'unsub', 'status', 'rows', 'signalRows', 'chart', 'chartTitle', 'log', 'windowSize'].map((id) => [id, {
     value: id === 'tickers' ? 'AAA.FR' : id === 'windowSize' ? '300000' : '',
     textContent: '', innerHTML: '', clientWidth: 500, clientHeight: 260,
     getContext: () => new Proxy({}, { get: () => () => {} }),
@@ -32,15 +32,19 @@ test('browser displays the window and matching EMA values for live and history a
   assert.match(elements.rows.innerHTML, /BUY.*12\.3457.*10\.1235/);
   receive(event('SELL', 601000, 0));
   assert.match(elements.rows.innerHTML, /SELL.*88\.0000.*99\.0000/);
+  assert.match(elements.signalRows.innerHTML, /BUY.*12\.3457.*10\.1235.*1970-01-01T00:05:00\.000Z/);
+  assert.match(elements.signalRows.innerHTML, /SELL.*88\.0000.*99\.0000.*1970-01-01T00:10:00\.000Z/);
   assert.match(elements.rows.innerHTML, /1970-01-01T00:10:00\.000Z.*1970-01-01T00:15:00\.000Z/);
   receive(event('BUY', 901000, 50));
   assert.match(elements.rows.innerHTML, /BUY.*<td>–<\/td><td>–<\/td>/);
   receive(event('EMA100', 901000, 11));
   receive(event('EMA38', 901000, 22));
   assert.match(elements.rows.innerHTML, /BUY.*22\.0000.*11\.0000/);
+  assert.match(elements.signalRows.innerHTML, /BUY.*22\.0000.*11\.0000.*1970-01-01T00:15:00\.000Z/);
   elements.windowSize.value = '600000';
   elements.windowSize.oninput();
   assert.match(elements.rows.innerHTML, /1970-01-01T00:10:00\.000Z.*1970-01-01T00:20:00\.000Z/);
   receive({ type: 'history', ticker: 'AAA.FR', events: [event('SELL', 1201000, 5)] });
   assert.match(elements.rows.innerHTML, /SELL.*<td>–<\/td><td>–<\/td>/);
+  assert.doesNotMatch(elements.signalRows.innerHTML, /BUY/);
 });
