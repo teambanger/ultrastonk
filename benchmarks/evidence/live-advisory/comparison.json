@@ -1,0 +1,2074 @@
+{
+  "expected": [
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "price",
+      "value": 100,
+      "count": 2
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "price",
+      "value": 150,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "BUY",
+      "value": 250,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "EMA100",
+      "value": 4.95049505,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "EMA38",
+      "value": 12.820512821,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "price",
+      "value": 200,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "price",
+      "value": 250,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789900,
+      "type": "price",
+      "value": 999,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "EMA100",
+      "value": 10.793059504,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "EMA38",
+      "value": 27.547666009,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "price",
+      "value": 300,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "BUY",
+      "value": 50,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "EMA100",
+      "value": 0.99009901,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "EMA38",
+      "value": 2.564102564,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "price",
+      "value": 50,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "BUY",
+      "value": 39,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "EMA100",
+      "value": 0.772277228,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "EMA38",
+      "value": 2.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "price",
+      "value": 39,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "EMA100",
+      "value": 0.757182629,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "EMA38",
+      "value": 1.897948718,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "EMA100",
+      "value": 0.742386934,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "EMA38",
+      "value": 1.801130835,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "EMA100",
+      "value": 0.727884222,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "EMA38",
+      "value": 1.709277972,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "EMA100",
+      "value": 0.713668693,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "EMA38",
+      "value": 1.622135512,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "EMA100",
+      "value": 0.699734659,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "EMA38",
+      "value": 1.539461896,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "EMA100",
+      "value": 0.686076547,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "EMA38",
+      "value": 1.461027952,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "EMA100",
+      "value": 0.672688893,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "EMA38",
+      "value": 1.386616262,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "EMA100",
+      "value": 0.659566341,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "EMA38",
+      "value": 1.316020557,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "EMA100",
+      "value": 0.646703641,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "EMA38",
+      "value": 1.249045143,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "EMA100",
+      "value": 0.634095648,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "EMA38",
+      "value": 1.185504367,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "EMA100",
+      "value": 0.621737318,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "EMA38",
+      "value": 1.125222092,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "EMA100",
+      "value": 0.609623708,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "EMA38",
+      "value": 1.068031215,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "EMA100",
+      "value": 0.597749971,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "EMA38",
+      "value": 1.013773204,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "EMA100",
+      "value": 0.586111358,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "EMA38",
+      "value": 0.962297655,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "EMA100",
+      "value": 0.574703212,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "EMA38",
+      "value": 0.913461878,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "EMA100",
+      "value": 0.56352097,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "EMA38",
+      "value": 0.8671305,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "EMA100",
+      "value": 0.552560159,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "EMA38",
+      "value": 0.823175089,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "EMA100",
+      "value": 0.541816393,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "EMA38",
+      "value": 0.781473803,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "EMA100",
+      "value": 0.531285376,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "EMA38",
+      "value": 0.741911044,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "EMA100",
+      "value": 0.520962893,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "EMA38",
+      "value": 0.704377144,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "EMA100",
+      "value": 0.510844816,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "EMA38",
+      "value": 0.66876806,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "EMA100",
+      "value": 0.500927097,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "EMA38",
+      "value": 0.634985082,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "EMA100",
+      "value": 0.491205768,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "EMA38",
+      "value": 0.602934565,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "EMA100",
+      "value": 0.481676941,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "EMA38",
+      "value": 0.572527664,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "EMA100",
+      "value": 0.472336804,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "EMA38",
+      "value": 0.543680092,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "EMA100",
+      "value": 0.463181619,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "EMA38",
+      "value": 0.516311882,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "EMA100",
+      "value": 0.454207726,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "EMA38",
+      "value": 0.49034717,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "EMA100",
+      "value": 0.445411533,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "EMA38",
+      "value": 0.465713982,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "EMA100",
+      "value": 0.436789523,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "EMA38",
+      "value": 0.442344034,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "EMA100",
+      "value": 0.428338245,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "EMA38",
+      "value": 0.420172545,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "SELL",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "EMA100",
+      "value": 0.42005432,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "EMA38",
+      "value": 0.399138056,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "BUY",
+      "value": 1000,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "EMA100",
+      "value": 20.21371661,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "EMA38",
+      "value": 51.66072072,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "price",
+      "value": 1000,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH0.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH1.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH2.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH3.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH4.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH5.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    }
+  ],
+  "actual": [
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "price",
+      "value": 100.0,
+      "count": 2
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "price",
+      "value": 150.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "BUY",
+      "value": 250.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "EMA100",
+      "value": 4.95049505,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "EMA38",
+      "value": 12.820512821,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "price",
+      "value": 200.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789800,
+      "type": "price",
+      "value": 250.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443789900,
+      "type": "price",
+      "value": 999.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "EMA100",
+      "value": 10.793059504,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "EMA38",
+      "value": 27.547666009,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14A.FR",
+      "timestamp_emit": 1795443790200,
+      "type": "price",
+      "value": 300.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "BUY",
+      "value": 50.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "EMA100",
+      "value": 0.99009901,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "EMA38",
+      "value": 2.564102564,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14B.FR",
+      "timestamp_emit": 1795443789200,
+      "type": "price",
+      "value": 50.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "BUY",
+      "value": 39.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "EMA100",
+      "value": 0.772277228,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "EMA38",
+      "value": 2.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443789100,
+      "type": "price",
+      "value": 39.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "EMA100",
+      "value": 0.757182629,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "EMA38",
+      "value": 1.897948718,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443790100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "EMA100",
+      "value": 0.742386934,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "EMA38",
+      "value": 1.801130835,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443791100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "EMA100",
+      "value": 0.727884222,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "EMA38",
+      "value": 1.709277972,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443792100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "EMA100",
+      "value": 0.713668693,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "EMA38",
+      "value": 1.622135512,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443793100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "EMA100",
+      "value": 0.699734659,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "EMA38",
+      "value": 1.539461896,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443794100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "EMA100",
+      "value": 0.686076547,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "EMA38",
+      "value": 1.461027952,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443795100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "EMA100",
+      "value": 0.672688893,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "EMA38",
+      "value": 1.386616262,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443796100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "EMA100",
+      "value": 0.659566341,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "EMA38",
+      "value": 1.316020557,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443797100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "EMA100",
+      "value": 0.646703641,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "EMA38",
+      "value": 1.249045143,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443798100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "EMA100",
+      "value": 0.634095648,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "EMA38",
+      "value": 1.185504367,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443799100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "EMA100",
+      "value": 0.621737318,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "EMA38",
+      "value": 1.125222092,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443800100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "EMA100",
+      "value": 0.609623708,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "EMA38",
+      "value": 1.068031215,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443801100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "EMA100",
+      "value": 0.597749971,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "EMA38",
+      "value": 1.013773204,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443802100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "EMA100",
+      "value": 0.586111358,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "EMA38",
+      "value": 0.962297655,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443803100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "EMA100",
+      "value": 0.574703212,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "EMA38",
+      "value": 0.913461878,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443804100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "EMA100",
+      "value": 0.56352097,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "EMA38",
+      "value": 0.8671305,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443805100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "EMA100",
+      "value": 0.552560159,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "EMA38",
+      "value": 0.823175089,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443806100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "EMA100",
+      "value": 0.541816393,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "EMA38",
+      "value": 0.781473803,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443807100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "EMA100",
+      "value": 0.531285376,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "EMA38",
+      "value": 0.741911044,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443808100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "EMA100",
+      "value": 0.520962893,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "EMA38",
+      "value": 0.704377144,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443809100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "EMA100",
+      "value": 0.510844816,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "EMA38",
+      "value": 0.66876806,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443810100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "EMA100",
+      "value": 0.500927097,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "EMA38",
+      "value": 0.634985082,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443811100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "EMA100",
+      "value": 0.491205768,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "EMA38",
+      "value": 0.602934565,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443812100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "EMA100",
+      "value": 0.481676941,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "EMA38",
+      "value": 0.572527664,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443813100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "EMA100",
+      "value": 0.472336804,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "EMA38",
+      "value": 0.543680092,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443814100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "EMA100",
+      "value": 0.463181619,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "EMA38",
+      "value": 0.516311882,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443815100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "EMA100",
+      "value": 0.454207726,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "EMA38",
+      "value": 0.49034717,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443816100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "EMA100",
+      "value": 0.445411533,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "EMA38",
+      "value": 0.465713982,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443817100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "EMA100",
+      "value": 0.436789523,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "EMA38",
+      "value": 0.442344034,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443818100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "EMA100",
+      "value": 0.428338245,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "EMA38",
+      "value": 0.420172545,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "SELL",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443819100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "EMA100",
+      "value": 0.42005432,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "EMA38",
+      "value": 0.399138056,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443820100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "BUY",
+      "value": 1000.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "EMA100",
+      "value": 20.21371661,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "EMA38",
+      "value": 51.66072072,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14C.FR",
+      "timestamp_emit": 1795443821100,
+      "type": "price",
+      "value": 1000.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH0.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH1.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH2.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH3.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH4.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FINISH5.FR",
+      "timestamp_emit": 1795443823000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH0.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH1.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH2.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH3.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH4.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vc00442ce14FLUSH5.FR",
+      "timestamp_emit": 1795443822000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "run": "Vc00442ce14",
+  "crossover_ticker": "Vc00442ce14C.FR",
+  "base": 1795443789000,
+  "window_ms": 1000,
+  "dedup": "NONE",
+  "late": "DROP",
+  "quarantined": 2,
+  "websocket_clients": 3
+}
