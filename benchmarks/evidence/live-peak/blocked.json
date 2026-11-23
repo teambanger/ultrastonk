@@ -1,0 +1,63 @@
+{
+  "phase": "scored",
+  "ticket": "07",
+  "status": "blocked",
+  "reason": "host_not_idle",
+  "branch": "integration/report-evidence",
+  "cap": {
+    "kind": "hard_wall_clock",
+    "duration_minutes": 40,
+    "start_utc": "2026-11-23T17:41:43Z",
+    "end_utc": "2026-11-23T18:21:43Z"
+  },
+  "precondition_check": {
+    "required": "docker ps shows no ultrastonk-* containers AND `ps -ef | grep sort_week` is empty",
+    "docker_ps_ultrastonk": "FAIL - foreign project ultrastonk-fullweek-3 running",
+    "sort_week_process": "PASS - empty",
+    "verdict": "host not idle; scored run must not start on top of it"
+  },
+  "foreign_project": {
+    "compose_project": "ultrastonk-fullweek-3",
+    "owner": "another session (ticket 06 full-week reference replay)",
+    "worktree": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/.kilo/worktrees/full-week-queries",
+    "run_dir": "/mnt/shared/data/ultrastonk-full-week/run3",
+    "observed_containers": [
+      "ultrastonk-fullweek-3-taskmanager-1",
+      "ultrastonk-fullweek-3-taskmanager-2",
+      "ultrastonk-fullweek-3-gateway-1",
+      "ultrastonk-fullweek-3-kafka-1"
+    ],
+    "note": "The peer's measured work completed (evidence/compare.json written 17:50Z) but its TaskManagers entered a crash/restart loop (RestartCount>=1, 'jobmanager/<unresolved>:6123' unreachable, no JobManager present) and did not self-terminate; Kafka and gateway stayed Up. The foreign project was never touched, stopped or inspected destructively.",
+    "touched_by_this_run": false
+  },
+  "recheck_timeline": [
+    {"t": "2026-11-23T17:41:43Z", "observed": "emitter Up, gateway health:starting, kafka-1 ~166% CPU"},
+    {"t": "2026-11-23T17:43:22Z", "observed": "emitter/gateway/kafka running"},
+    {"t": "2026-11-23T17:45:52Z", "observed": "taskmanagers+jobmanager added (Flink job starting)"},
+    {"t": "2026-11-23T17:47:53Z", "observed": "jobmanager gone; taskmanagers+gateway+kafka running"},
+    {"t": "2026-11-23T17:53:29Z", "observed": "taskmanagers 176% CPU each, kafka 111%; peer compare.json written 17:50Z"},
+    {"t": "2026-11-23T17:54:02Z", "observed": "taskmanagers crash-looping (restart), gateway+kafka Up"},
+    {"t": "2026-11-23T18:02:03Z", "observed": "taskmanagers still Up (restarted again), gateway+kafka Up 20m"}
+  ],
+  "waited_and_rechecked_seconds_approx": 1230,
+  "decision": "Do not start the scored run: the runbook requires an otherwise idle host, and starting a paced replay plus a second Kafka/Flink stack alongside the foreign project would invalidate both results. Held and re-checked; the host never became idle inside the cap.",
+  "not_produced": [
+    "slices/peak-warm.csv and its manifest (host-I/O extraction deliberately not run on a contended host)",
+    "run-plan.json (depends on slice manifests)",
+    "runs/ per-run artifacts",
+    "ledger.json entries",
+    "oracle-warm.jsonl",
+    "compare-warm-*.json",
+    "summary.json"
+  ],
+  "measurements_taken": "none",
+  "intended_downscale": {
+    "pacing": "SPEED_MULTIPLIER=1, PACING=capture",
+    "state": "warm only",
+    "pre_roll_ms": 120000,
+    "trailing_ms": 90000,
+    "flink_bounded_replay": false,
+    "repeats": "not decided - no repetition ran",
+    "measured_segment": "unchanged 1,223,873-row five-minute slice, FR/NL/ETR mix"
+  }
+}

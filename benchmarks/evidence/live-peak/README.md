@@ -3,7 +3,9 @@
 This directory is written by `benchmarks/peak_slice.py` and
 `benchmarks/live_peak.py` during the **scored phase**. It is intentionally empty
 of results until that phase runs: no measurement has been taken here yet. The
-method, pre-registered plan and decision rules are in
+scored phase was attempted on 2026-11-23 but could not run because the host was
+not idle; [`blocked.json`](blocked.json) records the host-contention evidence and
+the re-check timeline. The method, pre-registered plan and decision rules are in
 [`docs/live-peak.md`](../../../docs/live-peak.md).
 
 ## Layout

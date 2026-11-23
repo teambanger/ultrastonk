@@ -1,9 +1,12 @@
 # Live peak-load measurement (ticket 07)
 
 This is the preparation record and runbook for measuring the system under the
-official-week peak load. **No measurement has been taken yet.** Nothing here is
-a capacity, latency or correctness result: the scored runs are a second phase,
-triggered only when the host has no other scored workload running.
+official-week peak load. **The scored phase was attempted on 2026-11-23 but could
+not run: the host was not idle.** No scored measurement has been taken, and
+nothing here is a capacity, latency or correctness result. See
+[Scored results](#scored-results-2026-11-23--not-executed) below. The scored runs
+are a second phase, triggered only when the host has no other scored workload
+running.
 
 Peak load is offered by replaying a slice of the official DEBS CSV at recorded
 capture pace (`PACING=capture`, ticket 05) on an isolated Compose project. The
@@ -240,3 +243,56 @@ resource configuration. They are not a capacity claim, not a full-week claim, an
 not a live-policy correctness expectation; they are the peak-window behaviour of
 the measured configuration, with deviations from complete-input truth attributed
 as above.
+
+## Scored results (2026-11-23) — not executed
+
+The scored phase was attempted on 2026-11-23 on branch `integration/report-evidence`
+under a hard 40-minute wall-clock cap, but **no measurement was taken: the host was
+not idle.** The runbook requires the scored phase to run on an otherwise idle host,
+and the pre-start check failed: `docker ps` showed a foreign, actively-running
+Compose project, `ultrastonk-fullweek-3` (ticket 06's full-week reference replay, in
+the `full-week-queries` worktree), present for the whole window. Per the idle-host
+rule the run was held and re-checked rather than started on top of the other
+workload, and that project was never touched. `ps -ef | grep sort_week` was empty.
+
+The foreign project's measured work finished early (`run3/evidence/compare.json`
+written 17:50Z), but its TaskManagers entered a crash/restart loop (no JobManager
+reachable) and stayed Up with Kafka and the gateway for the rest of the window, so
+the host never became idle. With a single warm 1x run needing ~8.5 min of capture
+plus startup/drain and the slice extraction, no valid scored run fitted inside the
+remaining cap once the host freed.
+
+### Intended downscale (pre-registered conditions unchanged; campaign size reduced)
+
+- capture pace `SPEED_MULTIPLIER=1`, `PACING=capture`, **warm state only** — no 1.25x
+  and no forced-cold variant;
+- pre-roll **120 s** and trailing **90 s**, overriding the 300 s / 180 s defaults;
+- `FLINK_BOUNDED_REPLAY=false` — a live paced replay, not preload-and-process;
+- repeats: **two if one repetition costs ≤ 5 min wall clock, otherwise one.** Not
+  decided, because no repetition ran;
+- the measured peak segment is unchanged: the `1,223,873`-row five-minute slice with
+  the fixture's FR/NL/ETR mix, which the extractor asserts and fails closed on.
+
+### What was and was not produced
+
+No slice was extracted and no run was executed (extraction is itself a scored-phase
+host-I/O step and was deliberately not run on a contended host), so none of the
+scored evidence exists: no slice CSVs or manifests, no `run-plan.json` (which
+depends on the manifests), no `runs/` artifacts, no `ledger.json` entries, no oracle
+output, no comparison JSON and no `summary.json`. The only artifact is
+`benchmarks/evidence/live-peak/blocked.json`, which records the host-contention
+evidence and the re-check timeline.
+
+### What this result does and does not support
+
+- It does **not** support any pacing, expected-vs-delivered, backlog, drain,
+  restart/OOM, latency (trade or advisory) or oracle-correctness claim: there are no
+  numbers. The live advisory p99 is not merely sparse but absent, so it is
+  **inconclusive** for lack of any run, not for lack of samples.
+- It does **not** support a capacity claim, and a peak high-water-mark on this slice
+  would not have been a full-week claim even had it run; the slice is five minutes of
+  capture order, not the full week.
+- It **does** record that the peak-window configuration could not be scored inside
+  the imposed 40-minute cap on this host because the host was occupied by another
+  scored workload, which is exactly the contended phase this ticket is split out to
+  avoid.
