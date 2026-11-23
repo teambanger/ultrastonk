@@ -130,6 +130,31 @@ class ProfileWeekTest(unittest.TestCase):
             self.assertEqual(result["top_symbol_shares"], {"1": 2 / 3, "10": 1.0, "100": 1.0})
             self.assertEqual(result["one_second_peak"]["rows"], 1)
 
+    def test_raw_peak_counts_full_half_open_interval(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "sample.csv"
+            def row(time):
+                fields = [""] * 40
+                fields[0:4] = ["ABC.FR", "E", "08-11-2021", time]
+                fields[21] = "1"
+                return fields
+            with path.open("w", newline="") as target:
+                target.write("header\n" * 13)
+                csv.writer(target).writerows([row("10:00:00.000"), row("10:00:00.000"),
+                                              row("10:04:59.000"), row("10:04:59.500"),
+                                              row("10:04:59.999")])
+            data = path.read_bytes()
+            (root / "manifest.json").write_text(json.dumps({"doi": "test", "license": "test", "files": [
+                {"key": path.name, "size": len(data), "checksum": "md5:" + hashlib.md5(data).hexdigest()}]}))
+            output = root / "output.json"
+            subprocess.run([sys.executable, str(SCRIPT), "--manifest", str(root / "manifest.json"),
+                            "--data-dir", str(root), "--output", str(output)], check=True)
+            peak = json.loads(output.read_text())["raw_peak"]
+            self.assertEqual(peak["rows"], 5)
+            self.assertEqual(peak["start"], "2021-11-08T10:00:00.000000000")
+            self.assertEqual(peak["end_exclusive"], "2021-11-08T10:05:00.000000000")
+
     def test_trade_peak_starts_at_first_trade_not_earlier_quote(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
