@@ -15,11 +15,17 @@ Trusted numbers (from `summary.json`):
 
 | Condition | Committed/s | Exact delivery | Partition max/mean | Partition CV |
 |---|---:|---|---:|---:|
-| uniform-1000 | 3,924.7 | 80,000 / 80,000 | 1.122 | 0.094 |
-| longtail-1000 | 3,843.8 | exact | 1.692 | 0.320 |
-| longtail-2000 | 3,853.9 | exact | 1.103 | 0.108 |
+| uniform-1000 | 3,982.7 | 80,000 / 80,000 | 1.123 | 0.087 |
+| longtail-1000 | 3,879.9 | exact | 1.271 | 0.157 |
+| longtail-2000 | 3,848.3 | exact | 1.270 | 0.153 |
 
-Scope: one repetition per condition, 20 s, one TaskManager, no gateway; visible latency
+The quoted triple ran with a fixed ticker prefix (`--ticker-prefix B`), so every
+condition shares an identical key set and the partition mapping is reproducible. Two
+earlier triples with per-run prefixes agree on exact delivery and the throughput
+ordering (−2.1%, −2.0%) but their partition numbers moved with the hash; their sessions
+remain under `benchmarks/results/`.
+
+Scope: one repetition per condition (three triples total), 20 s, one TaskManager, no gateway; visible latency
 is commit visibility under 1 s checkpoints. Nothing here is a limit or a scaling law.
 
 Run: `python3 benchmarks/growth.py --tickets 09`. Raw matrix artifacts stay under

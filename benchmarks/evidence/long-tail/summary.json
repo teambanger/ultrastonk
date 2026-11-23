@@ -8,196 +8,199 @@
     "workers": 1
   },
   "commands": {
-    "longtail-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-1000.json",
-    "longtail-2000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-2000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 2000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-2000.json",
-    "uniform-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-uniform-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --skew 0.0"
+    "longtail-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --ticker-prefix B --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-1000.json",
+    "longtail-2000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-2000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 2000 --seed 42 --ticker-prefix B --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-2000.json",
+    "uniform-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-uniform-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --ticker-prefix B --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --skew 0.0"
   },
   "comparisons": {
     "longtail_vs_uniform_1000": {
       "committed_prices_per_second": {
-        "baseline": 3924.704911475037,
-        "changed": 3843.8148707592927,
-        "ratio": 0.9793895228965525
+        "baseline": 3982.7303909503808,
+        "changed": 3879.882959527384,
+        "ratio": 0.9741766523647476
       },
       "input_partition_imbalance.coefficient_of_variation": {
-        "baseline": 0.0942285552526409,
-        "changed": 0.3195425519394874,
-        "ratio": 3.3911434923601007
+        "baseline": 0.08727265107122621,
+        "changed": 0.15694545628975692,
+        "ratio": 1.7983349235222423
       },
       "input_partition_imbalance.max_over_mean": {
-        "baseline": 1.1219999999999999,
-        "changed": 1.6918499999999999,
-        "ratio": 1.5078877005347593
+        "baseline": 1.1229,
+        "changed": 1.2713999999999999,
+        "ratio": 1.1322468608068392
       },
       "latency_ms.p50": {
-        "baseline": 676.7945675019291,
-        "changed": 664.8782409974956,
-        "ratio": 0.9823929932705916
+        "baseline": 662.2142484993674,
+        "changed": 667.8687395033194,
+        "ratio": 1.0085387637260381
       },
       "latency_ms.p95": {
-        "baseline": 1856.7683243396468,
-        "changed": 1965.9518430540636,
-        "ratio": 1.058802984348221
+        "baseline": 1886.5149284560184,
+        "changed": 1585.8664031053197,
+        "ratio": 0.8406328405804037
       },
       "latency_ms.p99": {
-        "baseline": 2654.294217180285,
-        "changed": 2699.265063717321,
-        "ratio": 1.0169426758518163
+        "baseline": 2593.242449792305,
+        "changed": 2315.5517801470673,
+        "ratio": 0.8929175829018694
       }
     },
     "symbols_2000_vs_1000": {
       "committed_prices_per_second": {
-        "baseline": 3843.8148707592927,
-        "changed": 3853.8573566428804,
-        "ratio": 1.0026126351609654
+        "baseline": 3879.882959527384,
+        "changed": 3848.3059161410383,
+        "ratio": 0.9918613412528835
       },
       "input_partition_imbalance.coefficient_of_variation": {
-        "baseline": 0.3195425519394874,
-        "changed": 0.10817905007440211,
-        "ratio": 0.3385434879261034
+        "baseline": 0.15694545628975692,
+        "changed": 0.15338787028314851,
+        "ratio": 0.9773323414980534
       },
       "input_partition_imbalance.max_over_mean": {
-        "baseline": 1.6918499999999999,
-        "changed": 1.1028,
-        "ratio": 0.6518308360670273
+        "baseline": 1.2713999999999999,
+        "changed": 1.27005,
+        "ratio": 0.9989381783860312
       },
       "latency_ms.p50": {
-        "baseline": 664.8782409974956,
-        "changed": 639.1551584965782,
-        "ratio": 0.9613115892282385
+        "baseline": 667.8687395033194,
+        "changed": 698.8744495101855,
+        "ratio": 1.0464248559229234
       },
       "latency_ms.p95": {
-        "baseline": 1965.9518430540636,
-        "changed": 1413.7593688967195,
-        "ratio": 0.7191220750862721
+        "baseline": 1585.8664031053197,
+        "changed": 1864.366294153297,
+        "ratio": 1.1756137153184156
       },
       "latency_ms.p99": {
-        "baseline": 2699.265063717321,
-        "changed": 2199.332899566212,
-        "ratio": 0.8147895251670385
+        "baseline": 2315.5517801470673,
+        "changed": 2317.2354872721185,
+        "ratio": 1.0007271299823597
       }
     }
   },
   "conditions": {
     "longtail-1000": {
-      "achieved_originals_per_second": 3999.994877205621,
+      "achieved_originals_per_second": 3999.9883940343584,
       "benchmark_container": null,
-      "committed_prices_per_second": 3843.8148707592927,
+      "committed_prices_per_second": 3879.882959527384,
       "delivered_prices": 80000,
       "distribution_file": "/results/growth-weights-1000.json",
-      "drain_seconds": 0.8114489720028359,
+      "drain_seconds": 0.6180428020015825,
       "errors": [],
       "exit_code": "0",
       "expected_prices": 80000,
       "gateway_container": null,
       "input_partition_imbalance": {
-        "coefficient_of_variation": 0.3195425519394874,
-        "max_over_mean": 1.6918499999999999,
-        "max_share": 0.281975,
-        "min_share": 0.1229,
+        "coefficient_of_variation": 0.15694545628975692,
+        "max_over_mean": 1.2713999999999999,
+        "max_share": 0.2119,
+        "min_share": 0.1366625,
         "partitions": 6,
         "records": 80000,
         "shares": {
-          "0": 0.281975,
-          "1": 0.15485,
-          "2": 0.138175,
-          "3": 0.1646,
-          "4": 0.1375,
-          "5": 0.1229
+          "0": 0.2119,
+          "1": 0.14065,
+          "2": 0.1700375,
+          "3": 0.1366625,
+          "4": 0.1852625,
+          "5": 0.1554875
         }
       },
       "latency_ms": {
-        "max": 3223.1162579992088,
-        "p50": 664.8782409974956,
-        "p95": 1965.9518430540636,
-        "p99": 2699.265063717321
+        "max": 2886.3529109949013,
+        "p50": 667.8687395033194,
+        "p95": 1585.8664031053197,
+        "p99": 2315.5517801470673
       },
       "latency_samples": 80000,
       "missing_prices": 0,
       "price_correctness_passed": true,
-      "run_id": "a2800a3eddae-000",
-      "skew": 1.2,
+      "prometheus_services": null,
+      "run_id": "ddf66eb58ae5-000",
+      "skew": null,
       "symbols": 1000,
       "unexpected_prices": 0
     },
     "longtail-2000": {
-      "achieved_originals_per_second": 3999.989400226772,
+      "achieved_originals_per_second": 3999.9894484282813,
       "benchmark_container": null,
-      "committed_prices_per_second": 3853.8573566428804,
+      "committed_prices_per_second": 3848.3059161410383,
       "delivered_prices": 80000,
       "distribution_file": "/results/growth-weights-2000.json",
-      "drain_seconds": 0.7576514829997905,
+      "drain_seconds": 0.7871241459943121,
       "errors": [],
       "exit_code": "0",
       "expected_prices": 80000,
       "gateway_container": null,
       "input_partition_imbalance": {
-        "coefficient_of_variation": 0.10817905007440211,
-        "max_over_mean": 1.1028,
-        "max_share": 0.1838,
-        "min_share": 0.1290875,
+        "coefficient_of_variation": 0.15338787028314851,
+        "max_over_mean": 1.27005,
+        "max_share": 0.211675,
+        "min_share": 0.137275,
         "partitions": 6,
         "records": 80000,
         "shares": {
-          "0": 0.171125,
-          "1": 0.1290875,
-          "2": 0.177275,
-          "3": 0.1838,
-          "4": 0.1623625,
-          "5": 0.17635
+          "0": 0.211675,
+          "1": 0.1417375,
+          "2": 0.1710625,
+          "3": 0.137275,
+          "4": 0.1828875,
+          "5": 0.1553625
         }
       },
       "latency_ms": {
-        "max": 2463.8010000053328,
-        "p50": 639.1551584965782,
-        "p95": 1413.7593688967195,
-        "p99": 2199.332899566212
+        "max": 2829.5216510014143,
+        "p50": 698.8744495101855,
+        "p95": 1864.366294153297,
+        "p99": 2317.2354872721185
       },
       "latency_samples": 80000,
       "missing_prices": 0,
       "price_correctness_passed": true,
-      "run_id": "c827d6b5db8e-000",
-      "skew": 1.2,
+      "prometheus_services": null,
+      "run_id": "ff5408db1ae2-000",
+      "skew": null,
       "symbols": 2000,
       "unexpected_prices": 0
     },
     "uniform-1000": {
-      "achieved_originals_per_second": 3999.98689104326,
+      "achieved_originals_per_second": 3999.9885784322564,
       "benchmark_container": null,
-      "committed_prices_per_second": 3924.704911475037,
+      "committed_prices_per_second": 3982.7303909503808,
       "delivered_prices": 80000,
       "distribution_file": null,
-      "drain_seconds": 0.38291081399074756,
+      "drain_seconds": 0.08423968798888382,
       "errors": [],
       "exit_code": "0",
       "expected_prices": 80000,
       "gateway_container": null,
       "input_partition_imbalance": {
-        "coefficient_of_variation": 0.0942285552526409,
-        "max_over_mean": 1.1219999999999999,
-        "max_share": 0.187,
-        "min_share": 0.140825,
+        "coefficient_of_variation": 0.08727265107122621,
+        "max_over_mean": 1.1229,
+        "max_share": 0.18715,
+        "min_share": 0.140175,
         "partitions": 6,
         "records": 80000,
         "shares": {
-          "0": 0.18145,
-          "1": 0.140825,
-          "2": 0.187,
-          "3": 0.1543875,
-          "4": 0.1716875,
-          "5": 0.16465
+          "0": 0.18715,
+          "1": 0.1642125,
+          "2": 0.165775,
+          "3": 0.140175,
+          "4": 0.178325,
+          "5": 0.1643625
         }
       },
       "latency_ms": {
-        "max": 2917.5790440058336,
-        "p50": 676.7945675019291,
-        "p95": 1856.7683243396468,
-        "p99": 2654.294217180285
+        "max": 2836.089076998178,
+        "p50": 662.2142484993674,
+        "p95": 1886.5149284560184,
+        "p99": 2593.242449792305
       },
       "latency_samples": 80000,
       "missing_prices": 0,
       "price_correctness_passed": true,
-      "run_id": "5058cb4b9046-000",
+      "prometheus_services": null,
+      "run_id": "b6e4a0ece593-000",
       "skew": 0.0,
       "symbols": 1000,
       "unexpected_prices": 0
@@ -227,9 +230,9 @@
   },
   "scope": "single repetition; directional; processing path only, no gateway",
   "source_sessions": [
-    "5058cb4b9046",
-    "a2800a3eddae",
-    "c827d6b5db8e"
+    "b6e4a0ece593",
+    "ddf66eb58ae5",
+    "ff5408db1ae2"
   ],
-  "wall_seconds": 163.7392112330126
+  "wall_seconds": 163.84161132900044
 }

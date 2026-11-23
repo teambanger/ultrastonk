@@ -248,6 +248,7 @@ def matrix_command(matrix, condition, *, project, duration, warmup, rate, profil
                "--parallelism", "1", "--dedup", "NONE", "--late", "DROP", "--qualities", "baseline",
                "--repetitions", "1", "--duplicate-rate", "0", "--late-rate", "0",
                "--symbols", str(condition["symbols"]), "--seed", "42",
+               "--ticker-prefix", "B",  # identical key sets, so partition mapping is comparable
                "--resource-profile", f"perworker={profile_spec}"]
     if condition.get("distribution"):
         command += ["--distribution-file", f"/results/growth-weights-{condition['distribution']}.json"]

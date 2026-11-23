@@ -99,6 +99,7 @@ def main():
     parser.add_argument("--gateway", action="store_true", help="measure and validate live WebSocket subscribers")
     parser.add_argument("--clients", type=int, default=1, help="live WebSocket subscribers (requires --gateway)")
     parser.add_argument("--distribution-file", help="JSON with a positive per-symbol 'weights' array (overrides --skew)")
+    parser.add_argument("--ticker-prefix", help="fixed ticker prefix so partition mapping is reproducible across runs")
     args = parser.parse_args()
     if args.duration <= 0 or args.rate <= 0 or args.symbols <= 0 or args.warmup < 0:
         parser.error("duration/rate/symbols must be positive; warmup must be nonnegative")
@@ -113,7 +114,9 @@ def main():
     input_topic = os.getenv("KAFKA_INPUT_TOPIC", "price-events")
     output_topic = os.getenv("KAFKA_OUTPUT_TOPIC", "events-processed")
     dedup = os.getenv("DEDUP_STRATEGY", "NONE").upper()
-    prefix = "B" + args.run_id.replace("-", "") + "_"
+    # A fixed prefix keeps the generated ticker strings (and therefore the Kafka
+    # partition mapping) identical across comparable runs; the default stays unique.
+    prefix = args.ticker_prefix or ("B" + args.run_id.replace("-", "") + "_")
     rng = random.Random(args.seed)
     # A measured distribution is supplied as one positive weight per symbol so the
     # generated symbol population matches the week's ranked shares.

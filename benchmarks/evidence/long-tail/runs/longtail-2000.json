@@ -1,41 +1,42 @@
 {
-  "achieved_originals_per_second": 3999.989400226772,
+  "achieved_originals_per_second": 3999.9894484282813,
   "benchmark_container": null,
-  "committed_prices_per_second": 3853.8573566428804,
+  "committed_prices_per_second": 3848.3059161410383,
   "delivered_prices": 80000,
   "distribution_file": "/results/growth-weights-2000.json",
-  "drain_seconds": 0.7576514829997905,
+  "drain_seconds": 0.7871241459943121,
   "errors": [],
   "exit_code": "0",
   "expected_prices": 80000,
   "gateway_container": null,
   "input_partition_imbalance": {
-    "coefficient_of_variation": 0.10817905007440211,
-    "max_over_mean": 1.1028,
-    "max_share": 0.1838,
-    "min_share": 0.1290875,
+    "coefficient_of_variation": 0.15338787028314851,
+    "max_over_mean": 1.27005,
+    "max_share": 0.211675,
+    "min_share": 0.137275,
     "partitions": 6,
     "records": 80000,
     "shares": {
-      "0": 0.171125,
-      "1": 0.1290875,
-      "2": 0.177275,
-      "3": 0.1838,
-      "4": 0.1623625,
-      "5": 0.17635
+      "0": 0.211675,
+      "1": 0.1417375,
+      "2": 0.1710625,
+      "3": 0.137275,
+      "4": 0.1828875,
+      "5": 0.1553625
     }
   },
   "latency_ms": {
-    "max": 2463.8010000053328,
-    "p50": 639.1551584965782,
-    "p95": 1413.7593688967195,
-    "p99": 2199.332899566212
+    "max": 2829.5216510014143,
+    "p50": 698.8744495101855,
+    "p95": 1864.366294153297,
+    "p99": 2317.2354872721185
   },
   "latency_samples": 80000,
   "missing_prices": 0,
   "price_correctness_passed": true,
-  "run_id": "c827d6b5db8e-000",
-  "skew": 1.2,
+  "prometheus_services": null,
+  "run_id": "ff5408db1ae2-000",
+  "skew": null,
   "symbols": 2000,
   "unexpected_prices": 0
 }

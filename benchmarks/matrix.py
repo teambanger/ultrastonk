@@ -73,6 +73,7 @@ def main():
     parser.add_argument("--symbols", type=int, default=1000)
     parser.add_argument("--skew", type=float, default=1.2)
     parser.add_argument("--distribution-file", help="per-symbol weights JSON visible inside the benchmark container")
+    parser.add_argument("--ticker-prefix", help="fixed ticker prefix for reproducible partition mapping")
     parser.add_argument("--clients", type=int, default=1, help="live WebSocket subscribers per run (requires --gateway)")
     parser.add_argument("--duplicate-rate", type=float, default=.1)
     parser.add_argument("--late-rate", type=float, default=.05)
@@ -220,6 +221,7 @@ def run_matrix(args, qualities, session):
                     "--duration", str(args.duration), "--warmup", str(args.warmup), "--rate", rate,
                     "--symbols", str(args.symbols), "--skew", str(args.skew), "--seed", str(args.seed + repetition),
                     *(["--distribution-file", args.distribution_file] if args.distribution_file else []),
+                    *(["--ticker-prefix", args.ticker_prefix] if args.ticker_prefix else []),
                     *(["--clients", str(args.clients)] if args.gateway else []),
                     "--duplicate-rate", str(args.duplicate_rate if quality in {"duplicates", "mixed"} else 0),
                     "--late-rate", str(args.late_rate if quality in {"late", "mixed"} else 0),
