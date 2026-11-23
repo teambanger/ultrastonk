@@ -169,43 +169,90 @@ are not published.
   `1636752900000`. Audit topic `10,669,014` eligible late exclusions. Dump
   deficits are exactly-once control records (out `62,380,615` vs LEO
   `62,381,131`; audit `10,668,887` vs LEO `10,669,014`).
-- **Limits:** the capture-order run is **not** exact full-input correctness
-  (the dataset's ~3.7% eligible-trade capture-order lateness makes it fail the
-  gate). The correctness run is the labeled event-time-ordered reference replay,
-  which **is not yet complete** (run 3 covers only day 08, LEO still 0, no
-  comparison). No repo-side `benchmarks/evidence/full-week/` pack or summary doc
-  exists yet.
+- **Limits:** the capture-order run is **not** exact full-input correctness (the
+  dataset's ~3.7% eligible-trade capture-order lateness makes it fail the gate).
+  The correctness run is the labeled event-time-ordered reference replay, which
+  is **complete for one day** (`benchmarks/evidence/full-week/reference-day08/`):
+  `377,966` expected = `377,966` actual, all error counts `0`, final window
+  `1,640,407,300,000` on both sides, per-exchange ETR `114,763` / FR `211,427` /
+  NL `51,776` exact, and audit end offset `0` because the ordered day produced
+  **zero** eligible late exclusions (the dump ran, `complete: true`). Exact
+  full-week correctness in capture order is **not claimed**; the ordered
+  whole-week replay was dropped by team decision (see reduced scope).
+- **Repo pack:** `benchmarks/evidence/full-week/{README.md,summary.json}` plus
+  `capture-order/` and `reference-day08/` `{manifest,gate,comparison,source,timings,retention}.json`.
 - **Run 1 (invalid):** replayed the week but the bind-mounted broker retained a
   stale `53,635,606`-record prefix; `input.records (342,685,358) !=
-  emitter.acknowledged (289,049,752)`, rejected by the gate.
+  emitter.acknowledged (289,049,752)`, rejected by the gate. Kept as
+  `run1/INVALID-RUN.md` with logs, offsets and a hash manifest.
 
-## Ticket 07 — Measure live peak load and headroom (pending)
+## Ticket 07 — Measure live peak load and headroom (MEASURED, resolved)
 
 - **Question:** Did the running pipeline keep up with the recorded peak, and
   was there headroom?
-- **Artifacts:** `benchmarks/peak_slice.py`, `benchmarks/live_peak.py`,
-  `benchmarks/tests/test_peak_slice.py`, `benchmarks/tests/test_live_peak.py`,
-  `docs/live-peak.md`, `benchmarks/evidence/live-peak/` (currently only
-  `README.md`, `ledger.template.json`, empty `runs/`, empty `slices/`).
-- **Status:** **no measurement taken.** `docs/live-peak.md` line 4 states this
-  explicitly. Planned outputs: `benchmarks/evidence/live-peak/` per `README.md`.
-- **Planned mode/configuration:** capture-paced (`PACING=capture`), warm slice,
-  2 TaskManagers, 6 partitions, `WINDOW_SIZE_MS=300000`,
-  `MAX_OUT_OF_ORDER_MS=5000`, `LATE_EVENT_STRATEGY=DROP`,
-  `CHECKPOINT_INTERVAL_MS=10000`. See the reduced scope below for the cut-down
-  conditions.
+- **Artifacts:** `benchmarks/peak_slice.py`, `benchmarks/live_peak.py`, their
+  tests, `docs/live-peak.md`, and `benchmarks/evidence/live-peak/`
+  (`summary.json`, `comparison-warm-1x-r1.json` + `…-classification.json`,
+  `run-plan.json`, `ledger.json`, `runs/peak-warm-1x-r1-{run,limits,pacing}.json`,
+  `slices/peak-warm-manifest.json`, `blocked.json`). The slice CSV, the per-run
+  raw JSON and the committed-record dump stay outside Git by design.
+- **Mode:** 1x capture pace (`PACING=capture`, `SPEED_MULTIPLIER=1`), warm state,
+  **one** repetition, `FLINK_BOUNDED_REPLAY=false`, 2 TaskManagers,
+  `WINDOW_SIZE_MS=300000`, `MAX_OUT_OF_ORDER_MS=5000`, pre-roll 300 s /
+  trailing 180 s, offered as a 1,914,978-row slice in the fixture's documented
+  capture-time order (ties by source ordinal).
+- **Headline numbers:** achieved pacing on the measured segment `0.99991`
+  (max lag 35 ms); measured segment reproduced exactly (FR `651,418` /
+  NL `411,885` / ETR `160,570`); delivery exact — `195,061` price records
+  expected = committed = WebSocket, zero missing/extra, no EMA-pair gaps;
+  trade enqueue→WebSocket p50 `5,060` / p95 `9,063` / p99 `9,225` ms (n=195,061),
+  transport-only committed→WebSocket p50 `15.5` / p99 `134` ms, enqueue→ack
+  p50 `34` / p99 `58` ms (n=5,000); window-finalization→advisory receipt
+  p50 `240,962` / p99 `241,192` ms (n=3,154); drain `7.08` s; `0` restarts,
+  `0` OOMs. Oracle on the slice: expected `9,649` vs live `6,308`, missing
+  `3,341` all in the single final unclosed window (boundary effect), split
+  policy `3,309` / transport `18` / unexplained `14`.
+- **Limits:** the p99 is dominated by the deliberate 5 s disorder budget, so the
+  stated 1 s p99 project target is unachievable while that policy holds (transport
+  and acknowledgement are sub-100 ms); Kafka broker and gateway consumer-group lag
+  were not collected; one repetition only; the run exceeded its 40-minute cap by
+  1–2 minutes. Three harness defects were fixed and committed with the evidence
+  (`peak_slice.py --reorder capture`; `live_peak.py --pacings` plus a gateway
+  history-limit correction; a quadratic `capture_pilot.window_check`).
 
-## Ticket 08 — Bracket the Sustainable limit (pending)
+## Ticket 08 — Bracket the Sustainable limit (MEASURED, resolved — unbracketed)
 
 - **Question:** What is the measured Sustainable limit for one and two
   TaskManagers for the same synthetic workload?
 - **Artifacts:** `benchmarks/capacity_bracket.py` (drives `benchmarks/matrix.py`),
   `benchmarks/tests/test_capacity_bracket.py`, `docs/sustainable-limit.md`,
-  `benchmarks/evidence/sustainable-limit/{README.md,pre-registered-rules.json}`.
-  Planned: `run-ledger.jsonl`, `bracket.json`, and raw
-  `benchmarks/results/SESSION-*` artifacts named by `bracket.json source_sessions`.
-- **Status:** **no measurement taken** — only the frozen acceptance contract is
-  committed (`pre-registered-rules.json`).
+  `benchmarks/evidence/sustainable-limit/{bracket.json,run-ledger.jsonl,run-console*.log,README.md,pre-registered-rules.json}`,
+  plus preserved pre-fix runs `bracket-attempt2-contract-mismatch.json` and
+  `bracket-attempt1-uncapped.json`, and raw `benchmarks/results/6092fc46e099-*`
+  and `eb9c21b179e8-*`.
+- **Mode:** 1,000/4,000/8,000 originals/s × parallelism 1 and 2, 20 s runs,
+  5 s warmup, **one** repetition, fixed per-worker caps
+  (`taskmanager:1:2g,kafka:2:2g,gateway:1:512m,benchmark:2:1g`), monitoring on,
+  5 m 41 s end to end.
+- **Headline numbers:** delivery exact at all six points (zero missing or
+  unexpected prices on Kafka and WebSocket, zero missing EMAs, advisory counts
+  matching, zero committed→WebSocket backlog, no producer backpressure);
+  achieved input `99.9996–99.9997%`; committed throughput `952.9` (1 w, 1,000/s),
+  `3,937.1` (1 w, 4,000/s), `7,666.9` (1 w, 8,000/s), `968.6` (2 w, 1,000/s),
+  `3,888.5` (2 w, 4,000/s), `7,793.2` (2 w, 8,000/s). **Unbracketed** at both
+  worker counts (highest passing `8,000`, first failing `1,000`, non-monotonic),
+  so 8,000/s is a floor, not a ceiling. Worker gain `0.988×` at 4,000/s and
+  `1.016×` at 8,000/s for twice the workers, so **no throughput gain from a
+  second TaskManager at these rates**; both counts saturate their CPU quota with
+  throttling ratio 1.0, pointing at a shared component rather than worker CPU.
+- **Limits:** the two `1,000/s` FAILs are a startup-transient artifact of the
+  pinned backlog rule (the `elapsed = 0` sample drags the first-third mean), not
+  lost data; no sustainable-limit number can be quoted; one repetition (no
+  spread); no fine confirmation; nobody-budget bottleneck experiment; checkpoint
+  failures of `4–6` per run with zero job restarts are unexplained; the workload
+  is synthetic rather than the week's long tail. The first complete ladder run
+  FAILed delivery only because the driver's output contract rejected advisory
+  records — fixed in `benchmarks/driver.py`.
 - **Acceptance order:** INCONCLUSIVE (missing telemetry) → INCONCLUSIVE
   (achieved input < 0.98 of offered) → FAIL (incorrect delivery) → FAIL
   (sustained stage-backlog growth) → PASS.

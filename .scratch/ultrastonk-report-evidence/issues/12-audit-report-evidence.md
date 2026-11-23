@@ -14,3 +14,12 @@
 ## Comments
 
 - **Started early and in parallel by team decision (2026-11-23).** The programme must finish within roughly two hours of machine time, so the index (`benchmarks/evidence/README.md`) and the audit (`docs/evidence-audit.md`) are being built now against the artifacts that exist (tickets 01-06 and 11, plus the 07/08 harnesses), with tickets 07, 08, 09 and 10 marked PENDING rather than guessed. The pack must label every reduced item — the dropped ordered whole-week replay, 07's reduced repeats, 08's single-repetition ladder, and 09/10's conditional status — and must not present reduced-repeat results as equal-confidence evidence. Ticket 12 stays open until the pending runs land and a teammate reproduces one table or figure from the pack alone.
+
+- **Pack status after 2026-11-23.** The index (`benchmarks/evidence/README.md`) and the audit
+  (`docs/evidence-audit.md`) now record tickets 01–08 and 11 with their artifact paths, headline numbers and
+  limits; tickets 07 and 08 are no longer marked PENDING. Remaining before this ticket can close:
+  tickets 09 and 10 are DEFERRED outside the reframed goal and must be labelled as such in the report; the
+  ordered whole-week replay is REDUCED to a one-day reference and must be labelled; peak and capacity results
+  are single-repetition and directional; `capacity_model.scaling_efficiency` is a throughput ratio, not an
+  efficiency fraction, until corrected; and criterion 3 still needs a teammate to reproduce one table or
+  figure from the pack alone, which no agent can do on the team's behalf.
