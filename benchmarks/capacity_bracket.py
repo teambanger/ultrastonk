@@ -527,6 +527,40 @@ def build_fine_plans(coarse, workers_labeled, count, duration, warmup, repetitio
     return plans
 
 
+def select_fine_workers(coarse, single=False, explicit=None):
+    """Which separated worker counts get a fine confirmation run.
+
+    ``explicit`` restricts to those counts; ``single`` keeps only the most
+    informative one (the separated count with the highest passing load). The default
+    is every separated worker count.
+    """
+    separated = sorted(workers for workers, bounds in coarse.items() if bounds.get("separated"))
+    if explicit:
+        allowed = set(explicit)
+        return [workers for workers in separated if workers in allowed]
+    if single and separated:
+        return [max(separated, key=lambda workers: (coarse[workers]["highest_passing"], workers))]
+    return separated
+
+
+def should_add_extra_rate(coarse, extra_rate):
+    """Add the optional top rate only when every worker already passed its current top."""
+    if not extra_rate or not coarse:
+        return False
+    for bounds in coarse.values():
+        points = bounds.get("points") or {}
+        if not points or points[max(points)] != PASS:
+            return False
+    return True
+
+
+def stage_fits(remaining_s, duration, warmup, repetitions, setup_margin_s=120):
+    """Whether an optional stage fits the remaining wall budget (None means unbounded)."""
+    if remaining_s is None:
+        return True
+    return remaining_s >= (duration + warmup) * repetitions + setup_margin_s
+
+
 # ---------------------------------------------------------------------------
 # Summary, capacity gain and bottleneck evidence
 
@@ -757,13 +791,15 @@ def evaluate_records(records, rules, ledger):
     return evaluated
 
 
-def write_outputs(evidence_dir, evaluated, rules, coarse, final, source_sessions):
+def write_outputs(evidence_dir, evaluated, rules, coarse, final, source_sessions, decisions=None, started=None):
     evidence_dir = Path(evidence_dir)
     evidence_dir.mkdir(parents=True, exist_ok=True)
     points = summarize(evaluated)
     limiter = any(flink_limiter_evidence(point)["flink_bound"] for point in points if point["verdict"] in {PASS, FAIL})
     gain = worker_capacity_gain(points, rules, flink_limiter=limiter)
     payload = {"rules": rules, "generated_at_epoch_seconds": time.time(), "source_sessions": source_sessions,
+               "wall_seconds": (time.monotonic() - started) if started is not None else None,
+               "plan_decisions": decisions or [],
                "bracket": {str(workers): bounds for workers, bounds in final.items()},
                "coarse_bracket": {str(workers): bounds for workers, bounds in coarse.items()},
                "flink_limiter": limiter, "points": points, "worker_capacity_gain": gain, "runs": evaluated}
@@ -778,6 +814,7 @@ def main():
     parser.add_argument("--evidence-dir", default=str(ROOT / "benchmarks/evidence/sustainable-limit"))
     parser.add_argument("--ledger", default=str(ROOT / "benchmarks/evidence/sustainable-limit/run-ledger.jsonl"))
     parser.add_argument("--workers", default="1,2", help="comma-separated TaskManager counts")
+    parser.add_argument("--coarse-rates", help="explicit comma-separated coarse rates; overrides start/stop/factor")
     parser.add_argument("--coarse-start", type=int, default=1000)
     parser.add_argument("--coarse-stop", type=int, default=32000)
     parser.add_argument("--coarse-factor", type=float, default=2.0)
@@ -788,6 +825,13 @@ def main():
     parser.add_argument("--repetitions-fine", type=int, default=3)
     parser.add_argument("--fine-points", type=int, default=3)
     parser.add_argument("--fine-fraction", type=float, default=0.25)
+    parser.add_argument("--fine-single", action="store_true",
+                        help="run at most one fine confirmation, for the most informative separated worker")
+    parser.add_argument("--fine-workers", help="comma-separated worker counts allowed a fine confirmation")
+    parser.add_argument("--coarse-extra-rate", type=int,
+                        help="optional top rate added only when every worker passed its current top rate")
+    parser.add_argument("--wall-budget-seconds", type=float, default=0,
+                        help="skip optional extra/fine stages that no longer fit; 0 is unbounded")
     parser.add_argument("--profile-name", default="perworker")
     parser.add_argument("--profile-spec", required=True,
                         help="per-worker caps held fixed across worker counts, e.g. taskmanager:1:2g,kafka:2:2g,gateway:1:512m,benchmark:2:1g")
@@ -807,8 +851,14 @@ def main():
     rules = default_rules()
     ledger = Ledger(args.ledger)
     workers = [int(worker) for worker in args.workers.split(",")]
-    coarse = build_coarse_plan(workers, coarse_rates(args.coarse_start, args.coarse_stop, args.coarse_factor),
-                               args.duration_coarse, args.warmup, args.repetitions_coarse)
+    fine_workers_explicit = [int(worker) for worker in args.fine_workers.split(",")] if args.fine_workers else None
+    rates = ([int(rate) for rate in args.coarse_rates.split(",")] if args.coarse_rates
+             else coarse_rates(args.coarse_start, args.coarse_stop, args.coarse_factor))
+    coarse = build_coarse_plan(workers, rates, args.duration_coarse, args.warmup, args.repetitions_coarse)
+    started = time.monotonic()
+
+    def remaining():
+        return None if not args.wall_budget_seconds else max(0.0, args.wall_budget_seconds - (time.monotonic() - started))
 
     if args.dry_run:
         command = matrix_command(args.matrix, workers=coarse["workers"], rates=coarse["rates"],
@@ -819,9 +869,12 @@ def main():
                                  grace_ms=args.grace_ms, gateway=not args.no_gateway,
                                  monitoring=not args.no_monitoring, seed=args.seed)
         plan = {"rules": rules, "coarse": coarse,
-                "fine": "derived per worker from the coarse bracket: longer runs at "
-                        f"{args.fine_points} rates between highest-passing and first-failing, "
+                "coarse_extra_rate": args.coarse_extra_rate,
+                "fine": ("at most one confirmation run for the most informative separated worker"
+                         if args.fine_single else "one plan per separated worker") +
+                        f", {args.fine_points} rate(s) between highest-passing and first-failing, "
                         f"{args.repetitions_fine} repetitions, {args.duration_fine}s each",
+                "wall_budget_seconds": args.wall_budget_seconds or None,
                 "coarse_command": command}
         print(json.dumps(plan, indent=2, sort_keys=True))
         return
@@ -832,24 +885,50 @@ def main():
         for session in sessions:
             evaluated += evaluate_records(read_session(args.results_dir, session), rules, ledger)
         final = bracket(evaluated)
-        payload = write_outputs(args.evidence_dir, evaluated, rules, final, final, sessions)
+        payload = write_outputs(args.evidence_dir, evaluated, rules, final, final, sessions, started=started)
         print(json.dumps({"bracket": payload["bracket"], "source_sessions": sessions}, indent=2))
         return
 
-    evaluated, sessions = [], []
+    evaluated, sessions, decisions = [], [], []
     session, _ = collect_batch(args.matrix, args, coarse, "coarse")
     sessions.append(session)
     evaluated += evaluate_records(read_session(args.results_dir, session), rules, ledger)
     coarse_bracket = bracket(evaluated)
-    for index, spec in enumerate(build_fine_plans(coarse_bracket, workers, args.fine_points,
-                                                  args.duration_fine, args.warmup, args.repetitions_fine,
-                                                  args.fine_fraction)):
+
+    if args.coarse_extra_rate:
+        fits = stage_fits(remaining(), args.duration_coarse, args.warmup, 1)
+        if not should_add_extra_rate(coarse_bracket, args.coarse_extra_rate):
+            decisions.append({"stage": "coarse-extra", "ran": False,
+                              "reason": "top coarse rate did not pass for every worker"})
+        elif not fits:
+            decisions.append({"stage": "coarse-extra", "ran": False, "reason": "insufficient wall budget"})
+        else:
+            extra = build_coarse_plan(workers, [args.coarse_extra_rate], args.duration_coarse,
+                                      args.warmup, 1)
+            session, _ = collect_batch(args.matrix, args, extra, "coarse-extra")
+            sessions.append(session)
+            evaluated += evaluate_records(read_session(args.results_dir, session), rules, ledger)
+            coarse_bracket = bracket(evaluated)
+            decisions.append({"stage": "coarse-extra", "ran": True, "rate": args.coarse_extra_rate})
+
+    for index, spec in enumerate(build_fine_plans(coarse_bracket,
+                                                  select_fine_workers(coarse_bracket, args.fine_single, fine_workers_explicit),
+                                                  args.fine_points, args.duration_fine, args.warmup,
+                                                  args.repetitions_fine, args.fine_fraction)):
+        if not stage_fits(remaining(), spec["duration"], spec["warmup"], spec["repetitions"]):
+            decisions.append({"stage": "fine", "workers": spec["workers"], "ran": False,
+                              "reason": "insufficient wall budget"})
+            continue
         session, _ = collect_batch(args.matrix, args, spec, f"fine{index}")
         sessions.append(session)
         evaluated += evaluate_records(read_session(args.results_dir, session), rules, ledger)
+        decisions.append({"stage": "fine", "workers": spec["workers"], "ran": True, "rates": spec["rates"]})
+
     final = bracket(evaluated)
-    payload = write_outputs(args.evidence_dir, evaluated, rules, coarse_bracket, final, sessions)
-    print(json.dumps({"bracket": payload["bracket"], "source_sessions": sessions}, indent=2))
+    payload = write_outputs(args.evidence_dir, evaluated, rules, coarse_bracket, final, sessions,
+                            decisions, started)
+    print(json.dumps({"bracket": payload["bracket"], "wall_seconds": payload["wall_seconds"],
+                      "plan_decisions": decisions, "source_sessions": sessions}, indent=2))
 
 
 if __name__ == "__main__":
