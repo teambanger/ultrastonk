@@ -501,9 +501,13 @@ def compare_jsonl(expected, actual, db_path, sample_limit=20):
     connection.execute("CREATE TABLE records (source TEXT NOT NULL, symbol TEXT NOT NULL, "
                        "window INTEGER NOT NULL, type TEXT NOT NULL, ema38 REAL, ema100 REAL, "
                        "n INTEGER NOT NULL, PRIMARY KEY (source, symbol, window, type))")
-    _load_records(str(expected), connection, "expected")
-    _load_records(str(actual), connection, "actual")
-    connection.commit()
+    try:
+        _load_records(str(expected), connection, "expected")
+        _load_records(str(actual), connection, "actual")
+        connection.commit()
+    except Exception:
+        connection.close()
+        raise
     missing_count = connection.execute(
         "SELECT COUNT(*) FROM records e WHERE e.source = 'expected' AND NOT EXISTS "
         "(SELECT 1 FROM records a WHERE a.source = 'actual' AND a.symbol = e.symbol "
