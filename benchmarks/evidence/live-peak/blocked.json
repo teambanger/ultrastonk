@@ -2,7 +2,7 @@
   "phase": "scored",
   "ticket": "07",
   "status": "blocked",
-  "reason": "host_not_idle",
+  "reasons": ["host_not_idle", "slice_extraction_failed", "wall_clock_cap"],
   "branch": "integration/report-evidence",
   "cap": {
     "kind": "hard_wall_clock",
@@ -12,7 +12,7 @@
   },
   "precondition_check": {
     "required": "docker ps shows no ultrastonk-* containers AND `ps -ef | grep sort_week` is empty",
-    "docker_ps_ultrastonk": "FAIL - foreign project ultrastonk-fullweek-3 running",
+    "docker_ps_ultrastonk_at_start": "FAIL - foreign project ultrastonk-fullweek-3 running",
     "sort_week_process": "PASS - empty",
     "verdict": "host not idle; scored run must not start on top of it"
   },
@@ -27,22 +27,32 @@
       "ultrastonk-fullweek-3-gateway-1",
       "ultrastonk-fullweek-3-kafka-1"
     ],
-    "note": "The peer's measured work completed (evidence/compare.json written 17:50Z) but its TaskManagers entered a crash/restart loop (RestartCount>=1, 'jobmanager/<unresolved>:6123' unreachable, no JobManager present) and did not self-terminate; Kafka and gateway stayed Up. The foreign project was never touched, stopped or inspected destructively.",
-    "touched_by_this_run": false
+    "note": "The peer's measured work completed (evidence/compare.json written 17:50Z) but its TaskManagers entered a crash/restart loop (RestartCount>=1, 'jobmanager/<unresolved>:6123' unreachable, no JobManager present) and did not self-terminate; Kafka and gateway stayed Up until the whole stack disappeared at ~18:02:30Z. The foreign project was never touched, stopped or inspected destructively.",
+    "touched_by_this_run": false,
+    "freed_at_utc": "2026-11-23T18:02:30Z"
   },
   "recheck_timeline": [
     {"t": "2026-11-23T17:41:43Z", "observed": "emitter Up, gateway health:starting, kafka-1 ~166% CPU"},
-    {"t": "2026-11-23T17:43:22Z", "observed": "emitter/gateway/kafka running"},
     {"t": "2026-11-23T17:45:52Z", "observed": "taskmanagers+jobmanager added (Flink job starting)"},
-    {"t": "2026-11-23T17:47:53Z", "observed": "jobmanager gone; taskmanagers+gateway+kafka running"},
     {"t": "2026-11-23T17:53:29Z", "observed": "taskmanagers 176% CPU each, kafka 111%; peer compare.json written 17:50Z"},
-    {"t": "2026-11-23T17:54:02Z", "observed": "taskmanagers crash-looping (restart), gateway+kafka Up"},
-    {"t": "2026-11-23T18:02:03Z", "observed": "taskmanagers still Up (restarted again), gateway+kafka Up 20m"}
+    {"t": "2026-11-23T18:02:03Z", "observed": "taskmanagers still Up (restarted again), gateway+kafka Up 20m"},
+    {"t": "2026-11-23T18:02:30Z", "observed": "host freed - NO_ULTRASTONK, NO_SORT_WEEK"}
   ],
-  "waited_and_rechecked_seconds_approx": 1230,
-  "decision": "Do not start the scored run: the runbook requires an otherwise idle host, and starting a paced replay plus a second Kafka/Flink stack alongside the foreign project would invalidate both results. Held and re-checked; the host never became idle inside the cap.",
+  "waited_and_rechecked_seconds_approx": 1245,
+  "extraction_attempt": {
+    "started_utc": "2026-11-23T18:02:55Z",
+    "ended_utc": "2026-11-23T18:08:34Z",
+    "wall_seconds": 339,
+    "command": "python3 benchmarks/peak_slice.py --fixture /mnt/shared/data/official-week-Ij8jlfeA/results/week-fixture.json --data-dir /mnt/shared/data/official-week-Ij8jlfeA --state warm --pre-roll-ms 120000 --trailing-ms 90000 --output benchmarks/evidence/live-peak/slices/peak-warm.csv --manifest-out benchmarks/evidence/live-peak/slices/peak-warm-manifest.json",
+    "result": "failed_closed",
+    "error": "ValueError: emitter offsets do not place the measured start in the measured segment (benchmarks/peak_slice.py:214)",
+    "root_cause": "emitter_offsets (peak_slice.py:122) labels segments from the first physically-offered row (anchor_ms), and label_segment (peak_slice.py:136) then requires anchor_ms <= measured_start_ms. With the 120 s pre-roll override the first physical row in the narrower window falls after the measured start (capture order is non-monotonic, so the first physical row is not the earliest stamp), so the pre-roll cannot be represented and the extractor refuses to emit a mislabeled slice.",
+    "outputs": "slices/peak-warm.csv written but 0 bytes; no manifest produced",
+    "note": "The whole day-09 CSV read cost ~5.6 min (the runbook notes this is host I/O)."
+  },
+  "decision": "Do not start the scored run. While the foreign project ran, the idle-host rule forbade starting a second Kafka/Flink stack. The host only freed at ~18:02:30Z (T+20.8 min); slice extraction then took ~5.6 min and failed closed, and a ~13-min warm 1x run could not fit the ~12 min remaining. No measurement was taken and no stack was started.",
   "not_produced": [
-    "slices/peak-warm.csv and its manifest (host-I/O extraction deliberately not run on a contended host)",
+    "slices/peak-warm.csv (0 bytes) and peak-warm-manifest.json (absent)",
     "run-plan.json (depends on slice manifests)",
     "runs/ per-run artifacts",
     "ledger.json entries",
@@ -59,5 +69,7 @@
     "flink_bounded_replay": false,
     "repeats": "not decided - no repetition ran",
     "measured_segment": "unchanged 1,223,873-row five-minute slice, FR/NL/ETR mix"
-  }
+  },
+  "no_containers_created_by_this_run": true,
+  "no_volumes_created_by_this_run": true
 }

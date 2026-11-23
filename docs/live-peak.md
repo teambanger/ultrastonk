@@ -257,10 +257,19 @@ workload, and that project was never touched. `ps -ef | grep sort_week` was empt
 
 The foreign project's measured work finished early (`run3/evidence/compare.json`
 written 17:50Z), but its TaskManagers entered a crash/restart loop (no JobManager
-reachable) and stayed Up with Kafka and the gateway for the rest of the window, so
-the host never became idle. With a single warm 1x run needing ~8.5 min of capture
-plus startup/drain and the slice extraction, no valid scored run fitted inside the
-remaining cap once the host freed.
+reachable) and stayed Up with Kafka and the gateway until the whole stack finally
+disappeared at ~18:02:30Z (T+20.8 min), leaving ~19 min of the cap. Slice extraction
+was started immediately, but reading the whole day-09 CSV cost ~5.6 min and it then
+**failed closed**: `peak_slice.py --state warm --pre-roll-ms 120000 --trailing-ms
+90000` raised `ValueError: emitter offsets do not place the measured start in the
+measured segment` (`benchmarks/peak_slice.py:214`). The emitter labels segments from
+the first physically-offered row (`emitter_offsets`, `benchmarks/peak_slice.py:122`);
+with the 120 s pre-roll override that first physical row falls after the measured
+start (capture order is non-monotonic, so the first physical row is not the earliest
+stamp), so the pre-roll cannot be represented and the extractor refuses to emit a
+mislabeled slice. No usable slice or manifest was produced (the CSV was left at 0
+bytes), and a re-read plus a ~13-min warm 1x run could not fit the ~12 min that
+remained. No scored run was performed and no Compose stack was started.
 
 ### Intended downscale (pre-registered conditions unchanged; campaign size reduced)
 
@@ -275,13 +284,13 @@ remaining cap once the host freed.
 
 ### What was and was not produced
 
-No slice was extracted and no run was executed (extraction is itself a scored-phase
-host-I/O step and was deliberately not run on a contended host), so none of the
-scored evidence exists: no slice CSVs or manifests, no `run-plan.json` (which
-depends on the manifests), no `runs/` artifacts, no `ledger.json` entries, no oracle
-output, no comparison JSON and no `summary.json`. The only artifact is
-`benchmarks/evidence/live-peak/blocked.json`, which records the host-contention
-evidence and the re-check timeline.
+No slice was extracted successfully and no run was executed: the extraction was
+attempted once the host freed and failed closed (above), and no Compose stack was
+started. None of the scored evidence exists: no usable slice CSV or manifest, no
+`run-plan.json` (which depends on the manifests), no `runs/` artifacts, no
+`ledger.json` entries, no oracle output, no comparison JSON and no `summary.json`.
+The only artifact is `benchmarks/evidence/live-peak/blocked.json`, which records the
+host-contention evidence, the re-check timeline and the extraction failure.
 
 ### What this result does and does not support
 
