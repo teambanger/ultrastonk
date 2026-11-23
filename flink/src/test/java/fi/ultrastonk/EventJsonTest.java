@@ -7,7 +7,7 @@ class EventJsonTest {
     private static final String VALID = "{\"timestamp_emit\":123,\"ticker\":\"BRK.B.FR\",\"sec_type\":\"E\",\"price\":42.5}";
 
     @Test void parsesInputAndProducesOnlyGatewayFields() throws Exception {
-        PriceEvent event = EventJson.parse(VALID);
+        PriceEvent event = EventJson.parse(VALID).trade;
         assertEquals("BRK.B.FR", event.ticker);
         String json = EventJson.write(new EventProcessed(event.timestamp_emit, event.ticker, "price", event.price));
         assertEquals("{\"timestamp_emit\":123,\"ticker\":\"BRK.B.FR\",\"type\":\"price\",\"value\":42.5}", json);
@@ -22,8 +22,19 @@ class EventJsonTest {
         }
     }
 
+    @Test void parsesReplayTradeUsingExchangeTimeRatherThanEmissionTime() throws Exception {
+        PriceEvent event = EventJson.parse("""
+                {"id":"BRK.B.FR","secType":"E","last":42.5,"bid":42,"ask":43,
+                 "eventTimestampMs":1636351200021,"emitTimestampMs":1792152000100,"tradingDate":"08-11-2021"}
+                """).trade;
+        assertEquals(1636351200021L, event.timestamp_emit);
+        assertEquals("BRK.B.FR", event.ticker);
+        assertEquals("E", event.sec_type);
+        assertEquals(42.5, event.price);
+    }
+
     @Test void tombstonesReachValidationAsInvalidJsonValues() throws Exception {
-        assertEquals("null", new PriceValueSchema().deserialize(null));
+        assertTrue(new PriceValueSchema().deserialize(null).rejection.contains("\"raw\":\"null\""));
         assertThrows(IllegalArgumentException.class, () -> EventJson.parse("null"));
     }
 }

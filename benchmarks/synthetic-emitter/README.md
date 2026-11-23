@@ -5,26 +5,27 @@ The emitter generates the requested four-field JSON contract and publishes to Ka
 ## Run
 
 ```bash
-docker compose --profile emitter build dummy-emitter
+docker compose --profile synthetic build dummy-emitter
 docker compose run --rm --no-deps dummy-emitter --config /config/default.json
 docker compose run --rm --no-deps dummy-emitter --config /config/clean.json --rate 10000 --duration 30
 docker compose run --rm --no-deps dummy-emitter --config /config/chaos.json
 ```
 
-Start Kafka/Flink first. One-off `compose run` does not publish the metrics port by default. To keep metrics accessible, start the optional service with `compose --profile emitter up -d dummy-emitter`, or use `compose run --service-ports ...`. The default service runs for sixty seconds. For continuous emission, set duration to zero and max events to zero. Host metrics are available at [localhost:8001/metrics](http://localhost:8001/metrics). The optional monitoring stack discovers the service automatically while it is running.
+Start Kafka/Flink first. One-off `compose run` does not publish the metrics port by default. To keep metrics accessible, start the optional service with `compose --profile synthetic up -d dummy-emitter`, or use `compose run --service-ports ...`. The default service runs for sixty seconds. For continuous emission, set duration to zero and max events to zero. Host metrics are available at [localhost:8001/metrics](http://localhost:8001/metrics). The optional monitoring stack discovers the service automatically while it is running.
 
 For a local Python installation, install `requirements.txt` and set `--bootstrap-servers localhost:9092`. Kafka is unnecessary for configuration validation and dry runs:
 
 ```bash
-python3 emitter/dummy_emitter.py --print-defaults
-python3 emitter/dummy_emitter.py --config emitter/configs/chaos.json --validate
-python3 emitter/dummy_emitter.py --config emitter/configs/clean.json --dry-run --max-events 20
-python3 emitter/dummy_emitter.py --config emitter/configs/clean.json --dry-run --max-events 100 --output-jsonl /tmp/prices.jsonl
-python3 emitter/dummy_emitter.py --config emitter/configs/duplicates.json --dry-run --max-events 100 --trace-jsonl /tmp/injected.jsonl
-PYTHONPATH=emitter python3 -m unittest discover -s emitter/tests -v
+cd benchmarks/synthetic-emitter
+python3 dummy_emitter.py --print-defaults
+python3 dummy_emitter.py --config configs/chaos.json --validate
+python3 dummy_emitter.py --config configs/clean.json --dry-run --max-events 20
+python3 dummy_emitter.py --config configs/clean.json --dry-run --max-events 100 --output-jsonl /tmp/prices.jsonl
+python3 dummy_emitter.py --config configs/duplicates.json --dry-run --max-events 100 --trace-jsonl /tmp/injected.jsonl
+python3 -m unittest discover -s tests -v
 ```
 
-Tests run from the `emitter` directory, or with `PYTHONPATH=emitter` from the repository root. Logs and final summaries are JSON on stderr. Dry-run values are JSONL on stdout unless `--output-jsonl` captures them. Injected malformed payloads remain malformed in captures; tombstones are represented by a `null` line. A capture preserves publish order and values but not Kafka keys or exact timing.
+Logs and final summaries are JSON on stderr. Dry-run values are JSONL on stdout unless `--output-jsonl` captures them. Injected malformed payloads remain malformed in captures; tombstones are represented by a `null` line. A capture preserves publish order and values but not Kafka keys or exact timing.
 
 ## Configuration
 

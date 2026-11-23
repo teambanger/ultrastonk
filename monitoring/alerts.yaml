@@ -6,6 +6,13 @@ groups:
         for: 1m
         labels: {severity: critical}
         annotations: {summary: "Flink metrics endpoint unavailable"}
+      - alert: FlinkTaskManagersMissing
+        # sum() returns no series when every DNS target disappears. The default
+        # matches base Compose and is used if the resource exporter is unavailable.
+        expr: (sum(up{job="flink-taskmanagers"}) or vector(0)) < (max(pipeline_expected_taskmanagers{job="resources"}) or vector(2))
+        for: 1m
+        labels: {severity: critical}
+        annotations: {summary: "Fewer healthy TaskManager scrape targets than expected"}
       - alert: KafkaConsumerLagHigh
         expr: sum(kafka_consumergroup_lag{consumergroup=~".*flink.*"}) > 100000
         for: 2m

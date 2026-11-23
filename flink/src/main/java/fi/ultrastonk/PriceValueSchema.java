@@ -1,19 +1,31 @@
 package fi.ultrastonk;
 
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
 
-/** Kafka tombstones are invalid price values and must reach validation instead of crashing a reader. */
-public final class PriceValueSchema extends SimpleStringSchema {
-    private transient ComponentProfiler profiler;
+public final class PriceValueSchema extends AbstractDeserializationSchema<PriceInput> {
+    private transient ComponentProfiler decode;
+    private transient ComponentProfiler validation;
+
     @Override public void open(org.apache.flink.api.common.serialization.DeserializationSchema.InitializationContext context) {
-        profiler = new ComponentProfiler(context.getMetricGroup(), "source_decode");
+        decode = new ComponentProfiler(context.getMetricGroup(), "source_decode");
+        validation = new ComponentProfiler(context.getMetricGroup(), "validation");
     }
-    @Override public String deserialize(byte[] message) {
-        long started = profiler == null ? -1 : profiler.begin();
+
+    @Override public PriceInput deserialize(byte[] message) {
+        long started = decode == null ? -1 : decode.begin();
+        String raw = message == null ? "null" : new String(message, StandardCharsets.UTF_8);
+        if (decode != null) decode.end(started);
+        started = validation == null ? -1 : validation.begin();
         try {
-            return message == null ? "null" : super.deserialize(message);
+            return EventJson.parse(raw);
+        } catch (IOException | IllegalArgumentException e) {
+            String reason = e.getMessage() == null ? "invalid JSON value" : e.getMessage();
+            return new PriceInput(Long.MIN_VALUE, null, EventJson.rejected(raw,
+                    reason.substring(0, Math.min(reason.length(), 1024))));
         } finally {
-            if (profiler != null) profiler.end(started);
+            if (validation != null) validation.end(started);
         }
     }
 }

@@ -190,8 +190,13 @@ class Collector:
 def main():
     collector = Collector(Docker(os.getenv("DOCKER_SOCKET", "/var/run/docker.sock")), os.getenv("COMPOSE_PROJECT", "ultrastonk"))
     interval = float(os.getenv("RESOURCE_SAMPLE_INTERVAL_SECONDS", "5"))
+    expected_taskmanagers = int(os.getenv("EXPECTED_TASKMANAGERS", "2"))
     if interval <= 0:
         raise ValueError("RESOURCE_SAMPLE_INTERVAL_SECONDS must be positive")
+    if expected_taskmanagers <= 0:
+        raise ValueError("EXPECTED_TASKMANAGERS must be positive")
+    expected_metric = ("# TYPE pipeline_expected_taskmanagers gauge\n"
+                       f"pipeline_expected_taskmanagers {expected_taskmanagers}\n")
     def run():
         while True:
             started = time.monotonic()
@@ -204,7 +209,7 @@ def main():
                 self.send_error(404)
                 return
             with collector.lock:
-                body = collector.body.encode()
+                body = (expected_metric + collector.body).encode()
             self.send_response(200)
             self.send_header("Content-Type", "text/plain; version=0.0.4")
             self.send_header("Content-Length", str(len(body)))

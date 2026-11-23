@@ -33,7 +33,8 @@ public final class PricePipeline {
         env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
         env.setRestartStrategy(RestartStrategies.fixedDelayRestart(10, Duration.ofSeconds(10)));
 
-        KafkaSource<String> source = KafkaSource.<String>builder()
+        boolean boundedReplay = Boolean.parseBoolean(setting("FLINK_BOUNDED_REPLAY", "false"));
+        var sourceBuilder = KafkaSource.<PriceInput>builder()
                 .setBootstrapServers(brokers)
                 .setTopics(setting("KAFKA_INPUT_TOPIC", "price-events"))
                 .setGroupId(setting("KAFKA_GROUP_ID", "ultrastonk-flink"))
@@ -41,16 +42,18 @@ public final class PricePipeline {
                 .setStartingOffsets(OffsetsInitializer.earliest())
                 .setProperty("isolation.level", "read_committed")
                 .setProperty("partition.discovery.interval.ms", "10000")
-                .setValueOnlyDeserializer(new PriceValueSchema())
-                .build();
-        var parsed = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka prices").uid("kafka-prices")
-                .process(new ParsePriceEvent()).name("Validate price JSON").uid("validate-prices");
-        var indicators = parsed.assignTimestampsAndWatermarks(
-                        WatermarkStrategy.<PriceEvent>forBoundedOutOfOrderness(Duration.ofMillis(nonnegative("MAX_OUT_OF_ORDER_MS", 5000)))
-                                .withTimestampAssigner((event, kafkaTimestamp) -> event.timestamp_emit)
-                                .withIdleness(Duration.ofMillis(positive("SOURCE_IDLE_TIMEOUT_MS", 30000))))
-                .name("Price watermarks").uid("price-watermarks")
-                .keyBy(event -> event.ticker)
+                .setValueOnlyDeserializer(new PriceValueSchema());
+        if (boundedReplay) sourceBuilder.setBounded(OffsetsInitializer.latest());
+        var watermarks = WatermarkStrategy.<PriceInput>forBoundedOutOfOrderness(
+                        Duration.ofMillis(nonnegative("MAX_OUT_OF_ORDER_MS", 5000)))
+                .withTimestampAssigner((input, kafkaTimestamp) -> input.eventTimeMs);
+        // The Kafka source tracks progress per split. For a finite read, do not treat quiet
+        // partitions as idle: their known stopping offsets define completion instead.
+        if (!boundedReplay) watermarks = watermarks.withIdleness(
+                Duration.ofMillis(positive("SOURCE_IDLE_TIMEOUT_MS", 30000)));
+        var parsed = env.fromSource(sourceBuilder.build(), watermarks, "Kafka prices").uid("kafka-prices")
+                .process(new ParsePriceEvent()).name("Route prices and rejections").uid("validate-prices");
+        var indicators = parsed.keyBy(event -> event.ticker)
                 .process(new PriceIndicators(positive("WINDOW_SIZE_MS", 300000), policies))
                 .name("Price and window EMAs").uid("price-indicators");
 

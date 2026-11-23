@@ -26,7 +26,7 @@
       },
       "options": {
         "mode": "markdown",
-        "content": "Stage wall/CPU time and allocation are sampled **per call**. EMA calls are per completed window; validation calls are per input. CPU share is an estimate among instrumented synchronous stages, not total JVM CPU. Resource ratios use container limits when set, otherwise shared host/VM capacity. Apply `compose.resources.yaml` for fixed budgets. Metrics use portable clocks and Docker accounting; hardware still affects performance."
+        "content": "Stage wall/CPU time and allocation are sampled **per call**. EMA calls are per completed window; validation calls are per input. CPU share is an estimate among instrumented synchronous stages, not total JVM CPU. Resource ratios use container limits when set, otherwise shared host/VM capacity. Apply `deploy/compose.resources.yaml` for fixed budgets. Metrics use portable clocks and Docker accounting; hardware still affects performance."
       }
     },
     {

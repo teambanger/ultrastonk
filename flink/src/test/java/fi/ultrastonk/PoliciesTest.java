@@ -89,11 +89,16 @@ class PoliciesTest {
     }
 
     @Test void invalidJsonIsQuarantinedAndNextValidRecordIsProcessed() throws Exception {
-        try (var h = new OneInputStreamOperatorTestHarness<String, PriceEvent>(new ProcessOperator<>(new ParsePriceEvent()))) {
+        var schema = new PriceValueSchema();
+        try (var h = new OneInputStreamOperatorTestHarness<PriceInput, PriceEvent>(new ProcessOperator<>(new ParsePriceEvent()))) {
             h.open();
-            h.processElement(new StreamRecord<>("not json"));
-            h.processElement(new StreamRecord<>("{\"timestamp_emit\":100,\"ticker\":\"AAA.FR\",\"sec_type\":\"E\",\"price\":10}"));
-            assertEquals(1, h.getSideOutput(ParsePriceEvent.REJECTED).size());
+            h.processElement(new StreamRecord<>(schema.deserialize("not json".getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+            String replay = "{\"eventTimestampMs\":100,\"id\":\"AAA.FR\",\"secType\":\"E\"";
+            for (String raw : new String[]{replay + ",\"bid\":9}", replay + ",\"last\":0}", replay + ",\"last\":-1}",
+                    "{\"timestamp_emit\":100,\"ticker\":\"AAA.FR\",\"sec_type\":\"E\",\"price\":10}"}) {
+                h.processElement(new StreamRecord<>(schema.deserialize(raw.getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+            }
+            assertEquals(2, h.getSideOutput(ParsePriceEvent.REJECTED).size());
             assertEquals(1, h.getOutput().size());
         }
     }

@@ -2,6 +2,7 @@
 import argparse
 import collections
 import hashlib
+from itertools import accumulate
 import json
 import math
 import os
@@ -75,7 +76,7 @@ def main():
     dedup = os.getenv("DEDUP_STRATEGY", "NONE").upper()
     prefix = "B" + args.run_id.replace("-", "") + "_"
     rng = random.Random(args.seed)
-    weights = [1 / (i + 1) ** args.skew for i in range(args.symbols)]
+    cumulative_weights = list(accumulate(1 / (i + 1) ** args.skew for i in range(args.symbols)))
     symbols = [f"{prefix}{i}.{['FR', 'NL', 'ETR'][i % 3]}" for i in range(args.symbols)]
     expected = collections.Counter()
     actual = collections.Counter()
@@ -189,7 +190,7 @@ def main():
             producer.poll(0)
             continue
         measured = now >= measured_start
-        ticker = rng.choices(symbols, weights=weights, k=1)[0]
+        ticker = rng.choices(symbols, cum_weights=cumulative_weights, k=1)[0]
         timestamp = int(time.time() * 1000)
         if rng.random() < args.late_rate:
             timestamp -= args.late_delay_ms

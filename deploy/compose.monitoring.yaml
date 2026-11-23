@@ -25,6 +25,7 @@ services:
     environment:
       COMPOSE_PROJECT: ${COMPOSE_PROJECT_NAME:-ultrastonk}
       RESOURCE_SAMPLE_INTERVAL_SECONDS: ${RESOURCE_SAMPLE_INTERVAL_SECONDS:-5}
+      EXPECTED_TASKMANAGERS: ${EXPECTED_TASKMANAGERS:-2}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     cpus: 0.25

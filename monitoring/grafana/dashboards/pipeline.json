@@ -88,7 +88,8 @@
     },
     {
       "id": 3,
-      "title": "Price latency inside Flink: p50/p95/p99 by task",
+      "title": "Price latency: validation to pre-serialization",
+      "description": "Clock starts after successful JSON validation and stops before output serialization. Excludes producer and Kafka acknowledgement time.",
       "type": "timeseries",
       "gridPos": {
         "x": 0,
@@ -104,7 +105,7 @@
         {
           "expr": "flink_taskmanager_job_task_operator_user_pipeline_ingressToSinkMs{quantile=~\"0.5|0.95|0.99\"}",
           "refId": "A",
-          "legendFormat": "ingress to sink q={{quantile}} task={{subtask_index}}"
+          "legendFormat": "validation to pre-serialization q={{quantile}} task={{subtask_index}}"
         }
       ],
       "fieldConfig": {
@@ -122,7 +123,8 @@
     },
     {
       "id": 4,
-      "title": "Price age before Kafka commit (includes injected lateness)",
+      "title": "Price event age at pre-serialization",
+      "description": "Wall-clock time minus payload event time. Includes replay age and injected lateness; future event timestamps are omitted. Not delivery latency.",
       "type": "timeseries",
       "gridPos": {
         "x": 12,
@@ -639,8 +641,14 @@
       },
       "targets": [
         {
-          "expr": "rate({__name__=~\"dummy_emitter_generated_total|dummy_emitter_acknowledged_total\"}[1m])",
-          "refId": "A"
+          "expr": "rate(dummy_emitter_generated_total[1m])",
+          "refId": "A",
+          "legendFormat": "generated {{instance}}"
+        },
+        {
+          "expr": "rate(dummy_emitter_acknowledged_total[1m])",
+          "refId": "B",
+          "legendFormat": "acknowledged {{instance}}"
         }
       ],
       "fieldConfig": {
