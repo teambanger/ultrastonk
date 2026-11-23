@@ -134,7 +134,7 @@ def compose_env(run, slice_manifest, project, parallelism=DEFAULT_PARALLELISM,
         "PACING_SAMPLE_LIMIT": "5000",
         "CSV_PATH": "/data/peak-slice.csv",
         "GATEWAY_KAFKA_FROM_BEGINNING": "true",
-        "GATEWAY_HISTORY_LIMIT": "0",
+        "GATEWAY_HISTORY_LIMIT": "1",
     }
     if subscribe_limit:
         env["MAX_TICKERS_PER_CLIENT"] = str(subscribe_limit)
@@ -946,6 +946,8 @@ def main(argv=None):
                       help="STATE=path to a slice manifest produced by peak_slice.py")
     plan.add_argument("--repeats", type=int, default=DEFAULT_REPEATS)
     plan.add_argument("--states", default="warm")
+    plan.add_argument("--pacings", default="1,1.25",
+                      help="comma-separated SPEED_MULTIPLIER levels to plan")
     plan.add_argument("--include-rollover", action="store_true")
     plan.add_argument("--output", type=Path)
 
@@ -973,6 +975,8 @@ def main(argv=None):
     execute.add_argument("--results-dir", type=Path, default=Path("benchmarks/evidence/live-peak/runs"))
     execute.add_argument("--repeats", type=int, default=DEFAULT_REPEATS)
     execute.add_argument("--states", default="warm")
+    execute.add_argument("--pacings", default="1,1.25",
+                         help="comma-separated SPEED_MULTIPLIER levels to run")
     execute.add_argument("--include-rollover", action="store_true")
     execute.add_argument("--parallelism", type=int, default=DEFAULT_PARALLELISM)
     execute.add_argument("--partitions", type=int, default=DEFAULT_PARTITIONS)
@@ -995,7 +999,8 @@ def main(argv=None):
         states = tuple(state for state in args.states.split(",") if state)
         if args.include_rollover:
             states = states or ("warm",)
-        runs = plan_runs(states=states, repeats=args.repeats,
+        pacings = tuple(float(level) for level in args.pacings.split(",") if level)
+        runs = plan_runs(pacings=pacings, states=states, repeats=args.repeats,
                          include_rollover=args.include_rollover)
         manifests = {}
         for item in args.slice_manifest:
@@ -1040,7 +1045,9 @@ def main(argv=None):
         manifests = {item.partition("=")[0]: json.loads(Path(item.partition("=")[2]).read_text())["slice"]
                      for item in args.slice_manifest}
         states = tuple(state for state in args.states.split(",") if state) or ("warm",)
-        runs = plan_runs(states=states, repeats=args.repeats, include_rollover=args.include_rollover)
+        pacings = tuple(float(level) for level in args.pacings.split(",") if level)
+        runs = plan_runs(pacings=pacings, states=states, repeats=args.repeats,
+                         include_rollover=args.include_rollover)
         limit = int(args.subscribe[3:]) if args.subscribe.startswith("top") else None
         args.results_dir.mkdir(parents=True, exist_ok=True)
         ledger = new_ledger("scored")

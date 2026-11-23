@@ -1,0 +1,63 @@
+error: slice does not reproduce the fixture headline counts
+{
+  "slice": {
+    "source": "/tmp/live-peak-src/debs2022-gc-trading-day-09-11-21.csv",
+    "output": "benchmarks/evidence/live-peak/slices/peak-warm.csv",
+    "state": "warm",
+    "rows": 1914906,
+    "bytes": 162848744,
+    "sha256": "ac38f50c7ce33d5e098028980d64d071517da13d409fc52153ed6c91892eb740",
+    "slice_start_ms": 1636473361000,
+    "slice_end_ms": 1636473871000,
+    "measured_start_ms": 1636473481000,
+    "measured_end_ms": 1636473781000,
+    "first_capture_ms": 1636473361000,
+    "first_measured_ms": 1636473481000,
+    "last_measured_ms": 1636473780000,
+    "pre_roll_requested_ms": 120000,
+    "trailing_requested_ms": 90000,
+    "segments": {
+      "PRE_ROLL": 373213,
+      "MEASURED": 1223573,
+      "TRAILING": 318120
+    },
+    "measured_by_exchange": {
+      "FR": 651170,
+      "NL": 411874,
+      "ETR": 160529
+    },
+    "all_by_exchange": {
+      "FR": 1019865,
+      "NL": 629559,
+      "ETR": 265482
+    },
+    "emitter": {
+      "PACING": "capture",
+      "REPLAY_PREROLL_MS": 120000,
+      "REPLAY_MEASURE_MS": 300000
+    },
+    "labeled_measured": 1223573,
+    "fixture": {
+      "path": "/mnt/shared/data/official-week-Ij8jlfeA/results/week-fixture.json",
+      "verified": false,
+      "problems": [
+        "measured rows 1223573 != fixture 1223873",
+        "measured FR 651170 != fixture 651418",
+        "measured NL 411874 != fixture 411885",
+        "measured ETR 160529 != fixture 160570"
+      ],
+      "expected_rows": 1223873
+    }
+  },
+  "fixture_verification": {
+    "verified": false,
+    "problems": [
+      "measured rows 1223573 != fixture 1223873",
+      "measured FR 651170 != fixture 651418",
+      "measured NL 411874 != fixture 411885",
+      "measured ETR 160529 != fixture 160570"
+    ],
+    "expected_rows": 1223873,
+    "measured_rows": 1223573
+  }
+}

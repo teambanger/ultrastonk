@@ -1,0 +1,45 @@
+{
+  "phase": "scored",
+  "created_at_epoch_seconds": 1795459689.8480542,
+  "entries": [
+    {
+      "run_id": "peak-warm-1x-r1-attempt1",
+      "condition": "warm@1x",
+      "kind": "headline",
+      "state": "warm",
+      "pacing_level": 1.0,
+      "repeat": 1,
+      "status": "failed",
+      "reasons": [
+        "gateway crash-loop: HISTORY_LIMIT must be an integer >= 1, got \"0\" (compose_env set GATEWAY_HISTORY_LIMIT=0); collector exited 1 before collecting any data"
+      ],
+      "artifacts": {
+        "project": "ultrastonk-peak-07a5b8b183",
+        "note": "project torn down; no run artifact. Fixed GATEWAY_HISTORY_LIMIT to 1 for attempt 2."
+      },
+      "started_at_epoch_seconds": null,
+      "finished_at_epoch_seconds": null
+    },
+    {
+      "run_id": "peak-warm-1x-r1",
+      "condition": "warm@1x",
+      "kind": "headline",
+      "state": "warm",
+      "pacing_level": 1.0,
+      "repeat": 1,
+      "status": "valid",
+      "reasons": [],
+      "artifacts": {
+        "run": "runs/peak-warm-1x-r1-run.json",
+        "limits": "runs/peak-warm-1x-r1-limits.json",
+        "pacing": "runs/peak-warm-1x-r1-pacing.json",
+        "oracle": "oracle-warm.jsonl",
+        "committed": "committed-warm-1x-r1.jsonl",
+        "normalized": "committed-warm-1x-r1-normalized.jsonl",
+        "comparison": "comparison-warm-1x-r1.json"
+      },
+      "started_at_epoch_seconds": null,
+      "finished_at_epoch_seconds": null
+    }
+  ]
+}

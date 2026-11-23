@@ -21,6 +21,7 @@ Raw CSVs stay outside Git. Run `python3 benchmarks/peak_slice.py --help`.
 import argparse
 import csv
 import hashlib
+import io
 import json
 import os
 import re
@@ -145,14 +146,23 @@ def label_segment(stamp_ms, anchor_ms, preroll_ms, measure_ms):
 
 def extract_slice(source, output, measured_start_ms, measured_end_ms,
                   pre_roll_ms=DEFAULT_PRE_ROLL_MS, trailing_ms=DEFAULT_TRAILING_MS,
-                  state="warm"):
-    """Copy the in-range rows in source order and return a slice manifest.
+                  state="warm", reorder="physical"):
+    """Copy the in-range rows and return a slice manifest.
 
     The output CSV keeps the 13 header lines so the replay emitter can read it
-    with its normal loader. Row membership and order are preserved; only rows
-    that fall outside [slice_start, slice_end) or fail the loader's structural
-    screen are skipped.
+    with its normal loader. Row membership is fixed by the capture interval and
+    the loader's structural screen.
+
+    `reorder="physical"` preserves original source order (the recorded burst
+    order). `reorder="capture"` writes the fixture's documented timestamp order
+    instead: ascending system capture time, then original source ordinal for
+    ties. Capture mode is required when the first physical row of the source
+    starts after the measured start, because the capture pacer anchors its
+    segment offsets on the first offered row; physical order would otherwise
+    label most of the measured window as pre-roll.
     """
+    if reorder not in ("physical", "capture"):
+        raise ValueError("reorder must be physical or capture")
     source = Path(source)
     if not source.is_file():
         raise ValueError(f"CSV file is not readable: {source}")
@@ -169,6 +179,8 @@ def extract_slice(source, output, measured_start_ms, measured_end_ms,
     first_measured_ms = last_measured_ms = None
     copied = 0
     digest = hashlib.sha256()
+    entries = [] if reorder == "capture" else None
+    buffer = io.StringIO() if reorder == "capture" else None
     try:
         with source.open(newline="", encoding="utf-8") as stream, \
                 temporary.open("w", newline="", encoding="utf-8") as target:
@@ -176,17 +188,26 @@ def extract_slice(source, output, measured_start_ms, measured_end_ms,
             if not all(header):
                 raise ValueError("source has fewer than 13 header lines")
             target.write("".join(header))
-            digest.update("".join(header).encode())
+            if reorder == "physical":
+                digest.update("".join(header).encode())
             writer = csv.writer(target)
+            ordinal = 0
             for row in csv.reader(stream):
                 stamp = _capture_stamp(row)
                 if stamp is None or not (slice_start <= stamp < slice_end):
                     continue
-                writer.writerow(row)
-                digest.update((",".join(row) + "\n").encode())
+                if reorder == "capture":
+                    buffer.seek(0)
+                    buffer.truncate(0)
+                    csv.writer(buffer).writerow(row)
+                    entries.append((stamp, ordinal, buffer.getvalue()))
+                else:
+                    writer.writerow(row)
+                    digest.update((",".join(row) + "\n").encode())
+                    if anchor_ms is None:
+                        anchor_ms = stamp
+                ordinal += 1
                 copied += 1
-                if anchor_ms is None:
-                    anchor_ms = stamp
                 exchange = exchange_of(row[0].strip())
                 all_by_exchange[exchange] += 1
                 if stamp < measured_start_ms:
@@ -198,6 +219,13 @@ def extract_slice(source, output, measured_start_ms, measured_end_ms,
                     last_measured_ms = stamp if last_measured_ms is None else max(last_measured_ms, stamp)
                 else:
                     segment_rows["TRAILING"] += 1
+            if reorder == "capture" and entries:
+                entries.sort(key=lambda item: (item[0], item[1]))
+                anchor_ms = entries[0][0]
+                digest.update("".join(header).encode())
+                for _, _, text in entries:
+                    target.write(text)
+                    digest.update(text.encode())
         if anchor_ms is None:
             raise ValueError("no row fell in the requested capture interval")
         if segment_rows["MEASURED"] == 0:
@@ -268,6 +296,8 @@ def main(argv=None):
     parser.add_argument("--state", choices=("warm", "cold"), default="warm")
     parser.add_argument("--pre-roll-ms", type=int, default=DEFAULT_PRE_ROLL_MS)
     parser.add_argument("--trailing-ms", type=int, default=DEFAULT_TRAILING_MS)
+    parser.add_argument("--reorder", choices=("physical", "capture"), default="physical",
+                        help="row order: original source order, or capture-time order with source-ordinal ties")
     parser.add_argument("--skip-verify", action="store_true",
                         help="do not fail when measured counts differ from the fixture")
     args = parser.parse_args(argv)
@@ -277,7 +307,7 @@ def main(argv=None):
         parser.error("fixture does not name a source file")
     source = args.data_dir / source_name
     manifest = extract_slice(source, args.output, start, end, args.pre_roll_ms,
-                             args.trailing_ms, args.state)
+                             args.trailing_ms, args.state, args.reorder)
     verdict = verify_against_fixture(manifest, fixture)
     manifest["fixture"] = {"path": str(args.fixture), "verified": verdict["verified"],
                            "problems": verdict["problems"], "expected_rows": verdict["expected_rows"]}

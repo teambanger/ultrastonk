@@ -5,3 +5,6 @@ flink/target/
 __pycache__/
 benchmarks/results/*
 !benchmarks/results/.gitkeep
+benchmarks/evidence/live-peak/slices/*.csv
+benchmarks/evidence/live-peak/runs/*-run.json
+benchmarks/evidence/live-peak/committed-*.jsonl

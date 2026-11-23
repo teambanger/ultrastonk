@@ -1,12 +1,14 @@
 # Live peak-load measurement (ticket 07)
 
-This is the preparation record and runbook for measuring the system under the
-official-week peak load. **The scored phase was attempted on 2026-11-23 but could
-not run: the host was not idle.** No scored measurement has been taken, and
-nothing here is a capacity, latency or correctness result. See
-[Scored results](#scored-results-2026-11-23--not-executed) below. The scored runs
-are a second phase, triggered only when the host has no other scored workload
-running.
+This is the preparation record, runbook and measured result for the official-week
+peak load. The scored phase **ran on 2026-11-23** on branch
+`integration/report-evidence`, under a 40-minute cap and a deliberate downscale
+(1x only, warm only, pre-roll 120 s / trailing 90 s, one repetition). The measured
+numbers and their limits are in
+[Scored results](#scored-results-2026-11-23--measured) below. An earlier attempt
+that same day was blocked by a foreign Compose project; that record is retained
+unchanged in `benchmarks/evidence/live-peak/blocked.json`. The pre-registered plan
+below is unchanged; the scored section states exactly what was cut.
 
 Peak load is offered by replaying a slice of the official DEBS CSV at recorded
 capture pace (`PACING=capture`, ticket 05) on an isolated Compose project. The
@@ -244,64 +246,188 @@ not a live-policy correctness expectation; they are the peak-window behaviour of
 the measured configuration, with deviations from complete-input truth attributed
 as above.
 
-## Scored results (2026-11-23) — not executed
+## Scored results (2026-11-23) — measured
 
-The scored phase was attempted on 2026-11-23 on branch `integration/report-evidence`
-under a hard 40-minute wall-clock cap, but **no measurement was taken: the host was
-not idle.** The runbook requires the scored phase to run on an otherwise idle host,
-and the pre-start check failed: `docker ps` showed a foreign, actively-running
-Compose project, `ultrastonk-fullweek-3` (ticket 06's full-week reference replay, in
-the `full-week-queries` worktree), present for the whole window. Per the idle-host
-rule the run was held and re-checked rather than started on top of the other
-workload, and that project was never touched. `ps -ef | grep sort_week` was empty.
+**Status: measured, valid.** One scored repetition ran on a clear host. All five
+`capture_pilot` gates passed (`telemetry`, `pacing`, `delivery`, `identity_clock`,
+`windows`); the run is `valid` in the ledger. This is a peak-window result for the
+measured configuration, not a capacity or full-week claim.
 
-The foreign project's measured work finished early (`run3/evidence/compare.json`
-written 17:50Z), but its TaskManagers entered a crash/restart loop (no JobManager
-reachable) and stayed Up with Kafka and the gateway until the whole stack finally
-disappeared at ~18:02:30Z (T+20.8 min), leaving ~19 min of the cap. Slice extraction
-was started immediately, but reading the whole day-09 CSV cost ~5.6 min and it then
-**failed closed**: `peak_slice.py --state warm --pre-roll-ms 120000 --trailing-ms
-90000` raised `ValueError: emitter offsets do not place the measured start in the
-measured segment` (`benchmarks/peak_slice.py:214`). The emitter labels segments from
-the first physically-offered row (`emitter_offsets`, `benchmarks/peak_slice.py:122`);
-with the 120 s pre-roll override that first physical row falls after the measured
-start (capture order is non-monotonic, so the first physical row is not the earliest
-stamp), so the pre-roll cannot be represented and the extractor refuses to emit a
-mislabeled slice. No usable slice or manifest was produced (the CSV was left at 0
-bytes), and a re-read plus a ~13-min warm 1x run could not fit the ~12 min that
-remained. No scored run was performed and no Compose stack was started.
+### Downscale actually applied (pre-registered plan above kept intact)
 
-### Intended downscale (pre-registered conditions unchanged; campaign size reduced)
+- capture pace `SPEED_MULTIPLIER=1`, `PACING=capture`, **warm state only** — no
+  1.25x and no forced-cold variant;
+- pre-roll **120 s**, trailing **90 s** (overriding the 300 s / 180 s defaults);
+- `FLINK_BOUNDED_REPLAY=false`; window/disorder/lateness 300 s / 5 s / `DROP`;
+  parallelism 2, 6 input partitions, checkpoint 10 s, subscribe all tickers;
+- **repeats actually run: 1.** The rule was "two if one repetition costs ≤ 5 min".
+  The emitter phase alone is 510 s of capture (120 + 300 + 90) plus startup and
+  build, so the first repetition cost well over 5 min and no second repeat was run.
+  Fewer repeats lower confidence; there is no spread estimate.
+- measured peak segment unchanged and asserted: **1,223,873 rows**, FR 651,418 /
+  NL 411,885 / ETR 160,570, first/last measured capture times matching the fixture.
 
-- capture pace `SPEED_MULTIPLIER=1`, `PACING=capture`, **warm state only** — no 1.25x
-  and no forced-cold variant;
-- pre-roll **120 s** and trailing **90 s**, overriding the 300 s / 180 s defaults;
-- `FLINK_BOUNDED_REPLAY=false` — a live paced replay, not preload-and-process;
-- repeats: **two if one repetition costs ≤ 5 min wall clock, otherwise one.** Not
-  decided, because no repetition ran;
-- the measured peak segment is unchanged: the `1,223,873`-row five-minute slice with
-  the fixture's FR/NL/ETR mix, which the extractor asserts and fails closed on.
+Host preconditions were verified immediately before starting: `docker ps -a`
+empty and `ps -ef | grep -E 'sort_week|full_week'` empty. A unique project
+(`ultrastonk-peak-80d41f7b99`) was created, used, and torn down; `docker ps -a` was
+empty again afterwards.
 
-### What was and was not produced
+### Attempts (all kept)
 
-No slice was extracted successfully and no run was executed: the extraction was
-attempted once the host freed and failed closed (above), and no Compose stack was
-started. None of the scored evidence exists: no usable slice CSV or manifest, no
-`run-plan.json` (which depends on the manifests), no `runs/` artifacts, no
-`ledger.json` entries, no oracle output, no comparison JSON and no `summary.json`.
-The only artifact is `benchmarks/evidence/live-peak/blocked.json`, which records the
-host-contention evidence, the re-check timeline and the extraction failure.
+1. **`peak-warm-1x-r1-attempt1` — `failed`.** The first started stack crash-looped
+   the gateway: `compose_env` set `GATEWAY_HISTORY_LIMIT=0`, but the gateway
+   requires an integer `>= 1`, so it never started and the collector exited 1
+   before collecting anything. Project `ultrastonk-peak-07a5b8b183` was torn down;
+   no run artifact exists. Fixed to `GATEWAY_HISTORY_LIMIT=1`.
+2. **`peak-warm-1x-r1` — `valid`.** Full run, all gates pass.
+
+### Run plan actually used
+
+`run-plan.json` records pacing level `[1.0]`, one repeat, one run
+(`peak-warm-1x-r1`, condition `warm@1x`). This is the downscale of the
+pre-registered 1x/1.25x three-repeat campaign described above.
+
+### Achieved pacing (scheduled vs actual, emitter report)
+
+| Segment | Rows | Achieved ratio | Max lag |
+|---|---|---|---|
+| PRE_ROLL | 373,210 | 0.99983 | 739 ms |
+| MEASURED | 1,223,873 | 0.99991 | 35 ms |
+| TRAILING | 317,895 | 0.99980 | 47 ms |
+
+Measured-segment pacing is effectively 1.00x. (The slice manifest counts
+373,213 / 1,223,873 / 318,120 rows by strict capture-stamp membership; the 225-row
+trailing difference is the emitter's capture-offset boundary labeling.)
+
+### Expected vs delivered by subscription
+
+Price records: **expected 195,061 = committed 195,061 = WebSocket 195,061**, with
+zero missing, zero extra, and no EMA-pair gaps. The 1,914,978 committed-input rows
+include tied/duplicate identities inherent to the recorded data (8,257 duplicate
+identities / 16,529 duplicate rows; 1,395 tied timestamps), which the delivery
+check treats correctly.
+
+### Stage backlog and drain
+
+- **Kafka broker lag / gateway consumer-group lag: not collected.** The collector
+  wrote `consumer_lag: {}`; this is recorded as missing evidence, not silently
+  dropped.
+- **Flink input-minus-output gap:** max 1,713,373, final 1,710,455, nominally
+  "growing". This gap is structural — the output stream is per-window EMA/advisory
+  records, not one row per trade — so it is not a throughput backlog.
+- **Gateway output-minus-WebSocket gap:** max 1,654, final 0, not growing — the
+  gateway caught up.
+- **Drain:** 7.08 s from the first committed-input peak to the first delivery peak.
+
+### Restarts and OOMs
+
+Post-run `docker inspect` of every container in the project: **restart count 0,
+`OOMKilled=false`** for all (jobmanager, both taskmanagers, kafka, gateway,
+client, kafka-init; client exit 0). Task-restart JSON was not supplied to the
+collector, so `summary.restarts.available` is false; the container inspection is
+the source (`runs/post-run-containers.txt`).
+
+### Latency (p50/p95/p99 with sample sizes), two paths reported independently
+
+**Trade: enqueue → WebSocket** — n = 195,061
+| p50 | p95 | p99 | max |
+|---|---|---|---|
+| 5,060 ms | 9,063 ms | 9,225 ms | 10,171 ms |
+
+This path is dominated by the 5 s disorder/watermark hold plus processing, not by
+the WebSocket hop: committed-observation (enqueue→committed) is p50 5,043 / p99
+9,206 ms, while **committed → WebSocket is p50 15.5 / p95 104 / p99 134 ms** (max
+422 ms). Emitter enqueue→ack is p50 34 / p95 55 / p99 58 ms (n = 5,000).
+
+**Window-finalization → advisory receipt** — n = 3,154 (> 20, so not inconclusive)
+| p50 | p95 | p99 | max |
+|---|---|---|---|
+| 240,962 ms | 241,187 ms | 241,192 ms | 241,194 ms |
+
+This is dominated by the event-time-vs-capture-clock offset and watermark wait,
+kept apart from transport. Historical event age (wall minus 2021 event time) is
+p50 ≈ 158,988,927,518 ms (~5.04 years). Watermark wait is p50 −218,592 / p95
+−138,084 / p99 −37,785 ms with max 4,853 ms (n = 3,111); the negative values are
+the lower-bound eligibility estimate running ahead of actual enqueue when event
+time leads capture time. The 1 s p99 is a project target, not a rubric
+requirement; both paths are recorded, not asserted as project pass/fail.
+
+### Oracle comparison (`benchmarks/query_truth.py` over the same slice)
+
+Expected 9,649 oracle records vs 6,308 live records; **missing 3,341, extra 0,
+incorrect 0, duplicate 0** (so every live record it emitted matched the oracle).
+Exhaustive split of the 3,341 missing keys:
+
+- **policy-related 3,309** — all in a single five-minute window group; this is the
+  live pipeline withholding one whole window's EMA/advisory set, consistent with
+  that window not closing inside the capture/trailing window (the final window's
+  close is past the end of offered capture). It is a measurement-window boundary
+  effect, not a per-trade policy decision; the classifier labels it policy-related
+  because the inputs arrived.
+- **transport loss 18** — window keys whose committed inputs were short of the
+  eligible inputs (≈0.5% of expected records). Transport loss is negligible.
+- **unexplained 14** — a far-future event-time window (a data clock anomaly), kept
+  visible.
+
+The disk-backed comparator samples the first 20 mismatches; the numbers above are
+from an exhaustive in-memory pass over the same JSONL files (they are small).
+
+### Wall time and cap
+
+First extraction command 18:07:25Z. Direct capture-order extraction (5 GB source)
+18:21–18:26; failed attempt 1 18:27–18:31; valid run 18:31–~18:40 (build/start +
+8.5 min emitter); oracle ~5 s; summarize/compare/ledger ~30 s. The written summary
+landed at ~18:48Z, roughly **41–42 minutes**: ~1–2 minutes over the 40-minute hard
+cap. Nothing was cut from the condition set (one repeat and 90 s trailing were both
+kept); the overrun came from two harness defects that had to be fixed to produce
+valid evidence, below.
+
+### Harness changes required (uncommitted, working tree)
+
+- `benchmarks/peak_slice.py`: added `--reorder capture`. The DEBS physical order
+  makes the first in-range row 16:02:54.650, later than the measured start
+  (15:58:01), so the physically-ordered slice fails closed exactly as designed
+  (`emitter offsets do not place the measured start in the measured segment`). The
+  fixture's own `timestamp_order` is capture-time order with source-ordinal ties,
+  so `--reorder capture` (stable, preserving same-timestamp burst order) reproduces
+  the measured membership; fail-closed fixture verification is unchanged.
+- `benchmarks/live_peak.py`: added `--pacings`/`--pacings` to `plan`/`run` so the
+  mandated 1x-only condition can be selected (the CLI previously always planned
+  1x and 1.25x); set `GATEWAY_HISTORY_LIMIT=1` (was `0`, invalid).
+- `benchmarks/capture_pilot.py`: replaced the per-window full rescan in
+  `window_check` with a suffix-min index over event-time-sorted advancers
+  (identical semantics; the former path was O(windows × rows) and infeasible at
+  1.9 M input rows).
+- `speed_multiplier` in the client record is `None` because `docker compose run`
+  did not propagate `SPEED_MULTIPLIER` to the collector service; the summary takes
+  it from the emitter's authoritative pacing report (`1.0`). This is noted in
+  `summary.json`.
+
+`benchmarks/matrix.py`, `benchmarks/report.py`, the `.scratch/` tickets,
+`.kilo/plans/`, `docs/report-evidence.md`, `docs/evidence-audit.md`, and
+`blocked.json` were not modified. Nothing was staged or committed.
+
+### Evidence
+
+Under `benchmarks/evidence/live-peak/`: `slices/peak-warm.csv` +
+`slices/peak-warm-manifest.json` (verified), `run-plan.json`, `runs/peak-warm-1x-r1-{run,limits,pacing}.json`
+and `runs/post-run-containers.txt`, `oracle-warm.jsonl`,
+`committed-warm-1x-r1.jsonl`, `committed-warm-1x-r1-normalized.jsonl`,
+`comparison-warm-1x-r1.json`, `comparison-warm-1x-r1-classification.json`,
+`summary.json`, `ledger.json`, and the retained `blocked.json` from the earlier
+host-contention attempt.
 
 ### What this result does and does not support
 
-- It does **not** support any pacing, expected-vs-delivered, backlog, drain,
-  restart/OOM, latency (trade or advisory) or oracle-correctness claim: there are no
-  numbers. The live advisory p99 is not merely sparse but absent, so it is
-  **inconclusive** for lack of any run, not for lack of samples.
-- It does **not** support a capacity claim, and a peak high-water-mark on this slice
-  would not have been a full-week claim even had it run; the slice is five minutes of
-  capture order, not the full week.
-- It **does** record that the peak-window configuration could not be scored inside
-  the imposed 40-minute cap on this host because the host was occupied by another
-  scored workload, which is exactly the contended phase this ticket is split out to
-  avoid.
+- It **is** a measured peak-window result: pacing ~1.00x, exact expected-vs-delivered
+  delivery, no restarts/OOMs, and negligible transport loss against complete-input
+  truth.
+- It does **not** support a capacity or **full-week** claim. The slice is five
+  minutes of the recorded peak; a peak high-water mark is not a whole-week result.
+- It does **not** support a 1.25x or cold-start result (not run), a spread/confidence
+  interval (one repetition), or broker/gateway consumer-lag numbers (not collected).
+- The 1 s p99 is a **project target, not a rubric requirement**; both paths are
+  recorded, and the advisory path's large value is a clock/watermark effect kept
+  separate from the sub-second WebSocket hop.
+- Confidence is **lower than a multi-repeat campaign** would give; treat the numbers
+  as one valid peak-window observation of this configuration.

@@ -10,6 +10,7 @@ The evaluation functions are pure so they can be exercised against controlled fi
 `main()` performs the live collection against a disposable Compose project.
 """
 import argparse
+import bisect
 import collections
 import json
 import math
@@ -279,6 +280,19 @@ def window_check(run, tolerance_ms=3000):
     tied_windows = 0
     eligible_windows = 0
     not_eligible = 0
+    # Precompute min emit time over all input rows at or after each event-time
+    # threshold. A per-window rescan of the whole input is quadratic at peak
+    # scale; a suffix-min over event-time-sorted advancers is equivalent.
+    advancer_rows = sorted((int(record["event_ms"]), int(record["emit_ms"]))
+                           for record in (run.get("input") or [])
+                           if record.get("emit_ms") is not None)
+    advancer_events = [event for event, _ in advancer_rows]
+    advancer_min_emit = [0] * len(advancer_rows)
+    running_min = None
+    for index in range(len(advancer_rows) - 1, -1, -1):
+        emit = advancer_rows[index][1]
+        running_min = emit if running_min is None else min(running_min, emit)
+        advancer_min_emit[index] = running_min
     for (ticker, window_start), records in sorted(groups.items()):
         closing = max(int(record["event_ms"]) for record in records)
         closing_values = {round(float(record["value"]), 9) for record in records
@@ -295,13 +309,12 @@ def window_check(run, tolerance_ms=3000):
         # event time was enqueued. Its enqueue wall time is a deterministic lower bound for
         # eligibility and does not depend on the REST polling resolution.
         required_event = window_start + window + disorder + grace
-        advancers = [record for record in run.get("input") or []
-                     if record.get("emit_ms") is not None and int(record["event_ms"]) >= required_event]
-        if not advancers:
+        advancer_index = bisect.bisect_left(advancer_events, required_event)
+        if advancer_index >= len(advancer_rows):
             missing.append({"ticker": ticker, "window_start": window_start,
                             "reason": "observed watermark crossing without a committed input that can advance it"})
             continue
-        eligible_at = min(int(record["emit_ms"]) for record in advancers)
+        eligible_at = advancer_min_emit[advancer_index]
         eligible_windows += 1
         if ema_index.get((ticker, closing)) != {"EMA38", "EMA100"}:
             missing.append({"ticker": ticker, "window_start": window_start, "closing_event_ms": closing,

@@ -1,0 +1,1437 @@
+[
+    {
+        "Id": "7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff",
+        "Created": "2026-11-23T18:31:04.732677676Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "node",
+            "src/index.js"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2495904,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-23T18:31:15.23761954Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "starting",
+                "FailingStreak": 0,
+                "Log": []
+            }
+        },
+        "Image": "sha256:0ed4e8041b70aad11137de979c5e26b4ada5f4ea4544613b02818561d54227e2",
+        "ResolvConfPath": "/var/lib/docker/containers/7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff/hostname",
+        "HostsPath": "/var/lib/docker/containers/7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff/hosts",
+        "LogPath": "/var/lib/docker/containers/7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff/7778e13c1bb7f597a161fc5a52be1d0c52f41672604e33876dfb48181f3f52ff-json.log",
+        "Name": "/ultrastonk-peak-80d41f7b99-gateway-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "ultrastonk-peak-80d41f7b99_default",
+            "PortBindings": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "0"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "7778e13c1bb7",
+            "Domainname": "",
+            "User": "node",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "8080/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "HISTORY_LIMIT=1",
+                "KAFKA_BROKERS=kafka:9092",
+                "KAFKA_FROM_BEGINNING=true",
+                "KAFKA_GROUP_ID=peak-gateway-80d41f7b99",
+                "KAFKA_TOPIC=peak-80d41f7b99-out",
+                "MAX_TICKERS_PER_CLIENT=4075",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.22.3",
+                "YARN_VERSION=1.22.22",
+                "NODE_ENV=production",
+                "PORT=8080",
+                "SOURCE=kafka"
+            ],
+            "Cmd": [
+                "node",
+                "src/index.js"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "wget -qO- http://127.0.0.1:8080/health >/dev/null || exit 1"
+                ],
+                "Interval": 10000000000,
+                "Timeout": 3000000000,
+                "StartPeriod": 5000000000,
+                "Retries": 3
+            },
+            "Image": "ultrastonk-peak-80d41f7b99-gateway",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "828056c4747d45c628eba9ead096a1c227aad3e3be28065f759e1c23714fb969",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "kafka-init:service_completed_successfully:false",
+                "com.docker.compose.image": "sha256:b44c5bc087be652412b2e0539954fe3b2966663c380244d14f9030e26db89cc3",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "ultrastonk-peak-80d41f7b99",
+                "com.docker.compose.project.config_files": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/compose.yaml,/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/results/ultrastonk-peak-80d41f7b99-override.yaml",
+                "com.docker.compose.project.working_dir": "/mnt/shared/data/shool/BigD/SS26/ultrastonk",
+                "com.docker.compose.service": "gateway",
+                "com.docker.compose.version": "5.8.0"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "a9f942b3ff2a7846ca08c30999954155f02a2ece9706f90eb38e00d64391d281",
+            "SandboxKey": "/var/run/docker/netns/a9f942b3ff2a",
+            "Ports": {
+                "8080/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "32817"
+                    }
+                ]
+            },
+            "Networks": {
+                "ultrastonk-peak-80d41f7b99_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ultrastonk-peak-80d41f7b99-gateway-1",
+                        "gateway"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "cf823297df261d444ffdbd3c820c87096663d3b37dbfd9344c44e53134b9570c",
+                    "EndpointID": "a7d3865464ef8d8a9b44a5cd4a51294e90ce91f82424dd5afde872ed97e7446a",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.4",
+                    "MacAddress": "b6:2a:1f:bd:8d:fe",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ultrastonk-peak-80d41f7b99-gateway-1",
+                        "gateway",
+                        "7778e13c1bb7"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:b44c5bc087be652412b2e0539954fe3b2966663c380244d14f9030e26db89cc3",
+            "size": 1999,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    },
+    {
+        "Id": "91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a",
+        "Created": "2026-11-23T18:31:04.734034077Z",
+        "Path": "/opt/flink/pipeline-entrypoint.sh",
+        "Args": [
+            "standalone-job",
+            "--job-classname",
+            "fi.ultrastonk.PricePipeline"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2495801,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-23T18:31:15.109193754Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:2fd2135efb96ae6900893dd871c70aa0e84dc343839aec988eddf046bd52573d",
+        "ResolvConfPath": "/var/lib/docker/containers/91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a/hostname",
+        "HostsPath": "/var/lib/docker/containers/91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a/hosts",
+        "LogPath": "/var/lib/docker/containers/91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a/91096deda48a4c29d50e772968128e857a017e6026e370261fd8bb20deb4e32a-json.log",
+        "Name": "/ultrastonk-peak-80d41f7b99-jobmanager-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "ultrastonk-peak-80d41f7b99_flink-state:/opt/flink/state:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "ultrastonk-peak-80d41f7b99_default",
+            "PortBindings": {
+                "8081/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "0"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "ultrastonk-peak-80d41f7b99_flink-state",
+                "Source": "/var/lib/docker/volumes/ultrastonk-peak-80d41f7b99_flink-state/_data",
+                "Destination": "/opt/flink/state",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "91096deda48a",
+            "Domainname": "",
+            "User": "flink",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "6123/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "ALLOWED_LATENESS_MS=0",
+                "CHECKPOINT_INTERVAL_MS=10000",
+                "DEDUP_STRATEGY=NONE",
+                "DEDUP_TTL_MS=3600000",
+                "ENABLE_BUILT_IN_PLUGINS=",
+                "FLINK_BOUNDED_REPLAY=false",
+                "FLINK_PARALLELISM=2",
+                "FLINK_PROPERTIES=jobmanager.rpc.address: jobmanager\nrest.bind-address: 0.0.0.0\ntaskmanager.numberOfTaskSlots: 1\njobmanager.memory.process.size: 1024m\ntaskmanager.memory.process.size: 1536m\nstate.checkpoints.dir: file:///opt/flink/state/checkpoints\nstate.savepoints.dir: file:///opt/flink/state/savepoints\nstate.backend.type: rocksdb\nstate.backend.incremental: true\nmetrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory\nmetrics.reporter.prom.port: 9249\nmetrics.latency.interval: 5000\nmetrics.latency.granularity: operator\nmetrics.system-resource: true\n",
+                "FLINK_RESTORE_PATH=",
+                "KAFKA_BOOTSTRAP_SERVERS=kafka:9092",
+                "KAFKA_GROUP_ID=peak-flink-80d41f7b99",
+                "KAFKA_INPUT_TOPIC=peak-80d41f7b99-in",
+                "KAFKA_OUTPUT_TOPIC=peak-80d41f7b99-out",
+                "KAFKA_REJECTED_TOPIC=peak-80d41f7b99-rejected",
+                "KAFKA_TRANSACTION_PREFIX=peak-80d41f7b99-",
+                "LATE_EVENT_STRATEGY=DROP",
+                "LOG_INTERVAL_MS=10000",
+                "MAX_OUT_OF_ORDER_MS=5000",
+                "PROFILE_ENABLED=true",
+                "PROFILE_ISOLATE_OPERATORS=false",
+                "PROFILE_SAMPLE_EVERY=100",
+                "SOURCE_IDLE_TIMEOUT_MS=30000",
+                "WINDOW_SIZE_MS=300000",
+                "PATH=/opt/flink/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=en_US.UTF-8",
+                "LANGUAGE=en_US:en",
+                "LC_ALL=en_US.UTF-8",
+                "JAVA_VERSION=jdk-17.0.18+8",
+                "GOSU_VERSION=1.11",
+                "FLINK_TGZ_URL=https://dlcdn.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz",
+                "FLINK_ASC_URL=https://downloads.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz.asc",
+                "GPG_KEY=5EE2CDBE52BDDB9CCB1C63B6E6BAF9CFABD4ED71",
+                "CHECK_GPG=true",
+                "FLINK_HOME=/opt/flink"
+            ],
+            "Cmd": [
+                "standalone-job",
+                "--job-classname",
+                "fi.ultrastonk.PricePipeline"
+            ],
+            "Image": "ultrastonk-flink:local",
+            "Volumes": null,
+            "WorkingDir": "/opt/flink",
+            "Entrypoint": [
+                "/opt/flink/pipeline-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "739169a4757a994a38e2a0b2e0936ada3bfea33b8ba0262cc6ec8e12840a653b",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "kafka-init:service_completed_successfully:false",
+                "com.docker.compose.image": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "ultrastonk-peak-80d41f7b99",
+                "com.docker.compose.project.config_files": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/compose.yaml,/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/results/ultrastonk-peak-80d41f7b99-override.yaml",
+                "com.docker.compose.project.working_dir": "/mnt/shared/data/shool/BigD/SS26/ultrastonk",
+                "com.docker.compose.service": "jobmanager",
+                "com.docker.compose.version": "5.8.0",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "da661e2c4e0b53b8bd61dcb78f4169bf2a3ab8f68359b0dec296ac5c69048d7d",
+            "SandboxKey": "/var/run/docker/netns/da661e2c4e0b",
+            "Ports": {
+                "6123/tcp": null,
+                "8081/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "32816"
+                    }
+                ]
+            },
+            "Networks": {
+                "ultrastonk-peak-80d41f7b99_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ultrastonk-peak-80d41f7b99-jobmanager-1",
+                        "jobmanager"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "cf823297df261d444ffdbd3c820c87096663d3b37dbfd9344c44e53134b9570c",
+                    "EndpointID": "72a2935f1b2530a71a9ae9648efbcb57c2f2e822d83b124bd3ba33c7806d1865",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.3",
+                    "MacAddress": "42:98:d4:fa:8f:46",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ultrastonk-peak-80d41f7b99-jobmanager-1",
+                        "jobmanager",
+                        "91096deda48a"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+            "size": 3146,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    },
+    {
+        "Id": "6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f",
+        "Created": "2026-11-23T18:31:04.604916509Z",
+        "Path": "/__cacert_entrypoint.sh",
+        "Args": [
+            "/etc/kafka/docker/run"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2492539,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-23T18:31:04.869949624Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2026-11-23T20:31:09.991437815+02:00",
+                        "End": "2026-11-23T20:31:11.027543023+02:00",
+                        "ExitCode": 0,
+                        "Output": ""
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:4ceccc577f03f51f6af8dbfda55194d0d892f4fa7913ffbded567ce3895622ed",
+        "ResolvConfPath": "/var/lib/docker/containers/6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f/hostname",
+        "HostsPath": "/var/lib/docker/containers/6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f/hosts",
+        "LogPath": "/var/lib/docker/containers/6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f/6990d2ef07c838ad968dc08348a699e73734bad766ccfe05fdecc4a98f00cc7f-json.log",
+        "Name": "/ultrastonk-peak-80d41f7b99-kafka-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "ultrastonk-peak-80d41f7b99_kafka-data:/var/lib/kafka/data:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "ultrastonk-peak-80d41f7b99_default",
+            "PortBindings": {
+                "29092/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "9092"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "eefcf935a81919e9caba7ffc4c2ddbd9d0a89f6095a5cfb2a57c100489c1f4c6",
+                "Source": "/var/lib/docker/volumes/eefcf935a81919e9caba7ffc4c2ddbd9d0a89f6095a5cfb2a57c100489c1f4c6/_data",
+                "Destination": "/etc/kafka/secrets",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "volume",
+                "Name": "b4de22cae22d548a377186823df9950fcee1e15451b416d6aed0f446132a5ea1",
+                "Source": "/var/lib/docker/volumes/b4de22cae22d548a377186823df9950fcee1e15451b416d6aed0f446132a5ea1/_data",
+                "Destination": "/mnt/shared/config",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "volume",
+                "Name": "ultrastonk-peak-80d41f7b99_kafka-data",
+                "Source": "/var/lib/docker/volumes/ultrastonk-peak-80d41f7b99_kafka-data/_data",
+                "Destination": "/var/lib/kafka/data",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "6990d2ef07c8",
+            "Domainname": "",
+            "User": "appuser",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "29092/tcp": {},
+                "9092/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk",
+                "KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,EXTERNAL://localhost:9092",
+                "KAFKA_AUTO_CREATE_TOPICS_ENABLE=false",
+                "KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER",
+                "KAFKA_CONTROLLER_QUORUM_VOTERS=1@kafka:9093",
+                "KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL",
+                "KAFKA_LISTENERS=INTERNAL://:9092,EXTERNAL://:29092,CONTROLLER://:9093",
+                "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT",
+                "KAFKA_LOG_DIRS=/var/lib/kafka/data",
+                "KAFKA_NODE_ID=1",
+                "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1",
+                "KAFKA_PROCESS_ROLES=broker,controller",
+                "KAFKA_TRANSACTION_MAX_TIMEOUT_MS=900000",
+                "KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1",
+                "KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1",
+                "PATH=/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=en_US.UTF-8",
+                "LANGUAGE=en_US:en",
+                "LC_ALL=en_US.UTF-8",
+                "JAVA_VERSION=jdk-21.0.7+6"
+            ],
+            "Cmd": [
+                "/etc/kafka/docker/run"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"
+                ],
+                "Interval": 10000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 20000000000,
+                "Retries": 12
+            },
+            "Image": "apache/kafka:3.9.1",
+            "Volumes": {
+                "/etc/kafka/secrets": {},
+                "/mnt/shared/config": {},
+                "/var/lib/kafka/data": {}
+            },
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "/__cacert_entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "59aa57faa3d7b3afa336d90932063b2f0836cbb7980ab29d7129f07b2f5c2e70",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:5862db4a63a6dd7d46fd14771b10a1b39e069c2c47f17d8e4640f960720a0ead",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "ultrastonk-peak-80d41f7b99",
+                "com.docker.compose.project.config_files": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/compose.yaml,/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/results/ultrastonk-peak-80d41f7b99-override.yaml",
+                "com.docker.compose.project.working_dir": "/mnt/shared/data/shool/BigD/SS26/ultrastonk",
+                "com.docker.compose.service": "kafka",
+                "com.docker.compose.version": "5.8.0",
+                "maintainer": "Apache Kafka",
+                "org.label-schema.build-date": "2025-05-12",
+                "org.label-schema.description": "Apache Kafka",
+                "org.label-schema.name": "kafka",
+                "org.label-schema.vcs-url": "https://github.com/apache/kafka"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "47569a7641b5b6743f0885867b0689ce9e66207930bb77d6aa05121ac3be16b7",
+            "SandboxKey": "/var/run/docker/netns/47569a7641b5",
+            "Ports": {
+                "29092/tcp": [
+                    {
+                        "HostIp": "127.0.0.1",
+                        "HostPort": "9092"
+                    }
+                ],
+                "9092/tcp": null
+            },
+            "Networks": {
+                "ultrastonk-peak-80d41f7b99_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ultrastonk-peak-80d41f7b99-kafka-1",
+                        "kafka"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "cf823297df261d444ffdbd3c820c87096663d3b37dbfd9344c44e53134b9570c",
+                    "EndpointID": "9f7b8502f7997504dd15a989d077252198f8479d66e2e95604c8cecbf98c5908",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.2",
+                    "MacAddress": "da:a3:02:5f:db:c7",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ultrastonk-peak-80d41f7b99-kafka-1",
+                        "kafka",
+                        "6990d2ef07c8"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:5862db4a63a6dd7d46fd14771b10a1b39e069c2c47f17d8e4640f960720a0ead",
+            "size": 2196,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    },
+    {
+        "Id": "91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40",
+        "Created": "2026-11-23T18:31:04.778566954Z",
+        "Path": "/opt/flink/pipeline-entrypoint.sh",
+        "Args": [
+            "taskmanager"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2495999,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-23T18:31:15.372758932Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:2fd2135efb96ae6900893dd871c70aa0e84dc343839aec988eddf046bd52573d",
+        "ResolvConfPath": "/var/lib/docker/containers/91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40/hostname",
+        "HostsPath": "/var/lib/docker/containers/91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40/hosts",
+        "LogPath": "/var/lib/docker/containers/91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40/91d3503ea4aff84023d9bd63be9d39ee84e6402c1953a0247becdda235232e40-json.log",
+        "Name": "/ultrastonk-peak-80d41f7b99-taskmanager-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "ultrastonk-peak-80d41f7b99_flink-state:/opt/flink/state:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "ultrastonk-peak-80d41f7b99_default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "ultrastonk-peak-80d41f7b99_flink-state",
+                "Source": "/var/lib/docker/volumes/ultrastonk-peak-80d41f7b99_flink-state/_data",
+                "Destination": "/opt/flink/state",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "91d3503ea4af",
+            "Domainname": "",
+            "User": "flink",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "6123/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "ALLOWED_LATENESS_MS=0",
+                "CHECKPOINT_INTERVAL_MS=10000",
+                "DEDUP_STRATEGY=NONE",
+                "DEDUP_TTL_MS=3600000",
+                "ENABLE_BUILT_IN_PLUGINS=",
+                "FLINK_PARALLELISM=2",
+                "FLINK_PROPERTIES=jobmanager.rpc.address: jobmanager\nrest.bind-address: 0.0.0.0\ntaskmanager.numberOfTaskSlots: 1\njobmanager.memory.process.size: 1024m\ntaskmanager.memory.process.size: 1536m\nstate.checkpoints.dir: file:///opt/flink/state/checkpoints\nstate.savepoints.dir: file:///opt/flink/state/savepoints\nstate.backend.type: rocksdb\nstate.backend.incremental: true\nmetrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory\nmetrics.reporter.prom.port: 9249\nmetrics.latency.interval: 5000\nmetrics.latency.granularity: operator\nmetrics.system-resource: true\n",
+                "KAFKA_BOOTSTRAP_SERVERS=kafka:9092",
+                "KAFKA_GROUP_ID=peak-flink-80d41f7b99",
+                "KAFKA_INPUT_TOPIC=peak-80d41f7b99-in",
+                "KAFKA_OUTPUT_TOPIC=peak-80d41f7b99-out",
+                "KAFKA_REJECTED_TOPIC=peak-80d41f7b99-rejected",
+                "KAFKA_TRANSACTION_PREFIX=peak-80d41f7b99-",
+                "LATE_EVENT_STRATEGY=DROP",
+                "LOG_INTERVAL_MS=10000",
+                "MAX_OUT_OF_ORDER_MS=5000",
+                "PROFILE_ENABLED=true",
+                "PROFILE_ISOLATE_OPERATORS=false",
+                "PROFILE_SAMPLE_EVERY=100",
+                "SOURCE_IDLE_TIMEOUT_MS=30000",
+                "WINDOW_SIZE_MS=300000",
+                "PATH=/opt/flink/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=en_US.UTF-8",
+                "LANGUAGE=en_US:en",
+                "LC_ALL=en_US.UTF-8",
+                "JAVA_VERSION=jdk-17.0.18+8",
+                "GOSU_VERSION=1.11",
+                "FLINK_TGZ_URL=https://dlcdn.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz",
+                "FLINK_ASC_URL=https://downloads.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz.asc",
+                "GPG_KEY=5EE2CDBE52BDDB9CCB1C63B6E6BAF9CFABD4ED71",
+                "CHECK_GPG=true",
+                "FLINK_HOME=/opt/flink"
+            ],
+            "Cmd": [
+                "taskmanager"
+            ],
+            "Image": "ultrastonk-flink:local",
+            "Volumes": null,
+            "WorkingDir": "/opt/flink",
+            "Entrypoint": [
+                "/opt/flink/pipeline-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "5c5eda7ba991c5b0f80759a0a988bdbfe16173aad66d9cea6b33b912a3034dee",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "jobmanager:service_started:false",
+                "com.docker.compose.image": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "ultrastonk-peak-80d41f7b99",
+                "com.docker.compose.project.config_files": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/compose.yaml,/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/results/ultrastonk-peak-80d41f7b99-override.yaml",
+                "com.docker.compose.project.working_dir": "/mnt/shared/data/shool/BigD/SS26/ultrastonk",
+                "com.docker.compose.service": "taskmanager",
+                "com.docker.compose.version": "5.8.0",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "8e8a41fa3984a4866259a7b4fd183f517e640a91d569108c9acf0023b86d3c9a",
+            "SandboxKey": "/var/run/docker/netns/8e8a41fa3984",
+            "Ports": {
+                "6123/tcp": null,
+                "8081/tcp": null
+            },
+            "Networks": {
+                "ultrastonk-peak-80d41f7b99_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ultrastonk-peak-80d41f7b99-taskmanager-1",
+                        "taskmanager"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "cf823297df261d444ffdbd3c820c87096663d3b37dbfd9344c44e53134b9570c",
+                    "EndpointID": "b6ea5530a149909e0fd6d70a5f70c665f5081bd0062b218be94d6d77348cdc0b",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.5",
+                    "MacAddress": "66:a8:45:1d:ac:c9",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ultrastonk-peak-80d41f7b99-taskmanager-1",
+                        "taskmanager",
+                        "91d3503ea4af"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+            "size": 3146,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    },
+    {
+        "Id": "61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7",
+        "Created": "2026-11-23T18:31:04.778523788Z",
+        "Path": "/opt/flink/pipeline-entrypoint.sh",
+        "Args": [
+            "taskmanager"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 2496088,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-23T18:31:15.488618208Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:2fd2135efb96ae6900893dd871c70aa0e84dc343839aec988eddf046bd52573d",
+        "ResolvConfPath": "/var/lib/docker/containers/61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7/hostname",
+        "HostsPath": "/var/lib/docker/containers/61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7/hosts",
+        "LogPath": "/var/lib/docker/containers/61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7/61c837759b9ee0ddfc133f511e461b77eca9138dbdc4842e99830134c86dc9b7-json.log",
+        "Name": "/ultrastonk-peak-80d41f7b99-taskmanager-2",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "ultrastonk-peak-80d41f7b99_flink-state:/opt/flink/state:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "ultrastonk-peak-80d41f7b99_default",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "ultrastonk-peak-80d41f7b99_flink-state",
+                "Source": "/var/lib/docker/volumes/ultrastonk-peak-80d41f7b99_flink-state/_data",
+                "Destination": "/opt/flink/state",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "61c837759b9e",
+            "Domainname": "",
+            "User": "flink",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "6123/tcp": {},
+                "8081/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "ALLOWED_LATENESS_MS=0",
+                "CHECKPOINT_INTERVAL_MS=10000",
+                "DEDUP_STRATEGY=NONE",
+                "DEDUP_TTL_MS=3600000",
+                "ENABLE_BUILT_IN_PLUGINS=",
+                "FLINK_PARALLELISM=2",
+                "FLINK_PROPERTIES=jobmanager.rpc.address: jobmanager\nrest.bind-address: 0.0.0.0\ntaskmanager.numberOfTaskSlots: 1\njobmanager.memory.process.size: 1024m\ntaskmanager.memory.process.size: 1536m\nstate.checkpoints.dir: file:///opt/flink/state/checkpoints\nstate.savepoints.dir: file:///opt/flink/state/savepoints\nstate.backend.type: rocksdb\nstate.backend.incremental: true\nmetrics.reporter.prom.factory.class: org.apache.flink.metrics.prometheus.PrometheusReporterFactory\nmetrics.reporter.prom.port: 9249\nmetrics.latency.interval: 5000\nmetrics.latency.granularity: operator\nmetrics.system-resource: true\n",
+                "KAFKA_BOOTSTRAP_SERVERS=kafka:9092",
+                "KAFKA_GROUP_ID=peak-flink-80d41f7b99",
+                "KAFKA_INPUT_TOPIC=peak-80d41f7b99-in",
+                "KAFKA_OUTPUT_TOPIC=peak-80d41f7b99-out",
+                "KAFKA_REJECTED_TOPIC=peak-80d41f7b99-rejected",
+                "KAFKA_TRANSACTION_PREFIX=peak-80d41f7b99-",
+                "LATE_EVENT_STRATEGY=DROP",
+                "LOG_INTERVAL_MS=10000",
+                "MAX_OUT_OF_ORDER_MS=5000",
+                "PROFILE_ENABLED=true",
+                "PROFILE_ISOLATE_OPERATORS=false",
+                "PROFILE_SAMPLE_EVERY=100",
+                "SOURCE_IDLE_TIMEOUT_MS=30000",
+                "WINDOW_SIZE_MS=300000",
+                "PATH=/opt/flink/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "JAVA_HOME=/opt/java/openjdk",
+                "LANG=en_US.UTF-8",
+                "LANGUAGE=en_US:en",
+                "LC_ALL=en_US.UTF-8",
+                "JAVA_VERSION=jdk-17.0.18+8",
+                "GOSU_VERSION=1.11",
+                "FLINK_TGZ_URL=https://dlcdn.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz",
+                "FLINK_ASC_URL=https://downloads.apache.org/flink/flink-1.20.3/flink-1.20.3-bin-scala_2.12.tgz.asc",
+                "GPG_KEY=5EE2CDBE52BDDB9CCB1C63B6E6BAF9CFABD4ED71",
+                "CHECK_GPG=true",
+                "FLINK_HOME=/opt/flink"
+            ],
+            "Cmd": [
+                "taskmanager"
+            ],
+            "Image": "ultrastonk-flink:local",
+            "Volumes": null,
+            "WorkingDir": "/opt/flink",
+            "Entrypoint": [
+                "/opt/flink/pipeline-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "5c5eda7ba991c5b0f80759a0a988bdbfe16173aad66d9cea6b33b912a3034dee",
+                "com.docker.compose.container-number": "2",
+                "com.docker.compose.depends_on": "jobmanager:service_started:false",
+                "com.docker.compose.image": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "ultrastonk-peak-80d41f7b99",
+                "com.docker.compose.project.config_files": "/mnt/shared/data/shool/BigD/SS26/ultrastonk/compose.yaml,/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/results/ultrastonk-peak-80d41f7b99-override.yaml",
+                "com.docker.compose.project.working_dir": "/mnt/shared/data/shool/BigD/SS26/ultrastonk",
+                "com.docker.compose.service": "taskmanager",
+                "com.docker.compose.version": "5.8.0",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "dbd56cfc8976274d3d7fd6f705911e0ec1b4bae2770b6492c958e0af0fce32de",
+            "SandboxKey": "/var/run/docker/netns/dbd56cfc8976",
+            "Ports": {
+                "6123/tcp": null,
+                "8081/tcp": null
+            },
+            "Networks": {
+                "ultrastonk-peak-80d41f7b99_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "ultrastonk-peak-80d41f7b99-taskmanager-2",
+                        "taskmanager"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "cf823297df261d444ffdbd3c820c87096663d3b37dbfd9344c44e53134b9570c",
+                    "EndpointID": "71c187aaf7821b63f0d906c676381b04d91dde995aa31ca7d4f7cfb5c41ef37b",
+                    "Gateway": "172.23.0.1",
+                    "IPAddress": "172.23.0.6",
+                    "MacAddress": "12:0a:e4:3a:e3:2b",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "ultrastonk-peak-80d41f7b99-taskmanager-2",
+                        "taskmanager",
+                        "61c837759b9e"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:4f4c0e94f75e27965c818373540372f75f53a64404750bb4d2e643c534d66605",
+            "size": 3146,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

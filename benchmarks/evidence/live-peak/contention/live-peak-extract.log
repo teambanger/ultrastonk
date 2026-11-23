@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/peak_slice.py", line 296, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/peak_slice.py", line 279, in main
+    manifest = extract_slice(source, args.output, start, end, args.pre_roll_ms,
+                             args.trailing_ms, args.state)
+  File "/mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/peak_slice.py", line 214, in extract_slice
+    raise ValueError("emitter offsets do not place the measured start in the measured segment")
+ValueError: emitter offsets do not place the measured start in the measured segment
