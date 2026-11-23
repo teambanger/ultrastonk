@@ -1,0 +1,41 @@
+{
+  "achieved_originals_per_second": 3999.994877205621,
+  "benchmark_container": null,
+  "committed_prices_per_second": 3843.8148707592927,
+  "delivered_prices": 80000,
+  "distribution_file": "/results/growth-weights-1000.json",
+  "drain_seconds": 0.8114489720028359,
+  "errors": [],
+  "exit_code": "0",
+  "expected_prices": 80000,
+  "gateway_container": null,
+  "input_partition_imbalance": {
+    "coefficient_of_variation": 0.3195425519394874,
+    "max_over_mean": 1.6918499999999999,
+    "max_share": 0.281975,
+    "min_share": 0.1229,
+    "partitions": 6,
+    "records": 80000,
+    "shares": {
+      "0": 0.281975,
+      "1": 0.15485,
+      "2": 0.138175,
+      "3": 0.1646,
+      "4": 0.1375,
+      "5": 0.1229
+    }
+  },
+  "latency_ms": {
+    "max": 3223.1162579992088,
+    "p50": 664.8782409974956,
+    "p95": 1965.9518430540636,
+    "p99": 2699.265063717321
+  },
+  "latency_samples": 80000,
+  "missing_prices": 0,
+  "price_correctness_passed": true,
+  "run_id": "a2800a3eddae-000",
+  "skew": 1.2,
+  "symbols": 1000,
+  "unexpected_prices": 0
+}

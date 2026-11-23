@@ -1,0 +1,235 @@
+{
+  "baseline": {
+    "basis": "capacity bracket: 1 worker at 4,000 offered/s passed delivery exactly",
+    "duration_seconds": 20,
+    "offered_per_second": 4000,
+    "repetitions": 1,
+    "warmup_seconds": 5,
+    "workers": 1
+  },
+  "commands": {
+    "longtail-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-1000.json",
+    "longtail-2000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-longtail-2000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 2000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --distribution-file /results/growth-weights-2000.json",
+    "uniform-1000": "python3 /mnt/shared/data/shool/BigD/SS26/ultrastonk/benchmarks/matrix.py --project ultrastonk-growth-09-uniform-1000 --duration 20 --warmup 5 --rates 4000 --parallelism 1 --dedup NONE --late DROP --qualities baseline --repetitions 1 --duplicate-rate 0 --late-rate 0 --symbols 1000 --seed 42 --resource-profile perworker=taskmanager:1:2g,kafka:2:2g,benchmark:2:1g --skew 0.0"
+  },
+  "comparisons": {
+    "longtail_vs_uniform_1000": {
+      "committed_prices_per_second": {
+        "baseline": 3924.704911475037,
+        "changed": 3843.8148707592927,
+        "ratio": 0.9793895228965525
+      },
+      "input_partition_imbalance.coefficient_of_variation": {
+        "baseline": 0.0942285552526409,
+        "changed": 0.3195425519394874,
+        "ratio": 3.3911434923601007
+      },
+      "input_partition_imbalance.max_over_mean": {
+        "baseline": 1.1219999999999999,
+        "changed": 1.6918499999999999,
+        "ratio": 1.5078877005347593
+      },
+      "latency_ms.p50": {
+        "baseline": 676.7945675019291,
+        "changed": 664.8782409974956,
+        "ratio": 0.9823929932705916
+      },
+      "latency_ms.p95": {
+        "baseline": 1856.7683243396468,
+        "changed": 1965.9518430540636,
+        "ratio": 1.058802984348221
+      },
+      "latency_ms.p99": {
+        "baseline": 2654.294217180285,
+        "changed": 2699.265063717321,
+        "ratio": 1.0169426758518163
+      }
+    },
+    "symbols_2000_vs_1000": {
+      "committed_prices_per_second": {
+        "baseline": 3843.8148707592927,
+        "changed": 3853.8573566428804,
+        "ratio": 1.0026126351609654
+      },
+      "input_partition_imbalance.coefficient_of_variation": {
+        "baseline": 0.3195425519394874,
+        "changed": 0.10817905007440211,
+        "ratio": 0.3385434879261034
+      },
+      "input_partition_imbalance.max_over_mean": {
+        "baseline": 1.6918499999999999,
+        "changed": 1.1028,
+        "ratio": 0.6518308360670273
+      },
+      "latency_ms.p50": {
+        "baseline": 664.8782409974956,
+        "changed": 639.1551584965782,
+        "ratio": 0.9613115892282385
+      },
+      "latency_ms.p95": {
+        "baseline": 1965.9518430540636,
+        "changed": 1413.7593688967195,
+        "ratio": 0.7191220750862721
+      },
+      "latency_ms.p99": {
+        "baseline": 2699.265063717321,
+        "changed": 2199.332899566212,
+        "ratio": 0.8147895251670385
+      }
+    }
+  },
+  "conditions": {
+    "longtail-1000": {
+      "achieved_originals_per_second": 3999.994877205621,
+      "benchmark_container": null,
+      "committed_prices_per_second": 3843.8148707592927,
+      "delivered_prices": 80000,
+      "distribution_file": "/results/growth-weights-1000.json",
+      "drain_seconds": 0.8114489720028359,
+      "errors": [],
+      "exit_code": "0",
+      "expected_prices": 80000,
+      "gateway_container": null,
+      "input_partition_imbalance": {
+        "coefficient_of_variation": 0.3195425519394874,
+        "max_over_mean": 1.6918499999999999,
+        "max_share": 0.281975,
+        "min_share": 0.1229,
+        "partitions": 6,
+        "records": 80000,
+        "shares": {
+          "0": 0.281975,
+          "1": 0.15485,
+          "2": 0.138175,
+          "3": 0.1646,
+          "4": 0.1375,
+          "5": 0.1229
+        }
+      },
+      "latency_ms": {
+        "max": 3223.1162579992088,
+        "p50": 664.8782409974956,
+        "p95": 1965.9518430540636,
+        "p99": 2699.265063717321
+      },
+      "latency_samples": 80000,
+      "missing_prices": 0,
+      "price_correctness_passed": true,
+      "run_id": "a2800a3eddae-000",
+      "skew": 1.2,
+      "symbols": 1000,
+      "unexpected_prices": 0
+    },
+    "longtail-2000": {
+      "achieved_originals_per_second": 3999.989400226772,
+      "benchmark_container": null,
+      "committed_prices_per_second": 3853.8573566428804,
+      "delivered_prices": 80000,
+      "distribution_file": "/results/growth-weights-2000.json",
+      "drain_seconds": 0.7576514829997905,
+      "errors": [],
+      "exit_code": "0",
+      "expected_prices": 80000,
+      "gateway_container": null,
+      "input_partition_imbalance": {
+        "coefficient_of_variation": 0.10817905007440211,
+        "max_over_mean": 1.1028,
+        "max_share": 0.1838,
+        "min_share": 0.1290875,
+        "partitions": 6,
+        "records": 80000,
+        "shares": {
+          "0": 0.171125,
+          "1": 0.1290875,
+          "2": 0.177275,
+          "3": 0.1838,
+          "4": 0.1623625,
+          "5": 0.17635
+        }
+      },
+      "latency_ms": {
+        "max": 2463.8010000053328,
+        "p50": 639.1551584965782,
+        "p95": 1413.7593688967195,
+        "p99": 2199.332899566212
+      },
+      "latency_samples": 80000,
+      "missing_prices": 0,
+      "price_correctness_passed": true,
+      "run_id": "c827d6b5db8e-000",
+      "skew": 1.2,
+      "symbols": 2000,
+      "unexpected_prices": 0
+    },
+    "uniform-1000": {
+      "achieved_originals_per_second": 3999.98689104326,
+      "benchmark_container": null,
+      "committed_prices_per_second": 3924.704911475037,
+      "delivered_prices": 80000,
+      "distribution_file": null,
+      "drain_seconds": 0.38291081399074756,
+      "errors": [],
+      "exit_code": "0",
+      "expected_prices": 80000,
+      "gateway_container": null,
+      "input_partition_imbalance": {
+        "coefficient_of_variation": 0.0942285552526409,
+        "max_over_mean": 1.1219999999999999,
+        "max_share": 0.187,
+        "min_share": 0.140825,
+        "partitions": 6,
+        "records": 80000,
+        "shares": {
+          "0": 0.18145,
+          "1": 0.140825,
+          "2": 0.187,
+          "3": 0.1543875,
+          "4": 0.1716875,
+          "5": 0.16465
+        }
+      },
+      "latency_ms": {
+        "max": 2917.5790440058336,
+        "p50": 676.7945675019291,
+        "p95": 1856.7683243396468,
+        "p99": 2654.294217180285
+      },
+      "latency_samples": 80000,
+      "missing_prices": 0,
+      "price_correctness_passed": true,
+      "run_id": "5058cb4b9046-000",
+      "skew": 0.0,
+      "symbols": 1000,
+      "unexpected_prices": 0
+    }
+  },
+  "distribution_inputs": {
+    "1000": {
+      "coverage": {
+        "all": 1.0,
+        "symbols": 1000,
+        "top1": 0.026968302929599175,
+        "top10": 0.1774627175065627,
+        "top100": 0.6610766828894266
+      },
+      "source_rows": 255989115
+    },
+    "2000": {
+      "coverage": {
+        "all": 1.0,
+        "symbols": 2000,
+        "top1": 0.025629209593087083,
+        "top10": 0.1686509230413076,
+        "top100": 0.6282513551967029
+      },
+      "source_rows": 269364218
+    }
+  },
+  "scope": "single repetition; directional; processing path only, no gateway",
+  "source_sessions": [
+    "5058cb4b9046",
+    "a2800a3eddae",
+    "c827d6b5db8e"
+  ],
+  "wall_seconds": 163.7392112330126
+}

@@ -1,0 +1,138 @@
+{
+  "achieved_originals_per_second": 3999.948616017136,
+  "benchmark_container": null,
+  "committed_prices_per_second": 3845.724474522597,
+  "delivered_prices": 79999,
+  "distribution_file": "/results/growth-weights-200.json",
+  "drain_seconds": 0.8012695840006927,
+  "errors": [],
+  "exit_code": "0",
+  "expected_prices": 79999,
+  "gateway": {
+    "client_errors": [
+      [],
+      []
+    ],
+    "client_latency_ms": [
+      {
+        "p50": 710.8648099965649,
+        "p99": 2242.595245689156
+      },
+      {
+        "p50": 708.6827089951839,
+        "p99": 2260.550282184268
+      }
+    ],
+    "client_missing_emas": [
+      0,
+      0
+    ],
+    "client_missing_prices": [
+      0,
+      0
+    ],
+    "clients": 2,
+    "delivered_exact_all_clients": true,
+    "fanout_frames_per_second": 8475.093156446917,
+    "health": {
+      "clients": 2,
+      "dropped": 0,
+      "forwarded": 221162,
+      "in": 110181,
+      "invalid": 0,
+      "memory_mb": 239,
+      "tickers": 400
+    },
+    "per_client_prices_per_second": 3845.8426119016926,
+    "websocket_frames": 176294
+  },
+  "gateway_container": {
+    "cpu_percent": 5.76,
+    "memory_bytes": 203528601.6,
+    "samples": 1
+  },
+  "input_partition_imbalance": {
+    "coefficient_of_variation": 0.254909586164438,
+    "max_over_mean": 1.3440918011475145,
+    "max_share": 0.2240153001912524,
+    "min_share": 0.10508881361017013,
+    "partitions": 6,
+    "records": 79999,
+    "shares": {
+      "0": 0.15087688596107451,
+      "1": 0.1444768059600745,
+      "2": 0.10508881361017013,
+      "3": 0.2203027537844223,
+      "4": 0.15523944049300617,
+      "5": 0.2240153001912524
+    }
+  },
+  "latency_ms": {
+    "max": 2634.6854090079432,
+    "p50": 673.7227510020602,
+    "p95": 1381.7445211054278,
+    "p99": 2170.4048726119804
+  },
+  "latency_samples": 79999,
+  "missing_prices": 0,
+  "price_correctness_passed": true,
+  "prometheus_services": {
+    "benchmark": {
+      "pipeline_container_cpu_throttled_periods_ratio": 0.0,
+      "pipeline_container_cpu_used_cores": 0.44149178207027484,
+      "pipeline_container_cpu_utilization_ratio": 0.22074589103513742,
+      "pipeline_container_memory_utilization_ratio": 0.1363372802734375,
+      "pipeline_container_memory_working_set_bytes": 146391040.0
+    },
+    "gateway": {
+      "pipeline_container_cpu_throttled_periods_ratio": 0.04,
+      "pipeline_container_cpu_used_cores": 0.20431233041726546,
+      "pipeline_container_cpu_utilization_ratio": 0.20431233041726546,
+      "pipeline_container_memory_utilization_ratio": 0.3757476806640625,
+      "pipeline_container_memory_working_set_bytes": 201728000.0
+    },
+    "jobmanager": {
+      "pipeline_container_cpu_used_cores": 1.723376234804183,
+      "pipeline_container_cpu_utilization_ratio": 0.14361468623368193,
+      "pipeline_container_memory_utilization_ratio": 0.014218849796922894,
+      "pipeline_container_memory_working_set_bytes": 472342528.0
+    },
+    "kafka": {
+      "pipeline_container_cpu_throttled_periods_ratio": 0.3617021276595745,
+      "pipeline_container_cpu_used_cores": 1.2708968355264811,
+      "pipeline_container_cpu_utilization_ratio": 0.6354484177632406,
+      "pipeline_container_memory_utilization_ratio": 0.47894859313964844,
+      "pipeline_container_memory_working_set_bytes": 1028534272.0
+    },
+    "kafka-exporter": {
+      "pipeline_container_cpu_used_cores": 0.004323891429028428,
+      "pipeline_container_cpu_utilization_ratio": 0.000360324285752369,
+      "pipeline_container_memory_utilization_ratio": 0.0002638646053991137,
+      "pipeline_container_memory_working_set_bytes": 8765440.0
+    },
+    "prometheus": {
+      "pipeline_container_cpu_used_cores": 0.006479196665822925,
+      "pipeline_container_cpu_utilization_ratio": 0.0005399330554852437,
+      "pipeline_container_memory_utilization_ratio": 0.0011314119715618073,
+      "pipeline_container_memory_working_set_bytes": 37584896.0
+    },
+    "resource-exporter": {
+      "pipeline_container_cpu_throttled_periods_ratio": 0.0,
+      "pipeline_container_cpu_used_cores": 0.002293676445257213,
+      "pipeline_container_cpu_utilization_ratio": 0.009174705781028853,
+      "pipeline_container_memory_utilization_ratio": 0.1339111328125,
+      "pipeline_container_memory_working_set_bytes": 17973248.0
+    },
+    "taskmanager": {
+      "pipeline_container_cpu_throttled_periods_ratio": 0.9803921568627451,
+      "pipeline_container_cpu_used_cores": 0.9940526878198367,
+      "pipeline_container_cpu_utilization_ratio": 0.9940526878198367,
+      "pipeline_container_memory_utilization_ratio": 0.2273693084716797,
+      "pipeline_container_memory_working_set_bytes": 488271872.0
+    }
+  },
+  "run_id": "e48572d5c07f-000",
+  "skew": null,
+  "symbols": 200,
+  "unexpected_prices": 0
+}

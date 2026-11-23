@@ -1,0 +1,41 @@
+{
+  "achieved_originals_per_second": 3999.98689104326,
+  "benchmark_container": null,
+  "committed_prices_per_second": 3924.704911475037,
+  "delivered_prices": 80000,
+  "distribution_file": null,
+  "drain_seconds": 0.38291081399074756,
+  "errors": [],
+  "exit_code": "0",
+  "expected_prices": 80000,
+  "gateway_container": null,
+  "input_partition_imbalance": {
+    "coefficient_of_variation": 0.0942285552526409,
+    "max_over_mean": 1.1219999999999999,
+    "max_share": 0.187,
+    "min_share": 0.140825,
+    "partitions": 6,
+    "records": 80000,
+    "shares": {
+      "0": 0.18145,
+      "1": 0.140825,
+      "2": 0.187,
+      "3": 0.1543875,
+      "4": 0.1716875,
+      "5": 0.16465
+    }
+  },
+  "latency_ms": {
+    "max": 2917.5790440058336,
+    "p50": 676.7945675019291,
+    "p95": 1856.7683243396468,
+    "p99": 2654.294217180285
+  },
+  "latency_samples": 80000,
+  "missing_prices": 0,
+  "price_correctness_passed": true,
+  "run_id": "5058cb4b9046-000",
+  "skew": 0.0,
+  "symbols": 1000,
+  "unexpected_prices": 0
+}

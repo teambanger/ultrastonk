@@ -72,6 +72,8 @@ def main():
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--symbols", type=int, default=1000)
     parser.add_argument("--skew", type=float, default=1.2)
+    parser.add_argument("--distribution-file", help="per-symbol weights JSON visible inside the benchmark container")
+    parser.add_argument("--clients", type=int, default=1, help="live WebSocket subscribers per run (requires --gateway)")
     parser.add_argument("--duplicate-rate", type=float, default=.1)
     parser.add_argument("--late-rate", type=float, default=.05)
     parser.add_argument("--late-delay-ms", type=int, default=2000)
@@ -104,6 +106,8 @@ def main():
         parser.error("host ports must be in 0..65535")
     if args.repetitions <= 0 or args.symbols <= 0:
         parser.error("repetitions and symbols must be positive")
+    if args.clients <= 0 or (args.clients > 1 and not args.gateway):
+        parser.error("--clients must be positive and above 1 only with --gateway")
     qualities = args.qualities.split(",")
     if not set(qualities) <= {"baseline", "duplicates", "late", "mixed"}:
         parser.error("qualities must be baseline, duplicates, late, or mixed")
@@ -215,6 +219,8 @@ def run_matrix(args, qualities, session):
             completed = command("run", "--name", driver_name, "--no-deps", "benchmark", "--run-id", run_id,
                     "--duration", str(args.duration), "--warmup", str(args.warmup), "--rate", rate,
                     "--symbols", str(args.symbols), "--skew", str(args.skew), "--seed", str(args.seed + repetition),
+                    *(["--distribution-file", args.distribution_file] if args.distribution_file else []),
+                    *(["--clients", str(args.clients)] if args.gateway else []),
                     "--duplicate-rate", str(args.duplicate_rate if quality in {"duplicates", "mixed"} else 0),
                     "--late-rate", str(args.late_rate if quality in {"late", "mixed"} else 0),
                     "--late-delay-ms", str(args.late_delay_ms), *(["--gateway"] if args.gateway else []),
