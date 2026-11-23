@@ -20,10 +20,12 @@ Trusted numbers (from `summary.json`):
 | longtail-2000 | 3,848.3 | exact | 1.270 | 0.153 |
 
 The quoted triple ran with a fixed ticker prefix (`--ticker-prefix B`), so every
-condition shares an identical key set and the partition mapping is reproducible. Two
-earlier triples with per-run prefixes agree on exact delivery and the throughput
-ordering (−2.1%, −2.0%) but their partition numbers moved with the hash; their sessions
-remain under `benchmarks/results/`.
+condition shares an identical key set and the partition mapping is reproducible:
+sessions `b6e4a0ece593` / `ddf66eb58ae5` / `ff5408db1ae2`. Two earlier triples with
+per-run prefixes (`5058cb4b9046` / `a2800a3eddae` / `c827d6b5db8e`, then
+`ff1455612cf5` / `f9e634201e00` / `dd17b66d300a`) agree on exact delivery and the
+throughput ordering (−2.1%, −2.0%) but their partition numbers moved with the hash;
+their raw artifacts remain under `benchmarks/results/`.
 
 Scope: one repetition per condition (three triples total), 20 s, one TaskManager, no gateway; visible latency
 is commit visibility under 1 s checkpoints. Nothing here is a limit or a scaling law.

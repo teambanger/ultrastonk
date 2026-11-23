@@ -68,7 +68,11 @@ Kafka, zero missing EMAs), so the comparisons below are about load shape, not lo
 
 - **One repetition per condition**, 20 s each. Three independent triples were run; they
   agree on delivery exactness and on the throughput ordering, but only the fixed-prefix
-  triple gives a reproducible partition mapping, and it is the one quoted.
+  triple gives a reproducible partition mapping, and it is the one quoted. Sessions:
+  fixed-prefix quoted triple `b6e4a0ece593` / `ddf66eb58ae5` / `ff5408db1ae2`; earlier
+  per-run-prefix triples `5058cb4b9046` / `a2800a3eddae` / `c827d6b5db8e` and
+  `ff1455612cf5` / `f9e634201e00` / `dd17b66d300a` (raw artifacts under
+  `benchmarks/results/`).
 - Partition counts are measured at the producer (`msg.partition()`) for the generator's
   **synthetic ticker keys**. With the fixed prefix the key sets are identical across
   conditions, so the comparison is exact for this key space; the absolute shares are not
