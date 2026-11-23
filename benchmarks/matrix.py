@@ -59,6 +59,7 @@ def main():
     parser.add_argument("--project", help="unused Compose project name (default: ultrastonk-benchmark-<session>)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--monitoring", action="store_true")
+    parser.add_argument("--gateway", action="store_true", help="benchmark through one live WebSocket subscriber")
     parser.add_argument("--keep-running", action="store_true")
     parser.add_argument("--kafka-port", type=int, help="publish Kafka on this host port (default: internal only)")
     parser.add_argument("--flink-port", type=int, default=0, help="Flink host port (default: Docker-assigned)")
@@ -72,8 +73,8 @@ def main():
         parser.error("--kafka-port must be in 1..65535")
     if not all(0 <= port <= 65535 for port in (args.flink_port, args.prometheus_port, args.grafana_port)):
         parser.error("host ports must be in 0..65535")
-    if args.repetitions <= 0:
-        parser.error("repetitions must be positive")
+    if args.repetitions <= 0 or args.symbols <= 0:
+        parser.error("repetitions and symbols must be positive")
     qualities = args.qualities.split(",")
     if not set(qualities) <= {"baseline", "duplicates", "late", "mixed"}:
         parser.error("qualities must be baseline, duplicates, late, or mixed")
@@ -91,6 +92,7 @@ def main():
 
 def run_matrix(args, qualities, session):
     env = os.environ | {"COMPOSE_PROJECT_NAME": args.project, "KAFKA_PORT": str(args.kafka_port or 9092),
+        "GATEWAY_PORT": "0", "GATEWAY_KAFKA_FROM_BEGINNING": "true", "GATEWAY_HISTORY_LIMIT": "500",
         "FLINK_UI_PORT": str(args.flink_port), "PROMETHEUS_PORT": str(args.prometheus_port),
         "GRAFANA_PORT": str(args.grafana_port), "SOURCE_IDLE_TIMEOUT_MS": "1000", "MAX_OUT_OF_ORDER_MS": "100",
         "CHECKPOINT_INTERVAL_MS": "1000", "FLINK_RESTORE_PATH": "", "FLINK_BOUNDED_REPLAY": "false",
@@ -110,7 +112,11 @@ def run_matrix(args, qualities, session):
     if args.kafka_port is None:
         # Kafka clients run inside Compose; don't bind a host port unless explicitly requested.
         override += "  kafka:\n    ports: !reset []\n"
+    if args.gateway:
+        subscriptions = args.symbols * (2 if args.warmup else 1)
+        override += f"  gateway:\n    environment:\n      MAX_TICKERS_PER_CLIENT: '{subscriptions}'\n"
     compose += ["-f", "-", "--profile", "benchmark"]
+    gateway_services = ("gateway",) if args.gateway else ()
 
     def command(*parts, check=True, capture=False):
         return subprocess.run(compose + list(parts), cwd=ROOT, env=env, check=check,
@@ -119,6 +125,8 @@ def run_matrix(args, qualities, session):
     config = json.loads(command("config", "--format", "json", capture=True).stdout)
     check_project_available(args.project, config)
     image_names = [flink_image, f"{args.project}-benchmark:latest"]
+    if args.gateway:
+        image_names.append(f"{args.project}-gateway:latest")
     if args.monitoring:
         image_names.append(f"{args.project}-resource-exporter:latest")
     for name in image_names:
@@ -131,7 +139,8 @@ def run_matrix(args, qualities, session):
                        "flink/*.sh", "flink/*.properties",
                        "event-emitter/src/**/*.java", "event-emitter/pom.xml", "event-emitter/Dockerfile",
                        "benchmarks/*.py", "benchmarks/Dockerfile", "benchmarks/requirements.txt",
-                       "benchmarks/synthetic-emitter/**/*.py", "benchmarks/synthetic-emitter/configs/*.json",
+                        "benchmarks/synthetic-emitter/**/*.py", "benchmarks/synthetic-emitter/configs/*.json",
+                        "gateway/src/*.js", "gateway/package*.json", "gateway/Dockerfile", "gateway/.dockerignore",
                        "monitoring/**/*.yaml", "monitoring/**/*.json", "monitoring/**/*.alloy",
                        "monitoring/resource-exporter/*.py", "monitoring/resource-exporter/Dockerfile")
     source_paths = sorted({path for pattern in source_patterns for path in ROOT.glob(pattern) if path.is_file()})
@@ -149,18 +158,19 @@ def run_matrix(args, qualities, session):
     random.Random(args.seed).shuffle(combinations)
     rows = []
     try:
-        command("build", "jobmanager", "benchmark", *(["resource-exporter"] if args.monitoring else []))
+        command("build", "jobmanager", "benchmark", *gateway_services, *(["resource-exporter"] if args.monitoring else []))
         for index, (quality, dedup, late, parallelism, rate, repetition) in enumerate(combinations):
             run_id = f"{session}-{index:03d}"
             env.update({"DEDUP_STRATEGY": dedup, "LATE_EVENT_STRATEGY": late, "FLINK_PARALLELISM": parallelism,
                         "EXPECTED_TASKMANAGERS": parallelism,
                         "KAFKA_INPUT_TOPIC": f"bench-{run_id}-in", "KAFKA_OUTPUT_TOPIC": f"bench-{run_id}-out",
                         "KAFKA_REJECTED_TOPIC": f"bench-{run_id}-rejected", "KAFKA_GROUP_ID": f"bench-{run_id}",
-                        "KAFKA_TRANSACTION_PREFIX": f"bench-{run_id}-"})
+                        "KAFKA_TRANSACTION_PREFIX": f"bench-{run_id}-", "GATEWAY_KAFKA_GROUP_ID": f"bench-gateway-{run_id}"})
             if index:
-                command("stop", "jobmanager", "taskmanager")
+                command("stop", "jobmanager", "taskmanager", *gateway_services)
             command("up", "-d", "--scale", "taskmanager=" + parallelism,
-                    "kafka", "kafka-init", "jobmanager", "taskmanager", *(MONITORING_SERVICES if args.monitoring else ()))
+                     "kafka", "kafka-init", "jobmanager", "taskmanager", *gateway_services,
+                     *(MONITORING_SERVICES if args.monitoring else ()))
             print(f"Run {index + 1}/{len(combinations)}: quality={quality}, {dedup}/{late}, p={parallelism}, rate={rate}, repetition={repetition}", flush=True)
             started = time.time()
             completed = command("run", "--rm", "--no-deps", "benchmark", "--run-id", run_id,
@@ -168,9 +178,10 @@ def run_matrix(args, qualities, session):
                     "--symbols", str(args.symbols), "--skew", str(args.skew), "--seed", str(args.seed + repetition),
                     "--duplicate-rate", str(args.duplicate_rate if quality in {"duplicates", "mixed"} else 0),
                     "--late-rate", str(args.late_rate if quality in {"late", "mixed"} else 0),
-                    "--late-delay-ms", str(args.late_delay_ms), check=False, capture=True)
+                    "--late-delay-ms", str(args.late_delay_ms), *(["--gateway"] if args.gateway else []),
+                    check=False, capture=True)
             (results_dir / (run_id + ".driver.log")).write_text(completed.stdout + completed.stderr)
-            log = command("logs", "--no-color", "jobmanager", "taskmanager", capture=True)
+            log = command("logs", "--no-color", "jobmanager", "taskmanager", *gateway_services, capture=True)
             (results_dir / (run_id + ".containers.log")).write_text(log.stdout)
             containers = command("ps", "--quiet", capture=True).stdout.split()
             stats = docker_list("stats", "--no-stream", "--format", "{{json .}}", *containers) if containers else []
@@ -194,6 +205,10 @@ def run_matrix(args, qualities, session):
                 "price_correctness_passed": result.get("price_correctness_passed", False),
                 **{k: v for k, v in measured.items() if not isinstance(v, dict)},
                 **{"latency_" + k + "_ms": latency.get(k) for k in ["p50", "p95", "p99", "max"]}})
+            if args.gateway:
+                websocket_latency = measured.get("websocket_roundtrip_ms", {})
+                rows[-1].update({"gateway_correctness_passed": result.get("gateway_correctness_passed", False),
+                                 **{f"websocket_latency_{k}_ms": websocket_latency.get(k) for k in ["p50", "p95", "p99", "max"]}})
             # Write after every run so interruptions retain completed experiments.
             columns = list(dict.fromkeys(key for row in rows for key in row))
             with (results_dir / (session + "-matrix.csv")).open("w") as stream:
@@ -206,7 +221,8 @@ def run_matrix(args, qualities, session):
             command("down", "--volumes", "--rmi", "local", check=False)
             if docker_list("image", "ls", "--filter", f"reference={flink_image}", "--quiet"):
                 subprocess.run(["docker", "image", "rm", flink_image], cwd=ROOT, check=False)
-    if any(row["exit_code"] or not row["price_correctness_passed"] for row in rows):
+    if any(row["exit_code"] or not row["price_correctness_passed"] or not row.get("gateway_correctness_passed", True)
+           for row in rows):
         raise SystemExit(1)
 
 

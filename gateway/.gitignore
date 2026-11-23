@@ -1,0 +1,3 @@
+node_modules/
+# keep bench-results/latest.csv and latest.md, ignore the per-run timestamped files
+bench-results/bench-*.csv

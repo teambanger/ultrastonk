@@ -1,0 +1,3 @@
+# Store and check out gateway files with LF endings regardless of the
+# developer's core.autocrlf setting (keeps Docker/Linux and Windows identical).
+* text=auto eol=lf

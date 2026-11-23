@@ -8,6 +8,7 @@ import math
 import os
 from pathlib import Path
 import random
+import re
 import threading
 import time
 import urllib.parse
@@ -50,6 +51,37 @@ def wait_for_job(timeout=120):
     raise RuntimeError("Flink job did not reach RUNNING")
 
 
+def subscribe_gateway(symbols, timeout=60):
+    from websockets.sync.client import connect
+
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            if request_json("http://gateway:8080/health")["source"] == {"type": "kafka", "status": "running"}:
+                break
+        except (OSError, ValueError):
+            pass
+        time.sleep(.5)
+    else:
+        raise RuntimeError("Gateway Kafka source did not reach running")
+    socket = connect("ws://gateway:8080/", proxy=None, open_timeout=5, close_timeout=1)
+    try:
+        for offset in range(0, len(symbols), 500):
+            batch = symbols[offset:offset + 500]
+            socket.send(json.dumps({"type": "subscribe", "tickers": batch}))
+            pending = set(batch)
+            deadline = time.monotonic() + 10
+            while pending:
+                frame = json.loads(socket.recv(timeout=max(0, deadline - time.monotonic())))
+                if frame.get("type") != "history" or frame.get("ticker") not in pending or frame.get("events") != []:
+                    raise RuntimeError(f"Expected empty history for a fresh subscription, got {frame!r}")
+                pending.remove(frame["ticker"])
+        return socket
+    except Exception:
+        socket.close()
+        raise
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--duration", type=float, default=30)
@@ -64,6 +96,7 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--run-id", default=uuid.uuid4().hex[:12])
     parser.add_argument("--output-dir", default="/results")
+    parser.add_argument("--gateway", action="store_true", help="measure and validate one live WebSocket subscriber")
     args = parser.parse_args()
     if args.duration <= 0 or args.rate <= 0 or args.symbols <= 0 or args.warmup < 0:
         parser.error("duration/rate/symbols must be positive; warmup must be nonnegative")
@@ -78,16 +111,25 @@ def main():
     rng = random.Random(args.seed)
     cumulative_weights = list(accumulate(1 / (i + 1) ** args.skew for i in range(args.symbols)))
     symbols = [f"{prefix}{i}.{['FR', 'NL', 'ETR'][i % 3]}" for i in range(args.symbols)]
+    subscriptions = symbols + (["W" + ticker for ticker in symbols] if args.warmup else [])
+    if args.gateway and not all(re.fullmatch(r"[A-Za-z0-9._-]{1,32}", ticker) for ticker in subscriptions):
+        parser.error("--gateway requires generated tickers to fit the gateway protocol; shorten --run-id")
+    socket = subscribe_gateway(subscriptions) if args.gateway else None
     expected = collections.Counter()
     actual = collections.Counter()
+    kafka_emas = collections.Counter()
+    ws_prices = collections.Counter()
+    ws_emas = collections.Counter()
     seen = set()
     sent_at = {}
-    arrivals = []
-    latency_sample = []
+    last_arrival = {}
+    latency_samples = {"kafka": [], "websocket": []}
     event_age_sample = []
-    sample_rng = random.Random(args.seed)
+    sample_rng = {source: random.Random(args.seed) for source in latency_samples}
+    observations = collections.Counter()
     counters = collections.Counter()
     errors = []
+    ws_errors = []
     stop = threading.Event()
     lock = threading.Lock()
     producer = Producer({"bootstrap.servers": brokers, "enable.idempotence": True,
@@ -99,8 +141,41 @@ def main():
     metadata = consumer.list_topics(output_topic, timeout=15)
     consumer.assign([TopicPartition(output_topic, p, OFFSET_BEGINNING)
                      for p in metadata.topics[output_topic].partitions])
+
+    def observe(event, source, now):
+        websocket = source == "websocket"
+        if not event.get("ticker", "").startswith(prefix):
+            return
+        kind = event.get("type")
+        if set(event) != {"timestamp_emit", "ticker", "type", "value"} or kind not in {"price", "EMA38", "EMA100"} or not math.isfinite(event["value"]):
+            (ws_errors if websocket else errors).append("invalid output contract: " + repr(event))
+            return
+        with lock:
+            counters[("websocket_" if websocket else "") + kind] += 1
+            key = signature(event)
+            if kind != "price":
+                if socket:
+                    (ws_emas if websocket else kafka_emas)[(kind, *key)] += 1
+                return
+            (ws_prices if websocket else actual)[key] += 1
+            last_arrival[source] = now
+            if key in sent_at:
+                observations[source] += 1
+                n = observations[source]
+                index = n - 1 if n <= 100000 else sample_rng[source].randrange(n)
+                if index < 100000:
+                    latency = (now - sent_at[key]) * 1000
+                    latency_sample = latency_samples[source]
+                    if index == len(latency_sample):
+                        latency_sample.append(latency)
+                        if not websocket:
+                            event_age_sample.append(time.time() * 1000 - event["timestamp_emit"])
+                    else:
+                        latency_sample[index] = latency
+                        if not websocket:
+                            event_age_sample[index] = time.time() * 1000 - event["timestamp_emit"]
+
     def consume():
-        observations = 0
         try:
             while not stop.is_set():
                 message = consumer.poll(.1)
@@ -109,39 +184,33 @@ def main():
                 if message.error():
                     errors.append(str(message.error()))
                     continue
-                event = json.loads(message.value())
-                if not event.get("ticker", "").startswith(prefix):
-                    continue
-                if set(event) != {"timestamp_emit", "ticker", "type", "value"} or event["type"] not in {"price", "EMA38", "EMA100"} or not math.isfinite(event["value"]):
-                    errors.append("invalid output contract: " + repr(event))
-                    continue
-                with lock:
-                    counters[event["type"]] += 1
-                    if event["type"] != "price":
-                        continue
-                    key = signature(event)
-                    actual[key] += 1
-                    now = time.monotonic()
-                    if key in sent_at:
-                        latency = (now - sent_at[key]) * 1000
-                        age = time.time() * 1000 - event["timestamp_emit"]
-                        observations += 1
-                        # Uniform reservoir avoids unbounded latency storage and head-only samples.
-                        index = observations - 1 if observations <= 100000 else sample_rng.randrange(observations)
-                        if index < 100000:
-                            if index == len(latency_sample):
-                                latency_sample.append(latency)
-                                event_age_sample.append(age)
-                            else:
-                                latency_sample[index] = latency
-                                event_age_sample[index] = age
-                        arrivals.append(now)
+                now = time.monotonic()
+                observe(json.loads(message.value()), "kafka", now)
         except Exception as exc:
             errors.append(repr(exc))
         finally:
             consumer.close()
     thread = threading.Thread(target=consume, daemon=True)
     thread.start()
+
+    def consume_websocket():
+        try:
+            while not stop.is_set():
+                try:
+                    raw = socket.recv(timeout=.1)
+                except TimeoutError:
+                    continue
+                now = time.monotonic()
+                event = json.loads(raw)
+                if event.get("type") in {"error", "history"}:
+                    raise RuntimeError(f"Unexpected WebSocket frame: {event!r}")
+                observe(event, "websocket", now)
+        except Exception as exc:
+            ws_errors.append(repr(exc))
+
+    if socket:
+        ws_thread = threading.Thread(target=consume_websocket, daemon=True)
+        ws_thread.start()
     stats_samples = []
     sample_stop = threading.Event()
     def telemetry():
@@ -212,21 +281,32 @@ def main():
         delivery_errors.append("producer flush timed out")
     produced_at = time.monotonic()
     drain_deadline = produced_at + args.drain_timeout
+    expected_total = sum(expected.values())
     while time.monotonic() < drain_deadline:
         with lock:
-            complete = sum(actual.values()) >= sum(expected.values())
+            complete = counters["price"] >= expected_total
+            if socket and not ws_errors:
+                complete &= counters["websocket_price"] >= expected_total
         if complete:
             break
         time.sleep(.1)
     # Wait one more checkpoint so unexpected extra output is not hidden by the first matching count.
     time.sleep(min(args.drain_timeout, int(os.getenv("CHECKPOINT_INTERVAL_MS", "10000")) / 1000 + 1))
+    while socket and not ws_errors and time.monotonic() < drain_deadline:
+        with lock:
+            if all(counters["websocket_" + kind] >= counters[kind] for kind in ("price", "EMA38", "EMA100")):
+                break
+        time.sleep(.1)
     stop.set()
     thread.join(5)
+    if socket:
+        ws_thread.join(5)
+        socket.close()
     sample_stop.set()
     telemetry_thread.join(6)
     missing = expected - actual
     extra = actual - expected
-    final_arrival = max(arrivals, default=produced_at)
+    final_arrival = last_arrival.get("kafka", produced_at)
     settings = {name: os.getenv(name) for name in ["DEDUP_STRATEGY", "LATE_EVENT_STRATEGY", "WINDOW_SIZE_MS",
                 "MAX_OUT_OF_ORDER_MS", "ALLOWED_LATENESS_MS", "FLINK_PARALLELISM", "CHECKPOINT_INTERVAL_MS"]}
     result = {"run_id": args.run_id, "arguments": vars(args), "settings": settings,
@@ -236,17 +316,34 @@ def main():
                   "drain_seconds": max(0, final_arrival - produced_at),
                   "input_records_per_second": counters["input_records"] / max(.001, produced_at - measured_start),
                   "committed_prices_per_second": sum(actual.values()) / max(.001, final_arrival - measured_start),
-                  "visible_roundtrip_ms": quantiles(latency_sample), "event_age_at_visibility_ms": quantiles(event_age_sample)},
+                   "visible_roundtrip_ms": quantiles(latency_samples["kafka"]), "event_age_at_visibility_ms": quantiles(event_age_sample)},
               "counters": dict(counters), "errors": errors + delivery_errors,
               "price_correctness_passed": not missing and not extra and not errors and not delivery_errors,
               "telemetry": stats_samples,
               "missing_examples": [[list(k), v] for k, v in list(missing.items())[:10]],
               "extra_examples": [[list(k), v] for k, v in list(extra.items())[:10]]}
+    if socket:
+        ws_missing_prices = sum((actual - ws_prices).values())
+        ws_extra_prices = sum((ws_prices - actual).values())
+        ws_missing_emas = sum((kafka_emas - ws_emas).values())
+        ws_extra_emas = sum((ws_emas - kafka_emas).values())
+        result["gateway_correctness_passed"] = not any((ws_errors, ws_missing_prices, ws_extra_prices,
+                                                        ws_missing_emas, ws_extra_emas))
+        result["errors"].extend(ws_errors)
+        result["measurement"].update({
+            "websocket_prices": counters["websocket_price"],
+            "websocket_ema38": counters["websocket_EMA38"], "websocket_ema100": counters["websocket_EMA100"],
+            "websocket_missing_prices": ws_missing_prices, "websocket_unexpected_prices": ws_extra_prices,
+            "websocket_missing_emas": ws_missing_emas, "websocket_unexpected_emas": ws_extra_emas,
+            "websocket_prices_per_second": counters["websocket_price"] /
+                max(.001, last_arrival.get("websocket", produced_at) - measured_start),
+            "websocket_roundtrip_ms": quantiles(latency_samples["websocket"]),
+        })
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
     (output / (args.run_id + ".json")).write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({k: v for k, v in result.items() if k not in {"telemetry", "missing_examples", "extra_examples"}}, indent=2))
-    if not result["price_correctness_passed"]:
+    if not result["price_correctness_passed"] or not result.get("gateway_correctness_passed", True):
         raise SystemExit(1)
 
 

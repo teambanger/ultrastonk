@@ -1,9 +1,9 @@
 # Ultrastonk event processing
 
-Containerized Kafka messaging, a Java CSV replay emitter, and a Java 17 / Apache Flink 1.20.3 DataStream job. The integrated stack publishes its output to Kafka; it does not run a gateway or frontend. The dummy emitter and the synthetic producers/consumers under `benchmarks/` are test tools.
+Containerized Kafka messaging, a Java CSV replay emitter, a Java 17 / Apache Flink 1.20.3 DataStream job, and a WebSocket gateway with a browser test page. The dummy emitter and the synthetic producers/consumers under `benchmarks/` are test tools.
 
 ```text
-emitter -> price-events -> Flink validation -> keyed price/EMA processing -> events-processed
+emitter -> price-events -> Flink validation -> keyed price/EMA processing -> events-processed -> gateway -> browsers
                                   |                     |
                                   +---- rejected/late --+--> price-events-rejected
 
@@ -23,6 +23,8 @@ docker compose logs -f jobmanager taskmanager
 
 The Flink image build runs the Java correctness tests. Two TaskManagers, each with one slot, run a job with parallelism two. Kafka uses KRaft, six partitions per topic, durable volumes, and explicit topic initialization. Flink starts automatically after topic initialization. [Flink dashboard](http://localhost:8081).
 
+Open the [gateway test page](http://localhost:8080) and subscribe to a ticker such as `RDSA.NL`. The gateway reads committed records from `KAFKA_OUTPUT_TOPIC` and sends recent in-memory history followed by live events for the selected ticker. `/health` reports the gateway and its Kafka source status. Set `GATEWAY_PORT` to change the loopback port. See the [gateway README](gateway/README.md) for WebSocket messages and tests.
+
 **Replay real data.** Put the DEBS CSV under `data/src/` (or run `bash scripts/download_src_data.sh` for the default trading day), then start the stack with the real emitter:
 
 ```bash
@@ -36,7 +38,7 @@ The replay exits at the end of the input. Set `CSV_PATH` to a path inside `/data
 
 ```bash
 replay_project="ultrastonk-replay-$(date +%s)"
-KAFKA_PORT=19092 FLINK_UI_PORT=18081 \
+KAFKA_PORT=19092 FLINK_UI_PORT=18081 GATEWAY_PORT=18080 \
   docker compose -p "$replay_project" -f compose.yaml -f deploy/compose.replay.yaml \
   --profile emitter up -d --build
 ```
@@ -58,6 +60,7 @@ Volumes remain after `down`. Use the same overlays when operating an existing de
 **Repository layout**
 - `event-emitter/`: Java CSV replay producer.
 - `flink/`: processing job and Java tests.
+- `gateway/`: Kafka consumer, WebSocket subscriptions, and browser test page.
 - `benchmarks/`: verification, load tests, and the optional `synthetic-emitter/`.
 - `deploy/`: optional Compose overlays; `monitoring/`: dashboards and observability configuration.
 - `scripts/`: dataset download; `docs/`: benchmark, validation, and policy guides.
@@ -199,6 +202,8 @@ The matrix runner creates an isolated project and uses fresh topics, consumer gr
 ```bash
 # Nine policy combinations, one small run each.
 python3 benchmarks/matrix.py --duration 5 --warmup 1 --rates 1000 --parallelism 2 --repetitions 1 --monitoring
+# Include one gateway and measure delivery to a WebSocket subscriber.
+python3 benchmarks/matrix.py --gateway --duration 5 --warmup 1 --rates 1000 --parallelism 2 --dedup NONE --late DROP --repetitions 1
 # Full repeated comparison over the default load/resource grid.
 python3 benchmarks/matrix.py --monitoring
 python3 benchmarks/report.py benchmarks/results/SESSION-matrix.csv

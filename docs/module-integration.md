@@ -2,14 +2,14 @@
 
 ## Branch Boundaries
 
-`merge` is the integrated stack. It contains the Flink processing job and tests from `origin/feat/processing` and the Java CSV emitter from `origin/event-emitter`, with shared deployment files reorganized around the root `compose.yaml`. The Java emitter was imported by path; branch ancestry alone does not tell you whether a module's code is present.
+`merge` is the integrated stack. It contains the Flink processing job and tests from `origin/feat/processing`, the Java CSV emitter from `origin/event-emitter`, and the WebSocket gateway from `origin/gateway`. The emitter and gateway were imported by path; branch ancestry alone does not tell you whether a module's code is present.
 
 | Ref or path | Current state |
 |---|---|
 | `origin/feat/processing` | Source branch for the Flink job, synthetic tools, and monitoring. The integrated versions live on `merge`; the old root `emitter/` and root Compose overlay paths are obsolete. |
 | `origin/event-emitter` | Source branch for the Java producer. Its standalone Compose file is not the stack configuration on `merge`. |
 | `origin/data-downloader` | Contains standalone `download-data.sh`. The downloader used on `merge` is [`scripts/download_src_data.sh`](../scripts/download_src_data.sh). |
-| `origin/gateway` | Contains the standalone `gateway/` module, including its README, Compose file, tests, and browser test page. Neither `gateway/` nor a frontend service is present on `merge`. |
+| `origin/gateway` | Source branch for [`gateway/`](../gateway/). The integrated service uses the root Compose configuration instead of the branch's standalone Compose file. |
 
 Use `git status --short --branch`, `git diff --name-status HEAD...origin/<branch>`, and `git ls-tree -r --name-only origin/<branch> -- <module-path>` to separate branch changes from files already integrated. Use `git show origin/<branch>:<path>` to read branch-only build or deployment files without switching branches.
 
@@ -20,10 +20,11 @@ Use `git status --short --branch`, `git diff --name-status HEAD...origin/<branch
 | Deployment | [`compose.yaml`](../compose.yaml) defines Kafka, `kafka-init`, Flink, and workload profiles. [`.env.example`](../.env.example) lists operator settings; [`deploy/`](../deploy/) contains overlays for clustered Kafka, monitoring, resource limits, and bounded replay. Pass the root Compose file first so overlay-relative paths resolve from the repository root. |
 | CSV replay | [`event-emitter/`](../event-emitter/) is the Java 21 producer. `EventEmitter.java` owns pacing and Kafka configuration; `DataLoader.java` owns CSV extraction; `RawPriceEvent.java` owns the payload. Compose maps the shared bootstrap and input topic settings to this module's `KAFKA_SERVER` and `TOPIC_NAME`. |
 | Processing | [`PricePipeline.java`](../flink/src/main/java/fi/ultrastonk/PricePipeline.java) owns source watermarks and Kafka sinks. [`EventJson.java`](../flink/src/main/java/fi/ultrastonk/EventJson.java) validates the wire formats; [`PriceIndicators.java`](../flink/src/main/java/fi/ultrastonk/PriceIndicators.java) owns keyed state, window closes, and EMA updates. See [policies](policies.md) for state and late-data behavior. |
+| Gateway | [`gateway/`](../gateway/) consumes committed `KAFKA_OUTPUT_TOPIC` records in its own group and forwards them to WebSocket subscribers. [`gateway/README.md`](../gateway/README.md) covers the browser test page, client messages, and tests. |
 | Synthetic inputs | [`benchmarks/synthetic-emitter/`](../benchmarks/synthetic-emitter/) is the Python dummy emitter (`synthetic` profile), not the Java replay service (`emitter` profile). [`benchmarks/`](../benchmarks/) also contains a separate verifier, load driver, matrix runner, and report generator. |
 | Monitoring | [`deploy/compose.monitoring.yaml`](../deploy/compose.monitoring.yaml) wires [`monitoring/`](../monitoring/) configs, alerts, dashboards, and the resource exporter. See [telemetry](telemetry.md) for metric meaning and checks. |
 
-**Kafka boundary.** The live stack ends at Kafka, not at an HTTP or WebSocket service. Use `kafka:9092` on the base Compose network and `localhost:9092` from the host by default. The cluster overlay defines the peer broker addresses. Topic auto-creation is disabled: `kafka-init` creates the configured topics but does not reconcile existing topic settings.
+**Kafka boundary.** Kafka separates the Flink job from the gateway. Use `kafka:9092` on the base Compose network and `localhost:9092` from the host by default. The cluster overlay defines the peer broker addresses. Topic auto-creation is disabled: `kafka-init` creates the configured topics but does not reconcile existing topic settings.
 
 | Setting | Default | Contract |
 |---|---|---|

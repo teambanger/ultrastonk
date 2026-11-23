@@ -54,6 +54,20 @@ class VerifyTests(unittest.TestCase):
 
 
 class ReportTests(unittest.TestCase):
+    def test_gateway_failure_is_excluded_from_end_to_end_summary(self):
+        with tempfile.TemporaryDirectory() as temp:
+            matrix_csv = Path(temp) / "matrix.csv"
+            with matrix_csv.open("w") as stream:
+                rows = csv.writer(stream)
+                rows.writerow(["quality", "dedup", "late", "parallelism", "target_rate", "exit_code",
+                               "price_correctness_passed", "committed_prices_per_second", "latency_p99_ms",
+                               "gateway_correctness_passed", "websocket_prices_per_second", "websocket_latency_p99_ms"])
+                rows.writerow(["mixed", "NONE", "DROP", 1, 100, 0, True, 95, 10, True, 90, 15])
+                rows.writerow(["mixed", "NONE", "DROP", 1, 100, 0, True, 95, 10, False, 900, 300])
+            result = subprocess.run([sys.executable, str(BENCHMARKS / "report.py"), str(matrix_csv)],
+                                    text=True, capture_output=True, check=True)
+            self.assertIn("| 100 | 1/2 | 95.00 | n/a | 10.00 | 90.00 | 15.00 |", result.stdout)
+
     def test_failed_runs_are_counted_but_do_not_contribute_measurements(self):
         with tempfile.TemporaryDirectory() as temp:
             matrix_csv = Path(temp) / "matrix.csv"

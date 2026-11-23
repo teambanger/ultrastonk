@@ -18,20 +18,24 @@ The driver consumes transactional output concurrently and checks the complete me
 
 Latency uses a uniform reservoir of at most 100000 observations. Counts and correctness retain all measured identities, so the load generator's memory grows with experiment size. Measure generator CPU/memory and use a separate host for serious capacity measurements. A saturated single producer/consumer or shared-host resources can become the bottleneck before Flink does. Clock synchronization is required for event-age comparisons across hosts; the driver's monotonic roundtrip timing does not need synchronized remote clocks.
 
+Add `--gateway` to measure the full synthetic producer → Kafka → Flink → Kafka → gateway → WebSocket path. Each run starts one gateway with a fresh consumer group. One in-network WebSocket client subscribes to every workload ticker before warmup, including the separate warmup symbols. Without `--gateway` the matrix still stops at Kafka.
+
+The gateway mode reports raw-price delivery rate and latency from the driver's first enqueue attempt for that price identity to WebSocket receipt, using the same monotonic clock as Kafka visibility latency. Exact copies share the first attempt timestamp. Both boundaries include Kafka transaction visibility. The driver compares WebSocket price and EMA multisets against committed Kafka output observed during the run and fails on missing, extra, or invalid deliveries. It does not force the final windows to close or establish a browser-rendering or multi-client capacity result. For synthetic fan-out load, use the separate [gateway benchmark](../gateway/README.md#performance-results).
+
 Per-run files:
 
 | Artifact | Contents |
 |---|---|
 | `RUN.json` | Settings, workload arguments, counts, correctness, latency, drain, and sampled Flink REST state |
 | `RUN.driver.log` | Driver stdout/stderr, including failures |
-| `RUN.containers.log` | Flink logs for diagnosis |
+| `RUN.containers.log` | Flink logs and, in gateway mode, gateway logs |
 | `RUN.resources.jsonl` | Docker resource snapshot after the run |
 | `RUN.prometheus.json` | Flink, Kafka, and resource-exporter time series over the run, when `--monitoring` is set |
 | `SESSION-manifest.json` | Project, arguments, runtime versions, and source/configuration hashes |
 | `SESSION-matrix.csv` | Comparison rows, written after every run |
 | `SESSION-matrix.md` | Optional grouped report produced by `report.py` |
 
-`committed_prices_per_second` divides observed raw prices by measurement start through final observed price, including drain. `input_records_per_second` divides enqueued measured records by measurement plus producer flush time. Neither includes EMA events in its numerator. The report calculates medians and throughput standard deviation only from runs with a zero exit code and passing price correctness. Failed runs still count in `Passes/runs`, and their measurements stay in the raw artifacts. A group with no passing measurements shows `n/a`.
+`committed_prices_per_second` and `websocket_prices_per_second` divide observed raw prices by elapsed time from measurement start through the final observed price at each boundary, including drain. `input_records_per_second` divides enqueued measured records by measurement plus producer flush time. None includes EMA events in its numerator. The report only summarizes runs with a zero exit code and passing correctness checks. Failed runs still count in `Passes/runs`, and their measurements stay in the raw artifacts. A group with no passing measurements shows `n/a`.
 
 ## Correctness
 
