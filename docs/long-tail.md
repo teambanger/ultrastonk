@@ -29,49 +29,61 @@ kept symbols; the *shape* is the measured one.
 
 ## Results (`benchmarks/evidence/long-tail/summary.json`)
 
+The quoted triple uses a **fixed ticker prefix** so all conditions share an identical key
+set and the Kafka partition mapping is reproducible. (Two earlier triples used per-run
+ticker prefixes; they agree on the throughput ordering but their partition numbers moved
+with the hash — see the limits.)
+
 | Condition | Achieved input | Committed/s | Delivered | p50 / p95 / p99 visible (ms) | Max partition / mean | Partition CV |
 |---|---:|---:|---|---:|---:|---:|
-| uniform-1000 | 4,000.0/s (100%) | 3,924.7 | 80,000 / 80,000, 0 missing, 0 extra | 676.8 / 1,856.8 / 2,654.3 | 1.122 | 0.094 |
-| longtail-1000 | 4,000.0/s (100%) | 3,843.8 | exact | 664.9 / 1,966.0 / 2,699.3 | **1.692** | **0.320** |
-| longtail-2000 | 4,000.0/s (100%) | 3,853.9 | exact | 639.2 / 1,413.8 / 2,199.3 | 1.103 | 0.108 |
+| uniform-1000 | 4,000.0/s (100%) | 3,982.7 | 80,000 / 80,000, 0 missing, 0 extra | 662 / 1,887 / 2,593 | 1.123 | 0.087 |
+| longtail-1000 | 4,000.0/s (100%) | 3,879.9 | exact | 668 / 1,586 / 2,316 | **1.271** | **0.157** |
+| longtail-2000 | 4,000.0/s (100%) | 3,848.3 | exact | 699 / 1,864 / 2,317 | 1.270 | 0.153 |
 
 Delivery was exact in all three conditions (zero missing, zero unexpected prices on
-Kafka; drain 0.38–0.81 s), so the comparisons below are about load shape, not lost data.
+Kafka, zero missing EMAs), so the comparisons below are about load shape, not lost data.
 
 1. **Skew costs throughput and concentrates partitions.** Measured long-tail at 1,000
-   symbols committed 2.1% fewer prices per second than uniform traffic (3,843.8 vs
-   3,924.7), with p95 5.9% higher; the visible tail (p99) moved only 1.7%. The sharper
-   effect is on partition load: one of six Kafka partitions carried **28.2%** of the
-   input (max/mean **1.69**) under the measured distribution versus 1.12 under uniform.
-   With `parallelism=1` that is a broker/consumer-pressure effect, not a Flink-task
+   symbols committed **2.6% fewer** prices per second than uniform traffic (3,879.9 vs
+   3,982.7); two earlier triples with different synthetic keys reproduced the direction
+   at 2.1% and 2.0%. With the fixed key set the hottest partition carried 21.2% of the
+   input versus 18.7% under uniform (max/mean **1.271 vs 1.123**, CV 0.157 vs 0.087):
+   the measured weights add about two and a half percentage points to the busiest
+   partition. With `parallelism=1` that is broker/consumer pressure, not a Flink-task
    imbalance.
-2. **Doubling the symbol population at the same offered load smoothed partitions back
-   toward uniform.** `longtail-2000` committed the same throughput as `longtail-1000`
-   (1.003×) and ran the same delivered volume exactly, but max/mean partition load fell
-   from 1.69 to **1.10** and the partition CV from 0.320 to 0.108. The hot symbols are
-   unchanged; the extra 1,000 tail tickers spread keys across partitions. p95 fell 28%
-   and p99 19% versus the 1,000-symbol long-tail run, which is within the range the
-   checkpoint-visibility sampling can move at this length and should not be read as a
-   latency improvement.
+2. **Doubling the symbol population did not change partition concentration and cost
+   nothing measurable in throughput.** `longtail-2000` committed 3,848.3/s (0.8% below
+   the 1,000-symbol long-tail run, +0.3% and +4.5% in the earlier triples — i.e. no
+   consistent penalty) with exact delivery, and its partition shares are essentially
+   identical to `longtail-1000` (max/mean 1.270, CV 0.153). Ranks 1–1,000 keep the same
+   keys and weights; the appended tail tickers spread almost uniformly, so the hot
+   partition stays hot. An earlier per-run-prefix triple appeared to *reduce* skew at
+   2,000 symbols (1.69 → 1.10); that reversal was hash remapping, not the distribution.
+3. **Latency was not separable at this length.** p99 was 2,316–2,593 ms in all three
+   conditions with no consistent ordering (uniform had the highest p99 in this triple,
+   the lowest in both earlier triples). This latency is commit visibility under 1 s
+   checkpoints on 20 s runs; it should not be read as a skew effect.
 
 ## Limits
 
-- **One repetition per condition**, 20 s each; no spread and no repeat agreement check.
+- **One repetition per condition**, 20 s each. Three independent triples were run; they
+  agree on delivery exactness and on the throughput ordering, but only the fixed-prefix
+  triple gives a reproducible partition mapping, and it is the one quoted.
+- Partition counts are measured at the producer (`msg.partition()`) for the generator's
+  **synthetic ticker keys**. With the fixed prefix the key sets are identical across
+  conditions, so the comparison is exact for this key space; the absolute shares are not
+  a prediction for DEBS symbols, whose strings hash differently.
 - The visible latency is **commit-visibility** latency under 1 s checkpoints
   (`visible_roundtrip_ms`), not the live path's deliberate 5 s disorder hold; it is
   comparable only within this ladder (and with ticket 08's ladder).
-- Partition counts are *measured at the producer* (`msg.partition()` on delivery) for
-  the generator's synthetic ticker keys, not DEBS symbol strings. The comparison between
-  conditions is internally valid because only the weights/count moved, but the absolute
-  1.69 figure is a property of this key space, not a prediction for real symbols.
 - Exchange mix is the generator's fixed round-robin (FR/NL/ETR), not the week's
-  FR-heavy mix; it is identical in all three conditions.
+  FR-heavy mix; it is identical in all conditions.
 - No gateway in this pair: this measures the processing path, not delivery to clients.
 
 ## Reproduce
 
 ```sh
-python3 benchmarks/growth.py --tickets 09
+python3 benchmarks/growth.py --tickets 09   # passes --ticker-prefix B for a stable mapping
 python3 -m unittest benchmarks.tests.test_growth
 ```
 

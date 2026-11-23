@@ -240,8 +240,11 @@ No artifacts; issue files only. Consistent with "reduced / deferred".
 - **Tickets 09 and 10 are MEASURED and resolved**, and the index, dossier (§5.3) and audit no longer mark
   them pending: `benchmarks/growth.py` drives both pairs through `matrix.py` at the same documented
   4,000/s/one-worker baseline as ticket 08. Ticket 09: exact delivery in uniform/long-tail/long-tail-2×
-  conditions, committed 3,924.7 / 3,843.8 / 3,853.9 prices/s, partition input max/mean 1.122 / 1.692 /
-  1.103 — skew concentrates partition load, a larger symbol population spreads it. Ticket 10: fan-out
+  conditions; the quoted fixed-ticker-prefix triple commits 3,982.7 / 3,879.9 / 3,848.3 prices/s with
+  partition input max/mean 1.123 / 1.271 / 1.270 — skew concentrates the busiest partition, a larger symbol
+  population leaves concentration and throughput unchanged. Two earlier triples with per-run ticker prefixes
+  agree on delivery and throughput (−2.1%, −2.0%) but their partition numbers move with the key hash
+  (1.3–1.7 max/mean for the same distribution), which is recorded as a limitation. Ticket 10: fan-out
   8,475 → 17,022 frames/s (2.009×; 1.977× in an unmonitored repeat), every client exact on both runs, zero
   slow-client drops, gateway at 0.204 → 0.232 cores, upstream (TaskManager 0.997 core throttled, Kafka 0.63)
   the saturated components. Both tickets are **one repetition per condition** and labelled directional.

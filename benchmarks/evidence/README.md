@@ -268,17 +268,22 @@ are not published.
   `LATE_EVENT_STRATEGY=DROP`, 1 s windows, 100 ms disorder, 20 s measured after
   5 s warmup, seed 42, one repetition per condition, no gateway.
   `longtail-2000` keeps ranks 1–1,000 identical and appends measured tail weights.
-- **Headline numbers:** delivery exact in all three conditions
-  (80,000/80,000, zero missing/extra, drain 0.38–0.81 s); committed 3,924.7
-  (uniform-1000), 3,843.8 (longtail-1000, −2.1%), 3,853.9 (longtail-2000, +0.3%);
-  measured per-partition input max/mean 1.122 → **1.692** → 1.103 (CV 0.094 →
-  0.320 → 0.108). Hot-symbol skew concentrates Kafka partition load; a larger
-  symbol population spreads the same hot set across partitions at unchanged
-  throughput.
-- **Limits:** one repetition per condition; visible latency is 1 s-checkpoint
-  commit visibility, not the live disorder path; partition counts are measured on
-  the generator's synthetic keys (internally comparable, not a DEBS prediction);
-  exchange mix is the generator's fixed round-robin; no gateway.
+- **Headline numbers (fixed ticker prefix, so partition mapping is stable):**
+  delivery exact in all three conditions (80,000/80,000, zero missing/extra);
+  committed 3,982.7 (uniform-1000), 3,879.9 (longtail-1000, −2.6%), 3,848.3
+  (longtail-2000, −0.8% vs 1,000-symbol long-tail, no consistent penalty across
+  three triples); measured per-partition input max/mean 1.123 → **1.271** → 1.270
+  (CV 0.087 → 0.157 → 0.153). Skew concentrates the busiest partition (21.2% vs
+  18.7% of input); doubling the symbol population leaves that concentration and
+  throughput unchanged. Two earlier triples with per-run ticker prefixes agreed on
+  throughput but moved with the hash (max/mean ranged 1.3–1.7 for the same
+  distribution), which is why the quoted triple uses one fixed key set.
+- **Limits:** one repetition per condition within each of three triples; visible
+  latency is 1 s-checkpoint commit visibility, not the live disorder path, and was
+  not separable between conditions; partition counts are measured on the
+  generator's synthetic keys (identical key sets in the quoted triple, so the
+  comparison is exact for that key space, but not a DEBS prediction); exchange mix
+  is the generator's fixed round-robin; no gateway.
 
 ## Ticket 10 — Subscriber growth on one gateway (MEASURED, resolved)
 

@@ -323,21 +323,25 @@ not a limit or a scaling law.
 **Long-tail traffic and a larger symbol universe (ticket 09).** Uniform traffic versus
 the week's measured symbol shares at 1,000 symbols, then the same measured shares
 extended to 2,000 symbols with ranks 1–1,000 unchanged. Delivery was exact in all three
-conditions (80,000/80,000, zero missing, zero extra).
+conditions (80,000/80,000, zero missing, zero extra). The quoted triple fixes the
+ticker prefix (`--ticker-prefix B`), so every condition shares one key set and the Kafka
+partition mapping is reproducible; two earlier triples with per-run prefixes agree on
+the throughput ordering but their partition numbers moved with the key hash.
 
 | Condition | Symbols | Committed/s | p95 / p99 visible (ms) | Partition max/mean | Partition CV |
 |---|---:|---:|---:|---:|---:|
-| uniform | 1,000 | 3,924.7 | 1,856.8 / 2,654.3 | 1.122 | 0.094 |
-| measured long-tail | 1,000 | 3,843.8 | 1,966.0 / 2,699.3 | **1.692** | **0.320** |
-| measured long-tail | 2,000 | 3,853.9 | 1,413.8 / 2,199.3 | 1.103 | 0.108 |
+| uniform | 1,000 | 3,982.7 | 1,887 / 2,593 | 1.123 | 0.087 |
+| measured long-tail | 1,000 | 3,879.9 | 1,586 / 2,316 | **1.271** | **0.157** |
+| measured long-tail | 2,000 | 3,848.3 | 1,864 / 2,317 | 1.270 | 0.153 |
 
-Skew cost 2.1% of committed throughput and concentrated load: one of six Kafka
-partitions carried 28.2% of the input (max/mean 1.69 versus 1.12 uniform). Doubling the
-symbol population at the same offered load kept throughput and exact delivery and
-smoothed partition load back to 1.10 — the appended tail tickers spread keys, even
-though the hot symbols and their weights are unchanged. Partition counts are measured at
-the producer on the generator's synthetic keys, so the comparison is internally valid but
-the absolute figure is not a DEBS prediction.
+Skew cost **2.6%** of committed throughput (2.1% and 2.0% in the two earlier triples)
+and concentrated load: the busiest of six Kafka partitions carried 21.2% of the input
+versus 18.7% under uniform (max/mean 1.27 vs 1.12, CV 0.157 vs 0.087). Doubling the
+symbol population at the same offered load left concentration and throughput unchanged
+(−0.8%, within the ±5% the three triples span), and latency was not separable between
+conditions (p99 2.3–2.6 s, commit visibility under 1 s checkpoints). Partition counts are
+measured at the producer on the generator's synthetic keys; with one fixed key set the
+comparison is exact for that key space but is not a prediction for DEBS symbol strings.
 
 **Subscriber growth on one gateway (ticket 10).** Two versus four live clients, each
 subscribed to the same full 200-symbol set before the interval, every client verified

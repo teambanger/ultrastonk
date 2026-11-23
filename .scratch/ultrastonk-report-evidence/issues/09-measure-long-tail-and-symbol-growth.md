@@ -18,12 +18,16 @@
   baseline (4,000 offered/s, one TaskManager, `NONE`/`DROP`, 1 s window, 100 ms disorder, 20 s measured,
   seed 42, one repetition, no gateway): uniform 1,000 symbols, measured week weights for 1,000 symbols,
   and the same weights extended to 2,000 symbols with ranks 1–1,000 unchanged. Delivery was exact in all
-  three (80,000/80,000, zero missing/extra, drain 0.38–0.81 s). Committed 3,924.7 / 3,843.8 / 3,853.9
-  prices/s; measured per-partition input max/mean 1.122 / **1.692** / 1.103 (CV 0.094 / 0.320 / 0.108).
-  Long-tail skew costs 2.1% throughput and concentrates 28.2% of input on one Kafka partition; doubling the
-  symbol population keeps throughput and exact delivery and spreads the same hot set across partitions.
-  Distribution inputs are published as `benchmarks/evidence/long-tail/symbol-weights-{1000,2000}.json`;
-  argument in `docs/long-tail.md`. Limits: one repetition per condition; visible latency is 1 s-checkpoint
-  commit visibility, not the live disorder path; partition counts are measured on the generator's synthetic
-  keys (internally comparable, not a DEBS prediction); exchange mix is the generator's fixed round-robin;
-  no gateway in this pair. Directional only — no limit or scaling law is claimed.
+  three (80,000/80,000, zero missing/extra). Three independent triples were run; the quoted one fixes the
+  ticker prefix so all conditions share one key set and the Kafka partition mapping is reproducible:
+  committed 3,982.7 / 3,879.9 / 3,848.3 prices/s; measured per-partition input max/mean **1.123 / 1.271 /
+  1.270** (CV 0.087 / 0.157 / 0.153; busiest partition 21.2% vs 18.7% of input). Skew costs ~2–2.6% of
+  throughput and concentrates the busiest partition; doubling the symbol population leaves concentration
+  and throughput unchanged. The two earlier per-run-prefix triples agree on delivery and throughput
+  ordering but their partition numbers move with the key hash (1.3–1.7 max/mean for the same
+  distribution), so the fixed-prefix triple is the quoted one. Distribution inputs are published as
+  `benchmarks/evidence/long-tail/symbol-weights-{1000,2000}.json`; argument in `docs/long-tail.md`.
+  Limits: one repetition per condition; visible latency is 1 s-checkpoint commit visibility, not the live
+  disorder path, and was not separable between conditions; partition counts are measured on the
+  generator's synthetic keys (exact comparison only for that fixed key space, not a DEBS prediction);
+  exchange mix is the generator's fixed round-robin; no gateway in this pair. Directional only.
