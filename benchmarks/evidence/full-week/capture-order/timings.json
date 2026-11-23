@@ -1,0 +1,27 @@
+{
+  "unit": "seconds",
+  "preprocessing": {
+    "oracle_wall": 1154.583113193512,
+    "source_scan_wall": null,
+    "source_scan_parallel_jobs": null,
+    "source_scan_per_file": [],
+    "note": "analysis steps; source_scan ran in parallel after the replay"
+  },
+  "ingestion": {
+    "emitter_wall": 530.385941028595,
+    "compose_up_to_emitter_done": 535.6437907218933,
+    "note": "emitter publication; also bounded by the replay pacer at SPEED_MULTIPLIER"
+  },
+  "processing": {
+    "flink_job_wall": 428.0309998989105,
+    "job_running_epoch": 1795452344.953,
+    "job_finished_epoch": 1795452772.984,
+    "note": "bounded Flink job from RUNNING to FINISHED"
+  },
+  "drain": {
+    "dump_output_seconds": 521.854,
+    "dump_audit_seconds": 88.571,
+    "dump_wall": 616.2858741283417,
+    "note": "committed-output drain and audit read"
+  }
+}

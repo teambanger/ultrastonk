@@ -1,0 +1,23 @@
+{
+  "preflight": {
+    "disk_state": {
+      "path": "shared",
+      "total_bytes": 848837541888,
+      "used_bytes": 662017495040,
+      "free_bytes": 143626268672
+    },
+    "container_fs": {
+      "path": "/",
+      "total_bytes": 87677730816,
+      "used_bytes": 72670855168,
+      "free_bytes": 11259953152
+    },
+    "docker_root_dir": "docker"
+  },
+  "retention": {
+    "configured_retention_ms": 604800000,
+    "measured_kafka_data_bytes": 4830288912,
+    "measured_flink_state_bytes": 0,
+    "note": "fresh topics, 6 partitions, no prior data; measured after the run"
+  }
+}

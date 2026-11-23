@@ -1,0 +1,33 @@
+{
+  "unit": "seconds",
+  "preprocessing": {
+    "oracle_wall": null,
+    "source_scan_wall": 443.3042799410032,
+    "source_scan_parallel_jobs": 1,
+    "source_scan_per_file": [
+      {
+        "file": "debs2022-gc-trading-day-08-11-21.csv",
+        "day": "2021-11-08",
+        "seconds": 443.2003109780053
+      }
+    ],
+    "note": "analysis steps; source_scan ran in parallel after the replay"
+  },
+  "ingestion": {
+    "emitter_wall": 234.31601810455322,
+    "compose_up_to_emitter_done": 240.00917649269104,
+    "note": "emitter publication; also bounded by the replay pacer at SPEED_MULTIPLIER"
+  },
+  "processing": {
+    "flink_job_wall": 110.02099990844727,
+    "job_running_epoch": 1795455950.809,
+    "job_finished_epoch": 1795456060.83,
+    "note": "bounded Flink job from RUNNING to FINISHED"
+  },
+  "drain": {
+    "dump_output_seconds": 48.354,
+    "dump_audit_seconds": 1.005,
+    "dump_wall": 50.46631741523743,
+    "note": "committed-output drain and audit read"
+  }
+}

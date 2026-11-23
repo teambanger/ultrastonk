@@ -1,0 +1,61 @@
+{
+  "ticket": "06-verify-full-week-queries",
+  "verdict": {
+    "capture_order_whole_week": "deviations quantified; gate fails zero_late_exclusions and oracle_exact",
+    "complete_input_correctness": "pass on bounded ordered day-08 reference; full ordered week reduced out by team decision",
+    "correctness_rests_on": ["reference-day08", "ticket 04 ordered slice"]
+  },
+  "label": "reference-mode correctness run; not live-capacity or live-latency evidence",
+  "data": {
+    "source": "official-week-Ij8jlfeA (zenodo 10.5281/zenodo.6382482, cc-by-nc-sa-4.0)",
+    "files": 7,
+    "rows": 289116808,
+    "manifest": "scripts/official-week-manifest.json"
+  },
+  "configuration": {
+    "window_ms": 300000, "max_out_of_order_ms": 5000, "dedup_strategy": "NONE",
+    "late_event_strategy": "SIDE_OUTPUT", "event_time_zone": "Europe/Berlin",
+    "flink_parallelism": 2, "speed_multiplier": 1000, "pacing": "event",
+    "retention_ms": 604800000, "state_storage": "disk-backed bind mount"
+  },
+  "capture_order": {
+    "mode": "capture-order",
+    "input_records": 289049752,
+    "output_per_event_records": 62380615,
+    "audit_records": 10668887,
+    "source": {"rows_read": 289116808, "emitted": 289049752, "eligible_trades": 59391670},
+    "errors": {"missing": 376584, "extra": 6228, "numeric": 1482724, "duplicate": 0,
+               "wrong_direction": 0, "eligible_late_exclusions": 10668887},
+    "final_window": 1636752900000,
+    "gate_passed": false,
+    "gate_failed_checks": ["zero_late_exclusions", "oracle_exact"],
+    "timings_seconds": {"ingestion": 530.4, "processing": 428.0, "drain": 616.3, "oracle": 1154.6},
+    "note": "output holds per-event price/EMA components; normalize aggregates to one EMA per (symbol, window) plus advisories"
+  },
+  "reference_day08": {
+    "mode": "event-time-ordered",
+    "day": "2021-11-08",
+    "input_records": 53982555,
+    "eligible_trades": 11794520,
+    "normalized_records": 377966,
+    "errors": {"missing": 0, "extra": 0, "numeric": 0, "duplicate": 0, "wrong_direction": 0,
+               "eligible_late_exclusions": 0},
+    "final_window": 1636407300000,
+    "per_exchange": {"ETR": 114763, "FR": 211427, "NL": 51776},
+    "gate_passed": true,
+    "timings_seconds": {"sort_and_scan": 443.3, "ingestion": 234.3, "processing": 110.0, "drain": 50.5}
+  },
+  "invalidated_run": {
+    "run": "run1",
+    "cause": "bind-mounted broker dir retained a 53,635,606-record stale prefix; down -v does not clear bind mounts",
+    "gate_rejected_on": "input_records != acknowledged",
+    "evidence": "/mnt/shared/data/ultrastonk-full-week/run1/INVALID-RUN.md"
+  },
+  "harness_cost": {
+    "peak_disk_sorted_bytes": 33200000000,
+    "peak_disk_run2_broker_bytes": 15000000000,
+    "sort_workers": 4, "drain_workers": 6,
+    "freed_bytes": {"reference_cleanup": 33696526336, "run1_bulk": 5049256347},
+    "peak_rss": "not separately instrumented; JVM containers bounded by MaxRAMPercentage=75"
+  }
+}

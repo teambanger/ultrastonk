@@ -1,0 +1,344 @@
+{
+  "ticket": "06-verify-full-week-queries",
+  "mode": "event-time-ordered",
+  "scope": "bounded single-day (2021-11-08) event-time-ordered reference through the production operators; ordered week dropped by team decision",
+  "revision": {
+    "commit": "afa05e33ab01699891d69097603f95ab1e34e736",
+    "branch": "full-week-queries",
+    "describe": "afa05e3-dirty",
+    "worktree": "full-week-queries"
+  },
+  "configuration": {
+    "window_ms": 300000,
+    "max_out_of_order_ms": 5000,
+    "event_time_zone": "Europe/Berlin",
+    "speed_multiplier": 1000,
+    "pacing": "event",
+    "dedup_strategy": "NONE",
+    "late_event_strategy": "SIDE_OUTPUT",
+    "flink_parallelism": 2
+  },
+  "source": {
+    "rows_read": 53982555,
+    "eligible_trades": 11794520,
+    "final_window": 1636407300000,
+    "loader": {
+      "emitted": 53982555,
+      "dropped_width": 0,
+      "dropped_no_symbol": 0,
+      "dropped_no_time": 0,
+      "dropped_timestamp": 0,
+      "malformed_prices": 0,
+      "fallback_events": 0
+    }
+  },
+  "emitter": {
+    "emitted": 53982555,
+    "acknowledged": 53982555,
+    "submitted": 53982555,
+    "failed": 0,
+    "complete": true,
+    "accounting": {
+      "dropped_width": 0,
+      "dropped_no_symbol": 0,
+      "dropped_no_time": 0,
+      "dropped_price_filter": 0,
+      "dropped_timestamp": 0,
+      "malformed_prices": 0,
+      "price_filter": "none"
+    },
+    "per_file": [
+      {
+        "file": "debs2022-gc-trading-day-08-11-21.csv",
+        "read": 53982555,
+        "emitted": 53982555
+      }
+    ]
+  },
+  "input": {
+    "records": 53982555,
+    "complete": true,
+    "offsets": {
+      "0": {
+        "low": 0,
+        "high": 8474723
+      },
+      "1": {
+        "low": 0,
+        "high": 9536235
+      },
+      "2": {
+        "low": 0,
+        "high": 9255850
+      },
+      "3": {
+        "low": 0,
+        "high": 9086711
+      },
+      "4": {
+        "low": 0,
+        "high": 9262108
+      },
+      "5": {
+        "low": 0,
+        "high": 8366928
+      }
+    }
+  },
+  "audit": {
+    "late": 0,
+    "rejected": 0,
+    "records": 0,
+    "complete": true,
+    "offsets": {
+      "0": {
+        "low": 0,
+        "high": 0
+      },
+      "1": {
+        "low": 0,
+        "high": 0
+      },
+      "2": {
+        "low": 0,
+        "high": 0
+      },
+      "3": {
+        "low": 0,
+        "high": 0
+      },
+      "4": {
+        "low": 0,
+        "high": 0
+      },
+      "5": {
+        "low": 0,
+        "high": 0
+      }
+    }
+  },
+  "output": {
+    "prices": 11794520,
+    "final_window": 1636407300000,
+    "records": 12545612,
+    "complete": true,
+    "offsets": {
+      "0": {
+        "low": 0,
+        "high": 1971653
+      },
+      "1": {
+        "low": 0,
+        "high": 2331611
+      },
+      "2": {
+        "low": 0,
+        "high": 2305200
+      },
+      "3": {
+        "low": 0,
+        "high": 2071765
+      },
+      "4": {
+        "low": 0,
+        "high": 2067138
+      },
+      "5": {
+        "low": 0,
+        "high": 1798377
+      }
+    }
+  },
+  "comparison": {
+    "match": true,
+    "counts": {
+      "missing": 0,
+      "extra": 0,
+      "numeric": 0,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "records": {
+      "expected": 377966,
+      "actual": 377966
+    },
+    "expected_final_window": 1636407300000,
+    "actual_final_window": 1636407300000,
+    "per_day": {
+      "2021-11-08": {
+        "expected": 377966,
+        "actual": 377966,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      }
+    },
+    "per_exchange": {
+      "ETR": {
+        "expected": 114763,
+        "actual": 114763,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      },
+      "FR": {
+        "expected": 211427,
+        "actual": 211427,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      },
+      "NL": {
+        "expected": 51776,
+        "actual": 51776,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      }
+    },
+    "missing": [],
+    "extra": [],
+    "incorrect": [],
+    "duplicates": [],
+    "wrong_direction": [],
+    "sample_limit": 20
+  },
+  "expected_final_window": 1636407300000,
+  "expected_records": 377966,
+  "disposition_reconciliation": {
+    "scan_loader": {
+      "emitted": 53982555,
+      "dropped_width": 0,
+      "dropped_no_symbol": 0,
+      "dropped_no_time": 0,
+      "dropped_timestamp": 0,
+      "malformed_prices": 0,
+      "fallback_events": 0
+    },
+    "emitter_accounting": {
+      "dropped_width": 0,
+      "dropped_no_symbol": 0,
+      "dropped_no_time": 0,
+      "dropped_price_filter": 0,
+      "dropped_timestamp": 0,
+      "malformed_prices": 0,
+      "price_filter": "none"
+    },
+    "emitter_rows_read": 53982555,
+    "scan_rows_read": 53982555
+  },
+  "reconciliation": {
+    "per_day": {
+      "2021-11-08": {
+        "rows_read": 53982555,
+        "emitted": 53982555,
+        "eligible_trades": 11794520,
+        "committed_expected": 377966,
+        "committed_actual": 377966,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      }
+    },
+    "per_exchange": {
+      "ETR": {
+        "emitted": 9985397,
+        "eligible_trades": 6382414,
+        "committed_expected": 114763,
+        "committed_actual": 114763,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      },
+      "FR": {
+        "emitted": 29542234,
+        "eligible_trades": 4233311,
+        "committed_expected": 211427,
+        "committed_actual": 211427,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      },
+      "NL": {
+        "emitted": 14454924,
+        "eligible_trades": 1178795,
+        "committed_expected": 51776,
+        "committed_actual": 51776,
+        "missing": 0,
+        "extra": 0,
+        "numeric": 0,
+        "duplicate": 0,
+        "wrong_direction": 0
+      }
+    }
+  },
+  "timings": {
+    "unit": "seconds",
+    "preprocessing": {
+      "oracle_wall": null,
+      "source_scan_wall": 443.3042799410032,
+      "source_scan_parallel_jobs": 1,
+      "source_scan_per_file": [
+        {
+          "file": "debs2022-gc-trading-day-08-11-21.csv",
+          "day": "2021-11-08",
+          "seconds": 443.2003109780053
+        }
+      ],
+      "note": "analysis steps; source_scan ran in parallel after the replay"
+    },
+    "ingestion": {
+      "emitter_wall": 234.31601810455322,
+      "compose_up_to_emitter_done": 240.00917649269104,
+      "note": "emitter publication; also bounded by the replay pacer at SPEED_MULTIPLIER"
+    },
+    "processing": {
+      "flink_job_wall": 110.02099990844727,
+      "job_running_epoch": 1795455950.809,
+      "job_finished_epoch": 1795456060.83,
+      "note": "bounded Flink job from RUNNING to FINISHED"
+    },
+    "drain": {
+      "dump_output_seconds": 48.354,
+      "dump_audit_seconds": 1.005,
+      "dump_wall": 50.46631741523743,
+      "note": "committed-output drain and audit read"
+    }
+  },
+  "preflight": {
+    "disk_state": {
+      "path": "shared",
+      "total_bytes": 848837541888,
+      "used_bytes": 662017495040,
+      "free_bytes": 143626268672
+    },
+    "container_fs": {
+      "path": "/",
+      "total_bytes": 87677730816,
+      "used_bytes": 72670855168,
+      "free_bytes": 11259953152
+    },
+    "docker_root_dir": "docker"
+  },
+  "retention": {
+    "configured_retention_ms": 604800000,
+    "measured_kafka_data_bytes": 4830288912,
+    "measured_flink_state_bytes": 0,
+    "note": "fresh topics, 6 partitions, no prior data; measured after the run"
+  },
+  "errors": []
+}

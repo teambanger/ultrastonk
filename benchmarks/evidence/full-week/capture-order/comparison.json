@@ -1,0 +1,601 @@
+{
+  "match": false,
+  "counts": {
+    "missing": 376584,
+    "extra": 6228,
+    "numeric": 1482724,
+    "duplicate": 0,
+    "wrong_direction": 0
+  },
+  "records": {
+    "expected": 1868812,
+    "actual": 1498456
+  },
+  "expected_final_window": 1636752900000,
+  "actual_final_window": 1636752900000,
+  "per_day": {
+    "2021-11-08": {
+      "expected": 377966,
+      "actual": 9407,
+      "missing": 368726,
+      "extra": 167,
+      "numeric": 1514,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "2021-11-09": {
+      "expected": 371483,
+      "actual": 374727,
+      "missing": 100,
+      "extra": 3344,
+      "numeric": 370970,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "2021-11-10": {
+      "expected": 375579,
+      "actual": 372366,
+      "missing": 3380,
+      "extra": 167,
+      "numeric": 371867,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "2021-11-11": {
+      "expected": 371020,
+      "actual": 369749,
+      "missing": 2262,
+      "extra": 991,
+      "numeric": 368390,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "2021-11-12": {
+      "expected": 372764,
+      "actual": 372207,
+      "missing": 2116,
+      "extra": 1559,
+      "numeric": 369983,
+      "duplicate": 0,
+      "wrong_direction": 0
+    }
+  },
+  "per_exchange": {
+    "ETR": {
+      "expected": 560650,
+      "actual": 447778,
+      "missing": 115654,
+      "extra": 2782,
+      "numeric": 444221,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "FR": {
+      "expected": 1051131,
+      "actual": 845019,
+      "missing": 208831,
+      "extra": 2719,
+      "numeric": 834438,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "NL": {
+      "expected": 257031,
+      "actual": 205659,
+      "missing": 52099,
+      "extra": 727,
+      "numeric": 204065,
+      "duplicate": 0,
+      "wrong_direction": 0
+    }
+  },
+  "missing": [
+    {
+      "symbol": "I10AH.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I10AM.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I1SE.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I1TSL.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I2CIT.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I2ETH.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I3ABN.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I3BAB.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I3PTO.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "I3SGF.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IAAP3.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IAASI.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IAEXK.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IAGGH.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IALAT.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IAMZN.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "IBAB2.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "ICC1U.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "ICEU2.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    },
+    {
+      "symbol": "ICITY.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "count": 1
+    }
+  ],
+  "extra": [
+    {
+      "symbol": "A0C4C0.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4C1.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CA.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CB.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CC.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CD.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CE.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CG.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CH.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CJ.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CK.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CN.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CP.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CQ.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CR.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CW.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CX.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CY.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0C4CZ.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    },
+    {
+      "symbol": "A0LLP0.ETR",
+      "window": 1636404000000,
+      "type": "BUY",
+      "count": 1
+    }
+  ],
+  "incorrect": [
+    {
+      "symbol": "IEMIS.FR",
+      "window": 1636352700000,
+      "type": "EMA",
+      "expected": [
+        2.0633395471939853,
+        0.8225225507885561
+      ],
+      "actual": [
+        2.063298521552959,
+        0.8225067092043976
+      ]
+    },
+    {
+      "symbol": "IEPEJ.FR",
+      "window": 1636352700000,
+      "type": "EMA",
+      "expected": [
+        1.838830054451356,
+        0.7330179821236706
+      ],
+      "actual": [
+        1.8383172339385356,
+        0.7328199623216904
+      ]
+    },
+    {
+      "symbol": "IFXIT.FR",
+      "window": 1636352700000,
+      "type": "EMA",
+      "expected": [
+        23.980682412043357,
+        9.559625953968792
+      ],
+      "actual": [
+        23.98529779665874,
+        9.561408132186614
+      ]
+    },
+    {
+      "symbol": "INDIA.NL",
+      "window": 1636352700000,
+      "type": "EMA",
+      "expected": [
+        45.88745865574268,
+        18.29237102555467
+      ],
+      "actual": [
+        45.88848429676831,
+        18.29276706515863
+      ]
+    },
+    {
+      "symbol": "ISLVR.FR",
+      "window": 1636352700000,
+      "type": "EMA",
+      "expected": [
+        2.74451963114685,
+        1.0940778665652078
+      ],
+      "actual": [
+        2.7450324516596702,
+        1.094275886367188
+      ]
+    },
+    {
+      "symbol": "IAEM.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        14.745819163747855,
+        5.970844232591416
+      ],
+      "actual": [
+        14.746331984260673,
+        5.971042252393396
+      ]
+    },
+    {
+      "symbol": "ICAPU.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        191.58862868774264,
+        77.57695462484332
+      ],
+      "actual": [
+        191.58196202107595,
+        77.57438036741758
+      ]
+    },
+    {
+      "symbol": "ICHIA.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        1.6206846535528678,
+        0.6562489212702534
+      ],
+      "actual": [
+        1.6210231150913292,
+        0.6563796143395604
+      ]
+    },
+    {
+      "symbol": "ICYBR.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        1.147082554515114,
+        0.46447017635459625
+      ],
+      "actual": [
+        1.147031272463832,
+        0.46445037437439823
+      ]
+    },
+    {
+      "symbol": "IGGOU.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        18.784221169641192,
+        7.961801185372748
+      ],
+      "actual": [
+        18.784626297846323,
+        7.961957621016311
+      ]
+    },
+    {
+      "symbol": "IPHAG.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        3.6925342033792954,
+        1.4952137843481883
+      ],
+      "actual": [
+        3.693047023892116,
+        1.4954118041501685
+      ]
+    },
+    {
+      "symbol": "ISGLD.FR",
+      "window": 1636353000000,
+      "type": "EMA",
+      "expected": [
+        28.8702691013084,
+        11.689986069725023
+      ],
+      "actual": [
+        28.869243460282753,
+        11.689590030121064
+      ]
+    },
+    {
+      "symbol": "IBITC.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        13.091354723780922,
+        5.383299857293153
+      ],
+      "actual": [
+        13.090482928909127,
+        5.382963223629787
+      ]
+    },
+    {
+      "symbol": "IBRNT.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        7.361389514247724,
+        3.027067871083338
+      ],
+      "actual": [
+        7.361697206555415,
+        3.0271866829645266
+      ]
+    },
+    {
+      "symbol": "ICHIE.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        2.0254439575905794,
+        0.8328954526555198
+      ],
+      "actual": [
+        2.025315752462374,
+        0.8328459477050247
+      ]
+    },
+    {
+      "symbol": "IDSU3.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        1257.4890809098788,
+        517.0963360994658
+      ],
+      "actual": [
+        1257.5095937303915,
+        517.104256891545
+      ]
+    },
+    {
+      "symbol": "INREF.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        3.6948780270756405,
+        1.5193790793043913
+      ],
+      "actual": [
+        3.694837001434615,
+        1.5193632377202326
+      ]
+    },
+    {
+      "symbol": "IPHAU.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        34.451645805799835,
+        14.16741730940561
+      ],
+      "actual": [
+        34.45113298528701,
+        14.167219289603631
+      ]
+    },
+    {
+      "symbol": "IRSIJ.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        6.521366451632339,
+        2.6816846144192734
+      ],
+      "actual": [
+        6.521520297786184,
+        2.6817440203598677
+      ]
+    },
+    {
+      "symbol": "ITRYU.FR",
+      "window": 1636353300000,
+      "type": "EMA",
+      "expected": [
+        22.803255766781593,
+        9.377044200685708
+      ],
+      "actual": [
+        22.802640382166203,
+        9.37680657692333
+      ]
+    }
+  ],
+  "duplicates": [],
+  "wrong_direction": [],
+  "sample_limit": 20
+}

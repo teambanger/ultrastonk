@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": {
+    "mode_declared": true,
+    "source_nonempty": true,
+    "emitter_complete": true,
+    "input_complete": true,
+    "audit_complete": true,
+    "zero_late_exclusions": true,
+    "zero_rejected_inputs": true,
+    "committed_prices_match": true,
+    "output_complete": true,
+    "oracle_exact": true,
+    "final_window_present": true,
+    "no_errors": true
+  }
+}

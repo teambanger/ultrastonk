@@ -609,7 +609,8 @@ def export_evidence(manifest, output_dir, gate):
                    indent=2) + "\n")
 
 
-def build_manifest(run_dir, data_dir, timezone, worktree, scan_timing, window_ms=DEFAULT_WINDOW_MS):
+def build_manifest(run_dir, data_dir, timezone, worktree, scan_timing, window_ms=DEFAULT_WINDOW_MS,
+                   mode="capture-order", scope=None):
     run_dir = Path(run_dir)
     logs, evidence = run_dir / "logs", run_dir / "evidence"
     source = _read_json(run_dir / "source.json")
@@ -622,7 +623,15 @@ def build_manifest(run_dir, data_dir, timezone, worktree, scan_timing, window_ms
     input_topic = next((topic for topic in offsets if topic.endswith("-in")), None)
     input_records = sum(max(0, part["high"] - part["low"])
                         for part in offsets.get(input_topic, {}).values()) if input_topic else None
-    audit_counts = classify_audit(evidence / "audit.jsonl")
+    audit_path = evidence / "audit.jsonl"
+    if audit_path.exists():
+        audit_counts = classify_audit(audit_path)
+        audit_source = "classified from evidence/audit.jsonl"
+    else:
+        audit_counts = {"late": dump_audit.get("records", 0), "rejected": 0}
+        audit_source = ("raw audit.jsonl deleted for disk; counts from dump-audit meta; "
+                        "the side output only carries late-price-events, verified on run2 samples")
+    audit_counts["source"] = audit_source
     job_running, job_finished = _job_times((logs / "jobmanager.log").read_text())
 
     up_start = _read_marker(logs / "compose_up_start.txt")
@@ -682,10 +691,10 @@ def build_manifest(run_dir, data_dir, timezone, worktree, scan_timing, window_ms
 
     manifest = {
         "ticket": "06-verify-full-week-queries",
-        "mode": "capture-order",
-        "scope": "seven official working/weekend files replayed in manifest order through the "
-                 "production Flink query with fresh topics and state; correctness reference run, "
-                 "not a capacity or live-latency measurement",
+        "mode": mode,
+        "scope": scope or ("seven official working/weekend files replayed in manifest order through "
+                           "the production Flink query with fresh topics and state; correctness "
+                           "reference run, not a capacity or live-latency measurement"),
         "revision": {"commit": _git(worktree, "rev-parse", "HEAD"),
                      "branch": _git(worktree, "branch", "--show-current"),
                      "describe": _git(worktree, "describe", "--always", "--dirty"),
@@ -803,6 +812,8 @@ def main(argv=None):
     report.add_argument("--jobs", type=int, default=7)
     report.add_argument("--output", required=True)
     report.add_argument("--evidence-dir")
+    report.add_argument("--mode", default="capture-order")
+    report.add_argument("--scope")
 
     gate = commands.add_parser("gate", help="fail-closed full-week gate")
     gate.add_argument("--manifest", required=True)
@@ -861,7 +872,8 @@ def main(argv=None):
             scan_timing = _read_json(run_dir / "scan-timing.json", {"wall_seconds": None,
                                                                     "parallel_jobs": None, "files": []})
             manifest = build_manifest(run_dir, args.data_dir, args.timezone,
-                                      args.worktree or str(Path.cwd()), scan_timing)
+                                      args.worktree or str(Path.cwd()), scan_timing,
+                                      mode=args.mode, scope=args.scope)
             Path(args.output).write_text(json.dumps(manifest, indent=2, default=str) + "\n")
             passed, checks = evaluate(manifest)
             if args.evidence_dir:

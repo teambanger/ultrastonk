@@ -1,0 +1,62 @@
+{
+  "match": true,
+  "counts": {
+    "missing": 0,
+    "extra": 0,
+    "numeric": 0,
+    "duplicate": 0,
+    "wrong_direction": 0
+  },
+  "records": {
+    "expected": 377966,
+    "actual": 377966
+  },
+  "expected_final_window": 1636407300000,
+  "actual_final_window": 1636407300000,
+  "per_day": {
+    "2021-11-08": {
+      "expected": 377966,
+      "actual": 377966,
+      "missing": 0,
+      "extra": 0,
+      "numeric": 0,
+      "duplicate": 0,
+      "wrong_direction": 0
+    }
+  },
+  "per_exchange": {
+    "ETR": {
+      "expected": 114763,
+      "actual": 114763,
+      "missing": 0,
+      "extra": 0,
+      "numeric": 0,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "FR": {
+      "expected": 211427,
+      "actual": 211427,
+      "missing": 0,
+      "extra": 0,
+      "numeric": 0,
+      "duplicate": 0,
+      "wrong_direction": 0
+    },
+    "NL": {
+      "expected": 51776,
+      "actual": 51776,
+      "missing": 0,
+      "extra": 0,
+      "numeric": 0,
+      "duplicate": 0,
+      "wrong_direction": 0
+    }
+  },
+  "missing": [],
+  "extra": [],
+  "incorrect": [],
+  "duplicates": [],
+  "wrong_direction": [],
+  "sample_limit": 20
+}
