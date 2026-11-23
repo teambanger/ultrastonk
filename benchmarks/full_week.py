@@ -30,6 +30,9 @@ from datetime import datetime, timezone as dt_timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from benchmarks import reconcile_replay
 
 exchange_of = reconcile_replay.exchange_of
@@ -508,8 +511,8 @@ def build_manifest(run_dir, data_dir, timezone, worktree, scan_timing, window_ms
     source = _read_json(run_dir / "source.json")
     emitter_log = parse_emitter_log((logs / "emitter.log").read_text())
     offsets = _read_json(evidence / "offsets.json", {})
-    dump_output = _read_json(evidence / "output-dump-meta.json", {})
-    dump_audit = _read_json(evidence / "audit-dump-meta.json", {})
+    dump_output = _read_json(logs / "dump-output.log", {})
+    dump_audit = _read_json(logs / "dump-audit.log", {})
     comparison = _read_json(evidence / "compare.json")
     expected_records = comparison["records"]["expected"]
     input_topic = next((topic for topic in offsets if topic.endswith("-in")), None)
