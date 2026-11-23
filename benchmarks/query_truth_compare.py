@@ -59,13 +59,44 @@ def compare(expected, actual):
             "missing": missing, "extra": extra, "duplicates": duplicates, "incorrect": incorrect}
 
 
+def bounded_compare(expected, actual, db, sample_limit=20):
+    """Disk-backed comparison for week-scale files; samples instead of retaining every key."""
+    try:
+        from benchmarks.reconcile_replay import compare_jsonl
+    except ImportError:
+        from reconcile_replay import compare_jsonl
+    report = compare_jsonl(expected, actual, db, sample_limit)
+    duplicates = {"expected": [], "actual": []}
+    for item in report["duplicates"]:
+        duplicates[item["source"]].append({key: item[key] for key in
+                                           ("symbol", "window", "type", "count")})
+    return {
+        "match": report["match"],
+        "bounded": True,
+        "db": str(db),
+        "sample_limit": sample_limit,
+        "counts": report["counts"],
+        "records": report["records"],
+        "missing": report["missing"],
+        "extra": report["extra"],
+        "duplicates": duplicates,
+        "incorrect": report["incorrect"],
+        "expected_final_window": report["expected_final_window"],
+        "actual_final_window": report["actual_final_window"],
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("expected", help="expected JSONL file")
     parser.add_argument("actual", help="actual JSONL file")
+    parser.add_argument("--db", help="use a disk-backed SQLite index at this path (week-scale)")
+    parser.add_argument("--sample-limit", type=int, default=20,
+                        help="mismatch samples retained in disk-backed mode")
     args = parser.parse_args()
     try:
-        report = compare(args.expected, args.actual)
+        report = (bounded_compare(args.expected, args.actual, args.db, args.sample_limit)
+                  if args.db else compare(args.expected, args.actual))
     except (OSError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
