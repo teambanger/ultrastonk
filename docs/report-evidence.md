@@ -155,7 +155,7 @@ are artifacts of the fixture, not latency claims.
 | Emitter throughput | 545,563 rows/s, 0 failed, one pass | `<run2>/logs/emitter.log` |
 | Flink job window | 428.031 s (`RUNNING 16:45:44.953 → FINISHED 16:52:52.984`) | `<run2>/logs/jobmanager.log` |
 | Implied aggregate processing rate | 675,301 rows/s | DERIVED (`docs/capacity-model.md`) |
-| Output | 62,381,131 committed records; 5,282,388,854 bytes dumped | `<run2>/evidence/offsets.json`, `output.jsonl` |
+| Output | 62,381,131 committed records (dumps reclaimed after audit; counts retained in `offsets.json` and `compare.json`) | `<run2>/evidence/offsets.json` |
 | Broker state on disk | 16,507,840,934 bytes | `<run2>/logs/kafka_data_bytes.txt` |
 | Storage per unit | 57.11 MB per million rows ingested; 18.28 bytes output per row; 0.216 output records per row | DERIVED |
 
