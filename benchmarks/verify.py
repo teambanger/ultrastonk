@@ -13,6 +13,14 @@ def signature(event):
     return (event["ticker"], event["timestamp_emit"], event["type"], round(event["value"], 9))
 
 
+def comparison(expected, actual):
+    def records(counter):
+        return [dict(ticker=ticker, timestamp_emit=timestamp, type=kind, value=value, count=count)
+                for (ticker, timestamp, kind, value), count in sorted(counter.items())]
+    return {"expected": records(expected), "actual": records(actual),
+            "missing": records(expected - actual), "extra": records(actual - expected)}
+
+
 def check_history(message, ticker, expected):
     assert set(message) == {"type", "ticker", "events"} and message["type"] == "history" and message["ticker"] == ticker, message
     events = message["events"]
@@ -60,6 +68,7 @@ def flush_timestamp(window_end, max_out_of_order, grace):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gateway-url", help="WebSocket URL for live subscription isolation checks")
+    parser.add_argument("--evidence", help="write expected and observed committed Kafka comparison as JSON")
     args = parser.parse_args()
     try:
         topic_in, topic_out, rejected = isolated_topics(os.environ)
@@ -117,13 +126,13 @@ def main():
                         assert history == {"type": "history", "ticker": ticker, "events": []}, history
                     sockets.append((socket, tickers))
             verify(consumer, brokers, topic_in, topic_out, rejected, dedup, policy, checkpoint,
-                   run, a, b, c, base, window, advance, finish, sockets, args.gateway_url)
+                   run, a, b, c, base, window, advance, finish, sockets, args.gateway_url, args.evidence)
     finally:
         consumer.close()
 
 
 def verify(consumer, brokers, topic_in, topic_out, rejected, dedup, policy, checkpoint,
-           run, a, b, c, base, window, advance, finish, sockets, gateway_url):
+           run, a, b, c, base, window, advance, finish, sockets, gateway_url, evidence):
     from confluent_kafka import Producer, TopicPartition, OFFSET_BEGINNING
 
     producer = Producer({"bootstrap.servers": brokers, "enable.idempotence": True})
@@ -266,6 +275,13 @@ def verify(consumer, brokers, topic_in, topic_out, rejected, dedup, policy, chec
         with connect(gateway_url, open_timeout=30) as socket:
             socket.send(json.dumps({"type": "subscribe", "tickers": [c]}))
             check_history(json.loads(socket.recv(timeout=30)), c, expected)
+    if evidence:
+        result = comparison(expected, actual)
+        result.update(run=run, crossover_ticker=c, base=base, window_ms=window, dedup=dedup,
+                      late=policy, quarantined=sum(quarantined.values()), websocket_clients=len(sockets))
+        with open(evidence, "w", encoding="utf-8") as output:
+            json.dump(result, output, indent=2)
+            output.write("\n")
     print(json.dumps({"integration_passed": True, "dedup": dedup, "late": policy,
                       "validated_records": sum(actual.values()), "quarantined": sum(quarantined.values()),
                       "websocket_clients_validated": len(sockets)}, indent=2))

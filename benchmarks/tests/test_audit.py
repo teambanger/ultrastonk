@@ -49,6 +49,15 @@ class MatrixSafetyTests(unittest.TestCase):
 
 
 class VerifyTests(unittest.TestCase):
+    def test_comparison_capture_keeps_expected_actual_and_differences(self):
+        expected = collections.Counter({("A.FR", 1, "BUY", 39): 1})
+        actual = collections.Counter({("A.FR", 1, "SELL", 39): 1})
+        capture = verify.comparison(expected, actual)
+        self.assertEqual(capture["expected"][0]["type"], "BUY")
+        self.assertEqual(capture["actual"][0]["type"], "SELL")
+        self.assertEqual(capture["missing"][0]["type"], "BUY")
+        self.assertEqual(capture["extra"][0]["type"], "SELL")
+
     def test_history_is_checked_separately_from_live(self):
         event = {"ticker": "A.FR", "timestamp_emit": 1, "type": "BUY", "value": 100}
         expected = collections.Counter({verify.signature(event): 1})
