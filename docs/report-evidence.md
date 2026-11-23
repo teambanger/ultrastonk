@@ -166,16 +166,53 @@ so the recorded workload is far inside capacity in batch terms.
 **Caveat:** that run overlapped nothing else on the measured host, but it is a single repetition with
 uncapped containers, and 165× is a batch-drain bound, not a live-latency headroom claim.
 
-### 4.2 Behaviour at the recorded peak
+### 4.2 Behaviour at the recorded peak (MEASURED, one repetition)
 
-**PENDING —** ticket 07 (peak-load measurement) is running at the time of writing. It will fill: achieved
-capture pacing versus schedule, expected-versus-delivered counts by subscription, p50/p95/p99 with sample
-sizes for trade-enqueue→WebSocket and window-finalization→advisory receipt independently, backlog and
-drain, restarts/OOMs, and the oracle comparison with policy-related deviations split from transport loss.
-Artifacts will be `benchmarks/evidence/live-peak/` and `docs/live-peak.md`.
+Mode: 1× capture pace (`SPEED_MULTIPLIER=1`, `PACING=capture`), warm state, one repetition,
+`FLINK_BOUNDED_REPLAY=false`. The offered slice is the 5-minute peak plus support: 1,914,978 rows =
+300 s pre-roll + the 1,223,873-row measured segment + 180 s trailing, offered in the fixture's
+documented capture-time order (ties broken by source ordinal) because the raw physical order starts
+after the measured start — a harness property that must be stated, since it is not the physical file
+order. Artifacts: `benchmarks/evidence/live-peak/` (`summary.json`,
+`comparison-warm-1x-r1.json`, `runs/peak-warm-1x-r1-pacing.json`, `slices/peak-warm-manifest.json`,
+`ledger.json`) and `docs/live-peak.md`.
 
-**REDUCED:** 1× capture pace and warm state only; 1.25× and the cold variant were dropped; repeats
-reduced by measured run cost; pre-roll 120 s, trailing 90 s.
+| Quantity | Result |
+|---|---|
+| Achieved pacing, measured segment | **0.99991** (max lag 35 ms); pre-roll 0.99983, trailing 0.99980 |
+| Measured segment reproduced | 1,223,873 rows, FR 651,418 / NL 411,885 / ETR 160,570 — verification passed |
+| Price records: expected = committed = WebSocket | **195,061 = 195,061 = 195,061**, zero missing, zero extra, no EMA-pair gaps |
+| Trade enqueue→WebSocket (n=195,061) | p50 **5,060 ms**, p95 9,063 ms, p99 **9,225 ms**, max 10,171 ms |
+| Committed→WebSocket (transport only) | p50 **15.5 ms**, p99 134 ms |
+| Enqueue→broker acknowledgement (n=5,000) | p50 34 ms, p99 58 ms |
+| Window finalization→advisory receipt (n=3,154) | p50 240,962 ms, p95 241,187 ms, p99 241,192 ms |
+| Drain | 7.08 s |
+| Restarts / OOM kills | 0 / 0 |
+
+**Interpretation the report must carry:** the enqueue→WebSocket figure is dominated by the deliberate
+5 s out-of-order budget held before windows are finalized, not by transport — the transport-only leg is
+p50 15.5 ms / p99 134 ms and broker acknowledgement is p50 34 ms. The advisory figure is dominated by
+the historical event time versus the replay's capture clock (event age p50 ≈ 158,988,927,518 ms, about
+5.04 years), with watermark waiting reported separately (p50 −218,592 ms, max 4,853 ms). Consequently the
+**1 s p99 project target is not met for the trade path, and as stated it is not achievable** while a 5 s
+disorder budget is in force: the target and the budget conflict, and the honest reading is that transport
+and acknowledgement are sub-100 ms while end-to-end visibility is bounded by the chosen watermark policy.
+
+**Oracle comparison on the slice:** expected 9,649 window keys versus 6,308 live records — missing 3,341,
+extra 0, incorrect 0, duplicate 0; every live record matched. The exhaustive split is policy 3,309 /
+transport 18 / unexplained 14, and all 3,341 missing keys sit in the single final window, which had not
+closed inside the offered capture — a measurement-window boundary effect, not per-trade loss. True
+transport loss is therefore about 0.5% of window keys (`comparison-warm-1x-r1-classification.json`).
+
+**Gaps to state:** Kafka broker lag and gateway consumer-group lag were **not collected** (missing
+telemetry, recorded in the summary); the Flink input−output gap is structural because output is per-window
+rather than per-trade; index, slice CSV, per-run raw JSON and the committed-record dump stay outside Git by
+design (`.gitignore`), with their manifests and checksums committed instead.
+**REDUCED:** one repetition (no spread), 1× only (no 1.25×), warm only (no cold), one five-minute peak
+window, and the run finished ~1–2 minutes over its 40-minute cap. Harness fixes this required
+(`peak_slice.py --reorder capture`, `live_peak.py --pacings` and a gateway history-limit correction, and a
+quadratic `capture_pilot.window_check` replaced by a suffix-min index) are committed with the evidence,
+because the measured numbers depend on them.
 
 ### 4.3 Capture-paced end-to-end measurement path
 
