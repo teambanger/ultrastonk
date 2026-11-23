@@ -1,0 +1,363 @@
+{
+  "ticket": "04-reconcile-reference-slice",
+  "dataset": {
+    "doi": "10.5281/zenodo.6382482",
+    "license": "CC-BY-NC-SA-4.0",
+    "official_day": "debs2022-gc-trading-day-12-11-21.csv",
+    "provider_size": 4836178492,
+    "provider_md5": "4d9d0529948879e581cbe047eb23bfb7",
+    "local_sha256": "3e723f369934d7c833fe2c9f7bef2731d9be4f201309b488b959d6f562fc9624",
+    "size_verified": true,
+    "md5_verified": true
+  },
+  "slice": {
+    "file": "slice-large.csv",
+    "sha256": "2dd08ba11e4f700049dabce273c7a92aca33c94172a5eddb82cf51a039eb3f7f",
+    "bytes": 137024060,
+    "selection": "contiguous data rows 652282..2257481 (end exclusive), spanning the first event-time crossings of 08:55 and 09:10 Europe/Berlin after row 500000",
+    "event_windows": [
+      {
+        "start": 1636703700000,
+        "local": "2021-11-12T08:55:00+01:00",
+        "rows": 74390,
+        "trades": 24883
+      },
+      {
+        "start": 1636704000000,
+        "local": "2021-11-12T09:00:00+01:00",
+        "rows": 851526,
+        "trades": 109135
+      },
+      {
+        "start": 1636704300000,
+        "local": "2021-11-12T09:05:00+01:00",
+        "rows": 679281,
+        "trades": 116698
+      }
+    ],
+    "final_nonempty_window": 1636704300000,
+    "reversals": {
+      "events": 835332,
+      "eligible_trades": 26316,
+      "beyond_disorder_budget": 0,
+      "max_ms": 996,
+      "eligible_max_ms": 978
+    }
+  },
+  "mode": "capture-order",
+  "mode_decision": {
+    "chosen": "capture-order",
+    "reason": "ordinary bounded replay had zero eligible late exclusions, exact oracle match, and final-window coverage, so event-time reordering was not required",
+    "reference_run": "event-time-ordered cross-check also executed and passed; it is not the chosen throughput path because it requires a complete disk-backed sort",
+    "sort_oracle_equivalence": "oracle output from original and sorted slices matched exactly (11,608 records, final window 1636704300000)"
+  },
+  "settings": {
+    "DEDUP_STRATEGY": "NONE",
+    "LATE_EVENT_STRATEGY": "SIDE_OUTPUT",
+    "WINDOW_SIZE_MS": 300000,
+    "MAX_OUT_OF_ORDER_MS": 5000,
+    "CHECKPOINT_INTERVAL_MS": 10000,
+    "FLINK_PARALLELISM": 2,
+    "EVENT_TIME_ZONE": "Europe/Berlin",
+    "SPEED_MULTIPLIER": 1000,
+    "PRICE_FILTER": "none"
+  },
+  "source_accounting": {
+    "csv": "/mnt/shared/data/ultrastonk-reference-slice/slice-large.csv",
+    "window_ms": 300000,
+    "max_out_of_order_ms": 5000,
+    "rows_read": 1605199,
+    "loader": {
+      "emitted": 1605197,
+      "dropped_width": 0,
+      "dropped_no_symbol": 0,
+      "dropped_no_time": 2,
+      "dropped_timestamp": 0,
+      "malformed_prices": 0,
+      "fallback_events": 0
+    },
+    "query": {
+      "eligible_trades": 250716,
+      "eligible_symbols": 3671,
+      "invalid_symbol_rows": 0,
+      "nonpositive_or_missing_last_rows": 1354481
+    },
+    "reversals": {
+      "events": 835332,
+      "eligible_trades": 26316,
+      "beyond_disorder_budget": 0,
+      "max_ms": 996,
+      "eligible_max_ms": 978
+    },
+    "windows": {
+      "count": 3,
+      "final_nonempty": 1636704300000,
+      "final_event": 1636704300000,
+      "counts": {
+        "1636703700000": {
+          "rows": 74390,
+          "trades": 24883
+        },
+        "1636704000000": {
+          "rows": 851526,
+          "trades": 109135
+        },
+        "1636704300000": {
+          "rows": 679281,
+          "trades": 116698
+        }
+      }
+    }
+  },
+  "publication": {
+    "emitter": {
+      "emitted": 1605197,
+      "submitted": 1605197,
+      "failed": 0
+    },
+    "input_offsets": {
+      "0": {
+        "low": 0,
+        "high": 220460
+      },
+      "1": {
+        "low": 0,
+        "high": 291075
+      },
+      "2": {
+        "low": 0,
+        "high": 275256
+      },
+      "3": {
+        "low": 0,
+        "high": 302985
+      },
+      "4": {
+        "low": 0,
+        "high": 276036
+      },
+      "5": {
+        "low": 0,
+        "high": 239385
+      }
+    },
+    "input_records": 1605197,
+    "output_offsets": {
+      "0": {
+        "low": 0,
+        "high": 39023
+      },
+      "1": {
+        "low": 0,
+        "high": 51015
+      },
+      "2": {
+        "low": 0,
+        "high": 48452
+      },
+      "3": {
+        "low": 0,
+        "high": 47582
+      },
+      "4": {
+        "low": 0,
+        "high": 43467
+      },
+      "5": {
+        "low": 0,
+        "high": 40746
+      }
+    },
+    "output_records": 270261,
+    "output_high_total": 270285,
+    "audit_records": 0,
+    "dump_complete": true
+  },
+  "results": {
+    "prices": 250716,
+    "ema_components": 15874,
+    "ema_pairs": 7937,
+    "advisories": 3671,
+    "normalized_records": 270261,
+    "oracle_records": 11608,
+    "expected_final_window": 1636704300000,
+    "actual_final_window": 1636704300000,
+    "comparison": {
+      "match": true,
+      "bounded": true,
+      "counts": {
+        "missing": 0,
+        "extra": 0,
+        "incorrect": 0,
+        "duplicates": 0
+      },
+      "records": {
+        "expected": 11608,
+        "actual": 11608
+      }
+    },
+    "gate_input": {
+      "mode": "capture-order",
+      "slice": {
+        "csv": "slice-large.csv",
+        "source_day": "2021-11-12",
+        "source_rows": "652282-2257481",
+        "rows": 1605199
+      },
+      "settings": {
+        "DEDUP_STRATEGY": "NONE",
+        "LATE_EVENT_STRATEGY": "SIDE_OUTPUT",
+        "WINDOW_SIZE_MS": 300000,
+        "MAX_OUT_OF_ORDER_MS": 5000,
+        "CHECKPOINT_INTERVAL_MS": 10000,
+        "FLINK_PARALLELISM": 2,
+        "EVENT_TIME_ZONE": "Europe/Berlin",
+        "SPEED_MULTIPLIER": 1000,
+        "PRICE_FILTER": "none"
+      },
+      "emitter": {
+        "failed": 0,
+        "emitted": 1605197,
+        "acknowledged": 1605197,
+        "complete": true
+      },
+      "input": {
+        "records": 1605197,
+        "complete": true
+      },
+      "audit": {
+        "late": 0,
+        "rejected": 0,
+        "complete": true
+      },
+      "source": {
+        "eligible_trades": 250716
+      },
+      "output": {
+        "prices": 250716,
+        "final_window": 1636704300000,
+        "complete": true
+      },
+      "expected_final_window": 1636704300000,
+      "comparison": {
+        "match": true,
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "incorrect": 0,
+          "duplicates": 0
+        },
+        "missing": [],
+        "extra": [],
+        "incorrect": [],
+        "duplicates": [],
+        "records": {
+          "expected": 11608,
+          "actual": 11608
+        },
+        "expected_final_window": 1636704300000,
+        "actual_final_window": 1636704300000,
+        "sample_limit": 10
+      },
+      "errors": []
+    },
+    "gate_result": {
+      "passed": true,
+      "checks": {
+        "mode_declared": true,
+        "source_nonempty": true,
+        "emitter_complete": true,
+        "input_complete": true,
+        "audit_complete": true,
+        "zero_late_exclusions": true,
+        "zero_rejected_inputs": true,
+        "committed_prices_match": true,
+        "output_complete": true,
+        "oracle_exact": true,
+        "final_window_present": true,
+        "no_errors": true
+      }
+    }
+  },
+  "reference_run": {
+    "label": "event-time-ordered",
+    "input_sha256": "3bf07295bb7c60542a577e939109ba18f275a13586b30043173a9d41f7f215f2",
+    "input_records": 1605197,
+    "output_records": 270261,
+    "audit_records": 0,
+    "normalized": {
+      "records": 270261,
+      "prices": 250716,
+      "ema_components": 15874,
+      "ema_pairs": 7937,
+      "advisories": 3671,
+      "window_min": 1636703700000,
+      "final_window": 1636704300000
+    },
+    "comparison": {
+      "match": true,
+      "counts": {
+        "missing": 0,
+        "extra": 0,
+        "incorrect": 0,
+        "duplicates": 0
+      },
+      "records": {
+        "expected": 11608,
+        "actual": 11608
+      }
+    },
+    "checkpoint_final_bytes": 797857
+  },
+  "storage_observed": {
+    "slice_csv_bytes": 137024060,
+    "sort_db_bytes": 202956800,
+    "sorted_csv_bytes": 135418682,
+    "input_topic_bytes": 29265346,
+    "output_topic_bytes": 27663540,
+    "audit_topic_bytes": 0,
+    "broker_total_bytes": 56943271,
+    "raw_output_jsonl_bytes": 22697848,
+    "normalized_jsonl_bytes": 1444919,
+    "expected_jsonl_bytes": 1444922,
+    "compare_db_bytes": 2084864,
+    "checkpoint_1_bytes": 314639,
+    "checkpoint_final_bytes": 685624,
+    "reference_input_topic_bytes": 26156630,
+    "reference_output_topic_bytes": 27519044,
+    "reference_checkpoint_final_bytes": 797857
+  },
+  "preflight": {
+    "assumption": "linear in source bytes; full week official manifest is 24,874,180,296 bytes; weekend files add negligible rows",
+    "week_source_bytes": 24874180296,
+    "scale_factor": 181.531,
+    "estimated_week_rows": 291394149,
+    "capture_order_peak": {
+      "source_csv_bytes": 24874180296,
+      "input_topic_bytes": 5312581548,
+      "output_topic_bytes": 5021803336,
+      "audit_topic_bytes": 0,
+      "raw_output_jsonl_bytes": 4120373922,
+      "normalized_jsonl_bytes": 262298283,
+      "compare_db_bytes": 378468446,
+      "checkpoint_bytes": 124462339,
+      "total_bytes": 40094168170
+    },
+    "event_time_reference_peak_additional": {
+      "sort_db_bytes": 36843048115,
+      "sorted_csv_bytes": 24582753653,
+      "total_bytes": 61425801768
+    },
+    "capture_order_peak_with_15pct": 46108293395,
+    "reference_peak_with_15pct": 116747965428
+  },
+  "disk_free_bytes_at_run": 191126044672,
+  "commands": [
+    "python3 benchmarks/reconcile_replay.py extract --csv <day-12.csv> --output slice-large.csv --start-row 652282 --end-row 2257481",
+    "TMPDIR=<disk-scratch> python3 benchmarks/query_truth.py --timezone Europe/Berlin slice-large.csv > expected-large.jsonl",
+    "docker compose -p reconcile-ord-02 -f compose.yaml -f deploy/compose.replay.yaml --profile emitter up -d --build",
+    "python3 benchmarks/reconcile_replay.py dump --topic reconcile-ord02-out --output ordinary-output.jsonl",
+    "python3 benchmarks/reconcile_replay.py normalize --input ordinary-output.jsonl --output actual.jsonl",
+    "python3 benchmarks/query_truth_compare.py expected-large.jsonl actual.jsonl --db compare.sqlite"
+  ]
+}
