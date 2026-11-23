@@ -37,7 +37,7 @@ class PoliciesTest {
             send(h, 100, 10);
             send(h, 100, 20);
             h.processWatermark(new Watermark(999));
-            assertEquals(4, events(h).size());
+            assertEquals(5, events(h).size());
             assertEquals(20 * 2.0 / 39, events(h).get(2).value, 1e-10);
         }
     }
@@ -47,7 +47,7 @@ class PoliciesTest {
             send(h, 100, 10);
             send(h, 100, 20);
             h.processWatermark(new Watermark(999));
-            assertEquals(3, events(h).size());
+            assertEquals(4, events(h).size());
             assertEquals(10 * 2.0 / 39, events(h).get(1).value, 1e-10);
         }
     }
@@ -71,11 +71,11 @@ class PoliciesTest {
             send(h, 900, 20);
             assertEquals(2, events(h).size());
             h.processWatermark(new Watermark(1199));
-            assertEquals(4, events(h).size());
+            assertEquals(5, events(h).size());
             assertEquals(20 * 2.0 / 39, events(h).get(2).value, 1e-10);
             send(h, 950, 99);
             assertEquals(1, h.getSideOutput(PriceIndicators.LATE).size());
-            assertEquals("price", events(h).get(4).type);
+            assertEquals("price", events(h).get(5).type);
         }
     }
 

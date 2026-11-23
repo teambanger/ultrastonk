@@ -1,4 +1,6 @@
 import csv
+import collections
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -47,6 +49,34 @@ class MatrixSafetyTests(unittest.TestCase):
 
 
 class VerifyTests(unittest.TestCase):
+    def test_history_is_checked_separately_from_live(self):
+        event = {"ticker": "A.FR", "timestamp_emit": 1, "type": "BUY", "value": 100}
+        expected = collections.Counter({verify.signature(event): 1})
+        verify.check_history({"type": "history", "ticker": "A.FR", "events": [event]}, "A.FR", expected)
+        with self.assertRaises(AssertionError):
+            verify.check_history({"type": "history", "ticker": "A.FR", "events": []}, "A.FR", expected)
+
+    def test_live_delivery_checks_exact_ticker_filtered_multisets(self):
+        a = {"ticker": "A.FR", "timestamp_emit": 1, "type": "BUY", "value": 100}
+        b = {"ticker": "B.FR", "timestamp_emit": 2, "type": "SELL", "value": 0}
+        expected = collections.Counter({verify.signature(a): 1, verify.signature(b): 1})
+
+        class Socket:
+            def __init__(self, messages):
+                self.messages = iter(messages)
+
+            def recv(self, timeout):
+                try:
+                    return json.dumps(next(self.messages))
+                except StopIteration:
+                    raise TimeoutError from None
+
+        verify.check_live(Socket([a]), {"A.FR"}, expected, 0.01)
+        with self.assertRaisesRegex(AssertionError, "unexpected"):
+            verify.check_live(Socket([a, b]), {"A.FR"}, expected, 0.01)
+        with self.assertRaisesRegex(AssertionError, "missing"):
+            verify.check_live(Socket([]), {"A.FR"}, expected, 0.01)
+
     def test_application_and_cross_project_topics_are_refused(self):
         env = dict(COMPOSE_PROJECT_NAME="ultrastonk-verify-ab12", KAFKA_INPUT_TOPIC="verify-ab12-in",
                    KAFKA_OUTPUT_TOPIC="verify-ab12-out", KAFKA_REJECTED_TOPIC="verify-ab12-audit")

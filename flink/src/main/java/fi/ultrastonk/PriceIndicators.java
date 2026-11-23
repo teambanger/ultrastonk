@@ -181,10 +181,17 @@ public class PriceIndicators extends KeyedProcessFunction<String, PriceEvent, Ev
             closeProfile.end(started);
         }
         if (close == null) return;
+        Double previousShort = ema38.value();
+        Double previousLong = ema100.value();
+        double previousDifference = (previousShort == null ? 0 : previousShort)
+                - (previousLong == null ? 0 : previousLong);
         double shortValue = updateEma(close.price, ema38, 38, ema38Profile);
         double longValue = updateEma(close.price, ema100, 100, ema100Profile);
         emit(close, "EMA38", shortValue, out);
         emit(close, "EMA100", longValue, out);
+        double difference = shortValue - longValue;
+        if (previousDifference <= 0 && difference > 0) emit(close, "BUY", close.price, out);
+        else if (previousDifference >= 0 && difference < 0) emit(close, "SELL", close.price, out);
         completedWindows.inc();
     }
 
