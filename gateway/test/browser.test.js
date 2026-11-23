@@ -34,6 +34,8 @@ test('browser displays the window and matching EMA values for live and history a
   assert.match(elements.rows.innerHTML, /SELL.*88\.0000.*99\.0000/);
   assert.match(elements.signalRows.innerHTML, /BUY.*12\.3457.*10\.1235.*1970-01-01T00:05:00\.000Z/);
   assert.match(elements.signalRows.innerHTML, /SELL.*88\.0000.*99\.0000.*1970-01-01T00:10:00\.000Z/);
+  receive({ ticker: 'BBB.FR', type: 'BUY', timestamp_emit: 601000, value: 100 });
+  assert.doesNotMatch(elements.signalRows.innerHTML, /BBB\.FR/);
   assert.match(elements.rows.innerHTML, /1970-01-01T00:10:00\.000Z.*1970-01-01T00:15:00\.000Z/);
   receive(event('BUY', 901000, 50));
   assert.match(elements.rows.innerHTML, /BUY.*<td>–<\/td><td>–<\/td>/);
