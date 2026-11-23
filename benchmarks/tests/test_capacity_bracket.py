@@ -210,6 +210,61 @@ class ScheduleTests(unittest.TestCase):
         coarse = {1: {"highest_passing": None, "first_failing": 4000}}
         self.assertEqual(cb.build_fine_plans(coarse, [1], 2, 120, 10, 3, 0.25), [])
 
+    def coarse_bracket(self):
+        return {1: {"separated": True, "highest_passing": 2000, "first_failing": 4000},
+                2: {"separated": True, "highest_passing": 4000, "first_failing": 8000}}
+
+    def test_select_fine_workers_defaults_to_every_separated_worker(self):
+        self.assertEqual(cb.select_fine_workers(self.coarse_bracket()), [1, 2])
+
+    def test_select_fine_workers_single_picks_the_most_informative(self):
+        self.assertEqual(cb.select_fine_workers(self.coarse_bracket(), single=True), [2])
+
+    def test_select_fine_workers_explicit_restricts(self):
+        self.assertEqual(cb.select_fine_workers(self.coarse_bracket(), explicit=[1]), [1])
+
+    def test_select_fine_workers_ignores_unseparated(self):
+        coarse = {1: {"separated": False}, 2: {"separated": True, "highest_passing": 1, "first_failing": 2}}
+        self.assertEqual(cb.select_fine_workers(coarse, explicit=[1, 2]), [2])
+
+    def test_extra_rate_only_when_every_worker_passed_its_top(self):
+        passing = {1: {"points": {2000: cb.PASS, 4000: cb.PASS}},
+                   2: {"points": {4000: cb.PASS, 8000: cb.PASS}}}
+        failing = {1: {"points": {4000: cb.PASS}}, 2: {"points": {8000: cb.FAIL}}}
+        self.assertTrue(cb.should_add_extra_rate(passing, 8000))
+        self.assertFalse(cb.should_add_extra_rate(failing, 16000))
+        self.assertFalse(cb.should_add_extra_rate(passing, None))
+
+    def test_explicit_coarse_rates_override_the_geometric_ladder(self):
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "benchmarks/capacity_bracket.py"), "--dry-run",
+             "--profile-spec", "taskmanager:1:2g", "--coarse-rates", "1000,4000,8000"],
+            text=True, capture_output=True, check=True, cwd=ROOT)
+        self.assertEqual(json.loads(completed.stdout)["coarse"]["rates"], [1000, 4000, 8000])
+
+    def test_stage_fits_respects_the_wall_budget(self):
+        self.assertTrue(cb.stage_fits(None, 120, 10, 3))
+        self.assertTrue(cb.stage_fits(600, 60, 5, 1))
+        self.assertFalse(cb.stage_fits(120, 120, 10, 3))
+
+    def test_downscaled_dry_run_locks_the_scoped_command(self):
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "benchmarks/capacity_bracket.py"), "--dry-run",
+             "--profile-spec", "taskmanager:1:2g,kafka:2:2g,gateway:1:512m,benchmark:2:1g",
+             "--coarse-start", "500", "--coarse-stop", "4000", "--coarse-factor", "2",
+             "--duration-coarse", "30", "--warmup", "5", "--coarse-extra-rate", "8000",
+             "--fine-single", "--fine-points", "1", "--duration-fine", "60", "--repetitions-fine", "1",
+             "--wall-budget-seconds", "2700"],
+            text=True, capture_output=True, check=True, cwd=ROOT)
+        plan = json.loads(completed.stdout)
+        self.assertEqual(plan["coarse"]["rates"], [500, 1000, 2000, 4000])
+        self.assertEqual(plan["coarse_extra_rate"], 8000)
+        self.assertEqual(plan["wall_budget_seconds"], 2700)
+        joined = " ".join(plan["coarse_command"])
+        self.assertIn("--rates 500,1000,2000,4000", joined)
+        self.assertIn("--duration 30", joined)
+        self.assertIn("--parallelism 1,2", joined)
+
 
 class SummaryTests(unittest.TestCase):
     def point(self, workers, offered, steady, verdict, throttle=0.0, utilization=0.5):
@@ -380,7 +435,8 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(plan["rules"], cb.default_rules())
         self.assertEqual(plan["coarse"]["phase"], "coarse")
         self.assertIn("matrix.py", " ".join(plan["coarse_command"]))
-        self.assertIn("derived", plan["fine"])
+        self.assertIn("fine", plan)
+        self.assertIsNone(plan["coarse_extra_rate"])
 
 
 if __name__ == "__main__":

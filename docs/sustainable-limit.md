@@ -104,7 +104,61 @@ runner reports `unbracketed: no failing offered load`; that is a valid outcome, 
 error. `--evaluate-session SESSION` re-evaluates existing matrix artifacts without
 running anything.
 
-## Commands the scored phase will run
+## Scoped scored plan (two-hour programme; ticket 07 runs first)
+
+A later scope decision downscales ticket 08 to fit a roughly two-hour measurement
+programme and runs it **after** ticket 07's peak run, on an otherwise idle host. Only
+one configuration set is used, held fixed across both worker counts; the verdict rules
+are unchanged. This reduces the ladder and the repeat count, so the report must state
+the reduced confidence.
+
+**Scored command (exact):**
+
+```bash
+SPEC='taskmanager:1:2g,kafka:2:2g,gateway:1:512m,benchmark:2:1g'
+
+python3 benchmarks/capacity_bracket.py --profile-spec "$SPEC" \
+  --coarse-rates 500,1000,2000,4000 \
+  --duration-coarse 30 --warmup 5 --repetitions-coarse 1 \
+  --coarse-extra-rate 8000 \
+  --fine-single --fine-points 1 --duration-fine 60 --repetitions-fine 1 \
+  --wall-budget-seconds 2700
+```
+
+- **Coarse batch:** rates `500,1000,2000,4000` originals/s, `--parallelism 1,2` in one
+  batch, 30 s, 5 s warmup, 1 repetition, the fixed per-worker profile, monitoring and
+  gateway on, seed 42, the same shape and policies. `--coarse-extra-rate 8000` adds an
+  `8000` batch automatically **only if the `4000` point passed for both workers**.
+- **Fine confirmation:** at most one run (`--fine-single --fine-points 1`), for the most
+  informative separated worker, 60 s, 1 repetition, at the midpoint rate between the
+  coarse highest-passing and first-failing bounds. It is skipped if under ~15 minutes
+  remain (`--wall-budget-seconds 2700` enforces the fit automatically).
+- **Hard cap:** 45 minutes from go-ahead to summary, including the image build. Cut
+  order if the build plus the batch cannot fit: (1) drop `--coarse-extra-rate 8000`;
+  (2) drop the fine run; (3) drop to three rates with
+  `--coarse-rates 1000,4000,8000`.
+
+Because every configured point is now a **single repetition**, per-point repeat spread
+is a single run and has no meaningful stdev; that is stated wherever spread is reported.
+
+**Reduced-confidence fallbacks (exact):**
+
+```bash
+# Cut 1: no 8000 rate.
+python3 benchmarks/capacity_bracket.py --profile-spec "$SPEC" \
+  --coarse-rates 500,1000,2000,4000 --duration-coarse 30 --warmup 5 \
+  --fine-single --fine-points 1 --duration-fine 60 --repetitions-fine 1
+
+# Cut 2: no fine run (coarse batch only).
+python3 benchmarks/capacity_bracket.py --profile-spec "$SPEC" \
+  --coarse-rates 500,1000,2000,4000 --duration-coarse 30 --warmup 5
+
+# Cut 3: three rates, coarse batch only.
+python3 benchmarks/capacity_bracket.py --profile-spec "$SPEC" \
+  --coarse-rates 1000,4000,8000 --duration-coarse 30 --warmup 5
+```
+
+## Full commands (non-scoped reference)
 
 All commands run from the repository root with the host otherwise idle (no full-week
 replay, no drop-vs-grace comparison, no peak run concurrently). `--profile-spec` is the
@@ -125,13 +179,14 @@ python3 benchmarks/capacity_bracket.py --profile-spec "$SPEC" \
   --evaluate-session <SESSION> [--evaluate-session <SESSION> ...]
 ```
 
-The coarse command the runner issues (also printed by `--dry-run`):
+The coarse command the runner issues (also printed by `--dry-run`, shown here for the
+scoped `500,1000,2000,4000` ladder):
 
 ```bash
 python3 benchmarks/matrix.py \
   --project ultrastonk-capacity-coarse \
-  --duration 60 --warmup 10 \
-  --rates 1000,2000,4000,8000,16000,32000 --parallelism 1,2 \
+  --duration 30 --warmup 5 \
+  --rates 500,1000,2000,4000 --parallelism 1,2 \
   --dedup NONE --late DROP --qualities baseline --repetitions 1 \
   --duplicate-rate 0 --late-rate 0 \
   --resource-profile "perworker=$SPEC" --seed 42 \
@@ -139,9 +194,12 @@ python3 benchmarks/matrix.py \
   --gateway --monitoring
 ```
 
-Fine commands are identical except for `--parallelism <one worker>`, the fine rates,
-`--duration 120`, and `--repetitions 3`, with project names `ultrastonk-capacity-fine0`,
-`-fine1`, … Each `matrix.py` batch is a fresh `ultrastonk-benchmark-*` project.
+The optional extra batch uses the same command with `--project ultrastonk-capacity-coarse-extra`
+and `--rates 8000`. Fine commands are identical except for `--parallelism <one worker>`,
+the fine rates, `--duration 60`, and `--repetitions 1`, with project names
+`ultrastonk-capacity-fine0`, … Each `matrix.py` batch is a fresh `ultrastonk-benchmark-*`
+project. The full non-scoped reference schedule is the geometric `1000,2000,4000,8000,16000,32000`
+ladder at 60 s / 3 fine repetitions described under *Search schedule*.
 
 ### Resource profiles
 
