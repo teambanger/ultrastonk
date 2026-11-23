@@ -1,8 +1,11 @@
 {
   "doi": "10.5281/zenodo.6382482",
   "provider_manifest": "https://zenodo.org/api/records/6382482",
+  "provider_download_url_template": "https://zenodo.org/api/records/6382482/files/{key}/content",
   "license": "cc-by-nc-sa-4.0",
   "file_order": "ascending day, 2021-11-08 through 2021-11-14",
+  "provider_listing_order_days": ["09", "08", "14", "11", "13", "10", "12"],
+  "provider_revision": 3,
   "files": [
     {"key": "debs2022-gc-trading-day-08-11-21.csv", "size": 4672671094, "checksum": "md5:a08013f09a6b77355dae8b3ce141624d"},
     {"key": "debs2022-gc-trading-day-09-11-21.csv", "size": 5057964097, "checksum": "md5:3e1b7a79c63c71e03f4cef82fbda94a2"},
