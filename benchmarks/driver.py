@@ -147,12 +147,17 @@ def main():
         if not event.get("ticker", "").startswith(prefix):
             return
         kind = event.get("type")
-        if set(event) != {"timestamp_emit", "ticker", "type", "value"} or kind not in {"price", "EMA38", "EMA100"} or not math.isfinite(event["value"]):
+        # The live-advisory work added BUY/SELL records to the query output, so the
+        # contract must accept them. They are counted and delivery-checked separately
+        # and are never treated as prices or EMAs.
+        if set(event) != {"timestamp_emit", "ticker", "type", "value"} or kind not in {"price", "EMA38", "EMA100", "BUY", "SELL"} or not math.isfinite(event["value"]):
             (ws_errors if websocket else errors).append("invalid output contract: " + repr(event))
             return
         with lock:
             counters[("websocket_" if websocket else "") + kind] += 1
             key = signature(event)
+            if kind in ("BUY", "SELL"):
+                return
             if kind != "price":
                 if socket:
                     (ws_emas if websocket else kafka_emas)[(kind, *key)] += 1
@@ -322,7 +327,7 @@ def main():
     time.sleep(min(args.drain_timeout, int(os.getenv("CHECKPOINT_INTERVAL_MS", "10000")) / 1000 + 1))
     while socket and not ws_errors and time.monotonic() < drain_deadline:
         with lock:
-            if all(counters["websocket_" + kind] >= counters[kind] for kind in ("price", "EMA38", "EMA100")):
+            if all(counters["websocket_" + kind] >= counters[kind] for kind in ("price", "EMA38", "EMA100", "BUY", "SELL")):
                 break
         time.sleep(.1)
     stop.set()
@@ -358,12 +363,20 @@ def main():
         ws_extra_prices = sum((ws_prices - actual).values())
         ws_missing_emas = sum((kafka_emas - ws_emas).values())
         ws_extra_emas = sum((ws_emas - kafka_emas).values())
+        # Advisory delivery is checked at count level: the gateway must fan out at least
+        # as many BUY/SELL records as the query committed. Signature-level comparison of
+        # advisories is not implemented, and the evidence says so.
+        ws_missing_advisories = sum(max(0, counters[kind] - counters["websocket_" + kind])
+                                    for kind in ("BUY", "SELL"))
         result["gateway_correctness_passed"] = not any((ws_errors, ws_missing_prices, ws_extra_prices,
-                                                        ws_missing_emas, ws_extra_emas))
+                                                        ws_missing_emas, ws_extra_emas, ws_missing_advisories))
         result["errors"].extend(ws_errors)
         result["measurement"].update({
             "websocket_prices": counters["websocket_price"],
             "websocket_ema38": counters["websocket_EMA38"], "websocket_ema100": counters["websocket_EMA100"],
+            "websocket_buy": counters["websocket_BUY"], "websocket_sell": counters["websocket_SELL"],
+            "advisory_buy": counters["BUY"], "advisory_sell": counters["SELL"],
+            "websocket_missing_advisories": ws_missing_advisories,
             "websocket_missing_prices": ws_missing_prices, "websocket_unexpected_prices": ws_extra_prices,
             "websocket_missing_emas": ws_missing_emas, "websocket_unexpected_emas": ws_extra_emas,
             "websocket_prices_per_second": counters["websocket_price"] /
