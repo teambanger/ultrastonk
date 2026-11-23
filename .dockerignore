@@ -1,0 +1,8 @@
+**
+!flink/
+!flink/pom.xml
+!flink/src/
+!flink/src/**
+!flink/Dockerfile
+!flink/entrypoint.sh
+!flink/log4j-console.properties

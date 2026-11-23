@@ -1,0 +1,5 @@
+{
+  "rate": {"events_per_second": 1000, "duration_seconds": 30},
+  "symbols": {"count": 100, "distribution": "uniform"},
+  "faults": {"duplicate_probability": 0.5, "duplicate_copies": 2, "duplicate_delay_ms": 100, "delay_probability": 0}
+}

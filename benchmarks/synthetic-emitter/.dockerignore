@@ -1,0 +1,6 @@
+**
+!Dockerfile
+!requirements.txt
+!dummy_emitter.py
+!tests/
+!tests/**

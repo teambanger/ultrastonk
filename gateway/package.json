@@ -1,0 +1,23 @@
+{
+  "name": "ultrastonk-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WebSocket gateway: Kafka EMA results/advisories -> subscribed browser clients",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test --test-timeout=30000",
+    "smoke": "node scripts/smoke.js",
+    "kafka:check": "node scripts/kafka-check.js",
+    "kafka:publish": "node scripts/publish-test-events.js",
+    "kafka:e2e": "node scripts/kafka-e2e.js",
+    "bench": "node scripts/bench.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "ws": "^8.23.0"
+  }
+}

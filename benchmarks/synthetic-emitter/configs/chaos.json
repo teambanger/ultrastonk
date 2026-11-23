@@ -1,0 +1,5 @@
+{
+  "rate": {"events_per_second": 2000, "duration_seconds": 60, "burst_every_seconds": 15, "burst_duration_seconds": 3, "burst_multiplier": 5, "pause_every_seconds": 30, "pause_duration_seconds": 2},
+  "symbols": {"count": 1000, "distribution": "zipf", "zipf_exponent": 1.6},
+  "faults": {"duplicate_probability": 0.2, "duplicate_copies": 2, "duplicate_delay_ms": 100, "correction_probability": 0.05, "delay_probability": 0.2, "delay_min_ms": 1000, "delay_max_ms": 10000, "backdate_probability": 0.1, "backdate_ms": 30000, "invalid_probability": 0.02, "invalid_modes": ["malformed_json", "missing_price", "bad_price", "bad_ticker", "negative_timestamp", "tombstone"]}
+}

@@ -1,0 +1,7 @@
+services:
+  jobmanager:
+    environment:
+      FLINK_BOUNDED_REPLAY: "true"
+    depends_on:
+      event-emitter:
+        condition: service_completed_successfully
