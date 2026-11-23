@@ -21,7 +21,7 @@ docker compose up -d --build
 docker compose logs -f jobmanager taskmanager
 ```
 
-The Flink image build runs the Java correctness tests. Two TaskManagers, each with one slot, run a job with parallelism two. Kafka uses KRaft, six partitions per topic, durable volumes, and explicit topic initialization. Flink starts automatically after topic initialization. [Flink dashboard](http://localhost:8081).
+The Flink image build runs the Java correctness tests; the event-emitter image build runs its pacing and CSV tests. Two TaskManagers, each with one slot, run a job with parallelism two. Kafka uses KRaft, six partitions per topic, durable volumes, and explicit topic initialization. Flink starts automatically after topic initialization. [Flink dashboard](http://localhost:8081).
 
 Open the [gateway test page](http://localhost:8080) and subscribe to a ticker such as `RDSA.NL`. The gateway reads committed records from `KAFKA_OUTPUT_TOPIC` and sends recent in-memory history followed by live events for the selected ticker. `/health` reports the gateway and its Kafka source status. Set `GATEWAY_PORT` to change the loopback port. See the [gateway README](gateway/README.md) for WebSocket messages and tests.
 
@@ -33,6 +33,26 @@ docker compose logs -f event-emitter
 ```
 
 The replay exits at the end of the input. Set `CSV_PATH` to a path inside `/data` (or a comma-separated list in replay order), `SPEED_MULTIPLIER` to accelerate replay, or `MAX_SLEEP_MS` to cap long gaps. `REPLAY_DATA_DIR` selects the read-only host directory mounted at `/data`. The base stack without an emitter profile is suitable for isolated synthetic verification and benchmarks. Do not mix replay and synthetic workloads on the same input topic: synthetic timestamps can advance the watermark past historical events.
+
+**Capture-paced replay (opt-in).** By default the emitter paces by exchange event time and the payload, Kafka record and query all share that clock. Set `PACING=capture` to pace by the recorded system "Date"/"Time" columns (2/3) instead, so a replay reproduces the publication order and gaps of a live capture. The payload still carries the exchange `eventTimestampMs`; Flink keeps processing event time, and the four-field output contract is unchanged.
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `PACING` | `event` | `event` (unchanged) or `capture` |
+| `MISSING_CAPTURE_TIME` | `event` | Row without readable system date/time: pace by `event` time, `no-wait` (hold the previous capture position), or `fail` (abort the measured run) |
+| `REPLAY_PREROLL_MS` | `0` | Capture offset before the measured interval; rows here warm state and are excluded from the measured segment |
+| `REPLAY_MEASURE_MS` | `0` | Measured capture interval after pre-roll; `0` measures the remainder |
+| `PACING_REPORT_PATH` | unset | Write the pacing report JSON (segment counts, scheduled versus actual pacing, clock correlation, enqueue/ack samples) |
+| `PACING_SAMPLE_LIMIT` | `1000` | Bound on retained per-row report samples |
+
+In capture mode the payload gains `captureTimestampMs` and `sourceOrdinal` so the pilot can correlate the same event across boundaries; query event time is unchanged. Rows keep recorded order. Out-of-order capture times are emitted immediately, and `MAX_SLEEP_MS` caps and re-bases long gaps exactly as the event clock does. Segment labels are assigned by capture offset: pre-roll, measured, and trailing input. Trailing input is still published (and advances watermarks) but is not part of the measured interval.
+
+```bash
+REPLAY_DATA_DIR=./benchmarks/fixtures CSV_PATH=/data/capture-pilot.csv \
+  PACING=capture MISSING_CAPTURE_TIME=fail REPLAY_PREROLL_MS=10000 REPLAY_MEASURE_MS=60000 \
+  PACING_REPORT_PATH=/results/pilot-pacing.json SPEED_MULTIPLIER=20 \
+  docker compose --profile emitter run --rm --user "$(id -u):$(id -g)" event-emitter
+```
 
 **Finite replay with final EMAs.** Use a fresh Compose project and include the replay overlay. Flink waits for the emitter to finish, then reads Kafka to the captured end offsets and finalizes the remaining windows. Results are not streamed while the CSV is being published. Use a fresh project/topics for each run, and leave Kafka running long enough to consume the results.
 
@@ -218,6 +238,35 @@ For a browser that subscribes before publication, `--run-id evidence01` fixes
 the crossover ticker to `Vevidence01C.FR`; `--wait-for-file` holds publication
 until the specified file appears (up to 120 seconds). Use a fresh shared mount
 for this gate and remove any old gate file before starting.
+
+**Capture-paced pilot.** `benchmarks/capture_pilot.py` proves that a small live Historical replay measures the publication-to-subscriber path, not historical event age. It consumes committed input, committed output, and one live WebSocket subscriber from the same run, correlates the same event identity at each boundary, checks the emitter's scheduled-versus-achieved pacing, and fails on missing telemetry, insufficient pacing, or missing/duplicate delivery. It reports enqueue-to-ack, enqueue-to-committed, committed-to-WebSocket, window-finalization, historical event age, and watermark waiting separately, and records actual run settings and effective limits.
+
+Use a fresh project and disposable topics. Start the pilot before the emitter so the subscriber is registered before publication (for example with the isolated command above plus `--profile emitter`, `PACING=capture`, and a small `CSV_PATH` slice):
+
+```bash
+pilot_project="ultrastonk-pilot-$(date +%s)"
+id=${pilot_project#ultrastonk-pilot-}
+export COMPOSE_PROJECT_NAME=$pilot_project
+export KAFKA_INPUT_TOPIC=pilot-$id-in KAFKA_OUTPUT_TOPIC=pilot-$id-out KAFKA_REJECTED_TOPIC=pilot-$id-audit
+export KAFKA_PORT=39092 FLINK_UI_PORT=38081 GATEWAY_PORT=38080 PROMETHEUS_PORT=0
+export FLINK_BOUNDED_REPLAY=false WINDOW_SIZE_MS=60000 MAX_OUT_OF_ORDER_MS=5000 CHECKPOINT_INTERVAL_MS=1000
+export SOURCE_IDLE_TIMEOUT_MS=1000
+docker compose up -d --build kafka kafka-init jobmanager taskmanager gateway
+docker compose ps -q | xargs docker inspect > benchmarks/results/pilot-limits.json
+docker compose --profile benchmark build benchmark
+docker compose --profile benchmark run -d --name pilot-client --no-deps --entrypoint python benchmark \
+  capture_pilot.py --run-id pilot --tickers RDSA.NL,A2ASZ7.ETR --pacing-report /results/pilot-pacing.json \
+  --limits /results/pilot-limits.json
+REPLAY_DATA_DIR=./benchmarks/fixtures CSV_PATH=/data/capture-pilot.csv \
+  PACING=capture MISSING_CAPTURE_TIME=fail REPLAY_PREROLL_MS=10000 REPLAY_MEASURE_MS=60000 \
+  PACING_REPORT_PATH=/results/pilot-pacing.json SPEED_MULTIPLIER=20 \
+  docker compose --profile emitter run --rm --user "$(id -u):$(id -g)" event-emitter
+pilot_exit=$(docker wait pilot-client)
+docker logs pilot-client
+docker rm pilot-client
+```
+
+The emitter runs as an unprivileged user, so `--user` lets it write the report into the host-owned results directory. The pilot writes `benchmarks/results/pilot-capture-pilot.json` and exits nonzero (`pilot_exit`) unless every check passes. `--tickers` must list the measured symbols before publication; a replay that starts first cannot be subscribed retroactively. Add `--allow-missing-limits` only for a rehearsal run, and only claim a passing pilot when limits are present. Keep the measured slice short, use a fresh project, and do not run it against live or shared topics.
 
 The matrix runner creates an isolated project and uses fresh topics, consumer groups, transaction prefixes, and a new job for each run. It randomizes experiment order, performs warmup, injects duplicates/delays, varies worker counts and offered load, checks the raw-price multiset against the selected dedup policy, and exports JSON, CSV, container logs, resource snapshots, and optional raw Prometheus time series. Run the load driver directly only against a disposable synthetic stack, not against a live or replay feed.
 

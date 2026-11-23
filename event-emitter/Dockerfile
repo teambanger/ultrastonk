@@ -36,7 +36,7 @@ COPY src ./src
 # lz4/snappy/zstd codecs it needs at runtime, jackson-databind, opencsv, slf4j)
 # into target/dependency so the JRE-only runtime stage can use a plain -cp.
 RUN --mount=type=cache,target=/root/.m2 \
-    mvn -q -B -DskipTests package \
+    mvn -q -B package \
         dependency:copy-dependencies -DincludeScope=runtime \
         -DoutputDirectory=target/dependency
 

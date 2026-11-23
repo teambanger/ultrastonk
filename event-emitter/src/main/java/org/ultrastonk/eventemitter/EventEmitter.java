@@ -2,6 +2,8 @@ package org.ultrastonk.eventemitter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.opencsv.exceptions.CsvException;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -12,11 +14,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 public class EventEmitter {
 
@@ -29,6 +34,54 @@ public class EventEmitter {
     /** Upper bound on printed send failures; the total is always reported at the end. */
     private static final int MAX_LOGGED_FAILURES = 10;
 
+    /** Which clock drives the replay schedule. Event time is the unchanged default. */
+    public enum PacingMode {
+        EVENT, CAPTURE;
+
+        ReplayPacer.Mode toPacer() {
+            return this == CAPTURE ? ReplayPacer.Mode.CAPTURE : ReplayPacer.Mode.EVENT;
+        }
+
+        static PacingMode fromString(String value) {
+            String v = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+            if (v.isEmpty() || v.equals("event")) {
+                return EVENT;
+            }
+            if (v.equals("capture")) {
+                return CAPTURE;
+            }
+            throw new IllegalArgumentException("PACING must be event or capture, was '" + value + "'");
+        }
+    }
+
+    /** Policy for a row whose system date/time (capture) columns cannot be read. */
+    public enum MissingCaptureTime {
+        EVENT_TIME(ReplayPacer.MissingCaptureTime.EVENT_TIME),
+        NO_WAIT(ReplayPacer.MissingCaptureTime.NO_WAIT),
+        FAIL(ReplayPacer.MissingCaptureTime.FAIL);
+
+        private final ReplayPacer.MissingCaptureTime policy;
+
+        MissingCaptureTime(ReplayPacer.MissingCaptureTime policy) {
+            this.policy = policy;
+        }
+
+        ReplayPacer.MissingCaptureTime toPacer() {
+            return policy;
+        }
+
+        static MissingCaptureTime fromString(String value) {
+            String v = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+            return switch (v) {
+                case "", "event", "event-time" -> EVENT_TIME;
+                case "no-wait", "hold" -> NO_WAIT;
+                case "fail" -> FAIL;
+                default -> throw new IllegalArgumentException(
+                        "MISSING_CAPTURE_TIME must be event, no-wait or fail, was '" + value + "'");
+            };
+        }
+    }
+
     public record Config(
             List<Path> csvPaths,
             String topic,
@@ -39,7 +92,13 @@ public class EventEmitter {
             ZoneId eventZone,
             DataLoader.PriceFilter priceFilter,
             String acks,
-            boolean idempotence
+            boolean idempotence,
+            PacingMode pacingMode,
+            MissingCaptureTime missingCaptureTime,
+            long capturePrerollMs,
+            long captureMeasureMs,
+            String pacingReportPath,
+            int pacingSampleLimit
     ) {
         public Config {
             if (!Double.isFinite(speedMultiplier) || speedMultiplier <= 0.0) {
@@ -48,11 +107,24 @@ public class EventEmitter {
             if (maxSleepMs < 0 || maxSleepMs > Long.MAX_VALUE / 1_000_000L) {
                 throw new IllegalArgumentException("MAX_SLEEP_MS is outside the supported range");
             }
+            if (capturePrerollMs < 0 || captureMeasureMs < 0) {
+                throw new IllegalArgumentException("REPLAY_PREROLL_MS and REPLAY_MEASURE_MS must be nonnegative");
+            }
+            if (pacingSampleLimit < 0) {
+                throw new IllegalArgumentException("PACING_SAMPLE_LIMIT must be nonnegative");
+            }
         }
 
         /** Builds the configuration from environment variables, falling back to sane defaults. */
         public static Config fromEnv() {
-            String csv = env("CSV_PATH", "../data/src/debs2022-gc-trading-day-12-11-21.csv");
+            return fromEnv(System::getenv);
+        }
+
+        static Config fromEnv(Function<String, String> env) {
+            String csv = env.apply("CSV_PATH");
+            if (csv == null || csv.isBlank()) {
+                csv = "../data/src/debs2022-gc-trading-day-12-11-21.csv";
+            }
             List<Path> paths = Arrays.stream(csv.split(","))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
@@ -67,32 +139,39 @@ public class EventEmitter {
                             + " (set CSV_PATH)");
                 }
             }
-            String recordTimestamp = env("RECORD_TIMESTAMP", "append");
+            String recordTimestamp = value(env, "RECORD_TIMESTAMP", "append");
             if (!"append".equalsIgnoreCase(recordTimestamp) && !"event".equalsIgnoreCase(recordTimestamp)) {
                 throw new IllegalArgumentException("RECORD_TIMESTAMP must be append or event");
             }
+            String reportPath = env.apply("PACING_REPORT_PATH");
             return new Config(
                     paths,
-                    env("TOPIC_NAME", "price-events"),
-                    env("KAFKA_SERVER", "localhost:9092"),
-                    Double.parseDouble(env("SPEED_MULTIPLIER", "1.0")),
-                    Long.parseLong(env("MAX_SLEEP_MS", "0")),
+                    value(env, "TOPIC_NAME", "price-events"),
+                    value(env, "KAFKA_SERVER", "localhost:9092"),
+                    Double.parseDouble(value(env, "SPEED_MULTIPLIER", "1.0")),
+                    Long.parseLong(value(env, "MAX_SLEEP_MS", "0")),
                     "event".equalsIgnoreCase(recordTimestamp),
-                    ZoneId.of(env("EVENT_TIME_ZONE", "Europe/Berlin")),
-                    DataLoader.PriceFilter.fromString(env("PRICE_FILTER", "none")),
-                    env("KAFKA_ACKS", "all"),
-                    Boolean.parseBoolean(env("KAFKA_IDEMPOTENCE", "true"))
+                    ZoneId.of(value(env, "EVENT_TIME_ZONE", "Europe/Berlin")),
+                    DataLoader.PriceFilter.fromString(value(env, "PRICE_FILTER", "none")),
+                    value(env, "KAFKA_ACKS", "all"),
+                    Boolean.parseBoolean(value(env, "KAFKA_IDEMPOTENCE", "true")),
+                    PacingMode.fromString(value(env, "PACING", "event")),
+                    MissingCaptureTime.fromString(value(env, "MISSING_CAPTURE_TIME", "event")),
+                    Long.parseLong(value(env, "REPLAY_PREROLL_MS", "0")),
+                    Long.parseLong(value(env, "REPLAY_MEASURE_MS", "0")),
+                    reportPath == null || reportPath.isBlank() ? null : reportPath.trim(),
+                    Integer.parseInt(value(env, "PACING_SAMPLE_LIMIT", "1000"))
             );
         }
 
-        private static String env(String name, String fallback) {
-            String value = System.getenv(name);
+        private static String value(Function<String, String> env, String name, String fallback) {
+            String value = env.apply(name);
             return (value == null || value.isBlank()) ? fallback : value.trim();
         }
     }
 
     /**
-     * Outcome of a run. {@code firstEventTimeMs} is the event time of the first row emitted,
+     * Outcome of a run. {@code firstEventTimeMs} is the time of the first row emitted,
      * {@code load} aggregates the per-file CSV accounting over all replayed files, so
      * {@code load.emitted() == submitted} unless a send failed.
      */
@@ -100,6 +179,45 @@ public class EventEmitter {
                         DataLoader.LoadStats load) {
         public double eventsPerSecond() {
             return wallClockMs > 0 ? submitted * 1000.0 / wallClockMs : submitted;
+        }
+    }
+
+    private static final class TimingSample {
+        final long ordinal;
+        final ReplayPacer.Pace pace;
+        final Long captureTimestampMs;
+        final long eventTimestampMs;
+        final long enqueuedEpochMs;
+        volatile Long ackEpochMs;
+
+        TimingSample(long ordinal, ReplayPacer.Pace pace, Long captureTimestampMs, long eventTimestampMs,
+                     long enqueuedEpochMs) {
+            this.ordinal = ordinal;
+            this.pace = pace;
+            this.captureTimestampMs = captureTimestampMs;
+            this.eventTimestampMs = eventTimestampMs;
+            this.enqueuedEpochMs = enqueuedEpochMs;
+        }
+
+        ObjectNode json() {
+            ObjectNode node = MAPPER.createObjectNode();
+            node.put("source_ordinal", ordinal);
+            node.put("segment", pace.segment().name());
+            if (captureTimestampMs == null) {
+                node.putNull("capture_ms");
+            } else {
+                node.put("capture_ms", captureTimestampMs);
+            }
+            node.put("event_ms", eventTimestampMs);
+            node.put("scheduled_offset_ms", pace.scheduledOffsetMs());
+            node.put("actual_offset_ms", pace.actualOffsetMs());
+            node.put("enqueued_epoch_ms", enqueuedEpochMs);
+            if (ackEpochMs == null) {
+                node.putNull("ack_epoch_ms");
+            } else {
+                node.put("ack_epoch_ms", ackEpochMs);
+            }
+            return node;
         }
     }
 
@@ -117,22 +235,28 @@ public class EventEmitter {
     public Stats emit() throws IOException, CsvException {
         AtomicLong submitted = new AtomicLong();
         AtomicLong failed = new AtomicLong();
+        AtomicLong ordinal = new AtomicLong();
         AtomicLong lastProgressMs = new AtomicLong(System.currentTimeMillis());
-        ReplayClock clock = new ReplayClock();
+        List<TimingSample> samples = Collections.synchronizedList(new ArrayList<>());
+        boolean capture = config.pacingMode() == PacingMode.CAPTURE;
+        ReplayPacer pacer = new ReplayPacer(config.pacingMode().toPacer(), config.missingCaptureTime().toPacer(),
+                config.capturePrerollMs(), config.captureMeasureMs(), config.speedMultiplier(),
+                config.maxSleepMs(), ReplayPacer.NanoSource.system())
+                .withSampleLimit(config.pacingSampleLimit());
         DataLoader.LoadStats load = null;
         long runStartMs = System.currentTimeMillis();
 
-        System.out.printf("Replaying %s -> topic '%s' via %s at %.2fx (event zone %s, price filter %s)%n",
+        System.out.printf("Replaying %s -> topic '%s' via %s at %.2fx (event zone %s, price filter %s, pacing %s)%n",
                 config.csvPaths(), config.topic(), config.bootstrapServers(), config.speedMultiplier(),
-                config.eventZone(), config.priceFilter().id());
+                config.eventZone(), config.priceFilter().id(), config.pacingMode());
 
         try (KafkaProducer<String, String> producer = new KafkaProducer<>(producerProperties())) {
-            // A single ReplayClock spans all files: the per-day files are chronologically ordered,
-            // so event times keep increasing across files and the replay stays gap-free.
+            // A single pacer spans all files: the per-day files are chronologically ordered,
+            // so the replay stays gap-free across files.
             for (Path csv : config.csvPaths()) {
                 System.out.printf("Replaying %s%n", csv.toAbsolutePath());
-                DataLoader.LoadStats fileStats =
-                        replayFile(producer, csv, clock, submitted, failed, runStartMs, lastProgressMs);
+                DataLoader.LoadStats fileStats = replayFile(producer, csv, pacer, capture, samples, ordinal,
+                        submitted, failed, runStartMs, lastProgressMs);
                 load = load == null ? fileStats : load.plus(fileStats);
                 System.out.printf("  %s: %s%n", csv.getFileName(), fileStats.summary(config.priceFilter()));
             }
@@ -142,9 +266,9 @@ public class EventEmitter {
         if (load == null) {
             load = DataLoader.LoadStats.empty();
         }
-        Stats stats = new Stats(submitted.get(), failed.get(), clock.firstEventTimeMs(),
+        Stats stats = new Stats(submitted.get(), failed.get(), pacer.firstTimeMs(),
                 System.currentTimeMillis() - runStartMs, load);
-        System.out.printf("Done: %d submitted, %d failed, %.0f ev/s, first event time %d%n",
+        System.out.printf("Done: %d submitted, %d failed, %.0f ev/s, first paced time %d%n",
                 stats.submitted(), stats.failed(), stats.eventsPerSecond(), stats.firstEventTimeMs());
         System.out.printf("Total: %s%n", load.summary(config.priceFilter()));
         if (config.priceFilter() != DataLoader.PriceFilter.NONE) {
@@ -152,23 +276,65 @@ public class EventEmitter {
                             + "faithful replay, do not use this run for report numbers.%n",
                     config.priceFilter().id(), load.droppedTotal(), load.rowsRead());
         }
+        if (config.pacingReportPath() != null) {
+            writePacingReport(pacer, samples, submitted.get(), failed.get(), stats);
+        }
         return stats;
     }
 
+    private void writePacingReport(ReplayPacer pacer, List<TimingSample> samples, long submitted, long failed,
+                                   Stats stats) throws IOException {
+        ObjectNode report = pacer.report();
+        report.put("pacing_report_version", 1);
+        report.put("topic", config.topic());
+        report.put("speed_multiplier", config.speedMultiplier());
+        report.put("max_sleep_ms", config.maxSleepMs());
+        report.put("event_time_zone", config.eventZone().getId());
+        report.put("price_filter", config.priceFilter().id());
+        report.put("submitted", submitted);
+        report.put("failed", failed);
+        report.put("first_paced_time_ms", stats.firstEventTimeMs());
+        report.put("wall_clock_ms", stats.wallClockMs());
+        ArrayNode sampleArray = report.putArray("samples");
+        synchronized (samples) {
+            for (TimingSample sample : samples) {
+                sampleArray.add(sample.json());
+            }
+        }
+        Path path = Path.of(config.pacingReportPath());
+        if (path.getParent() != null) {
+            Files.createDirectories(path.getParent());
+        }
+        MAPPER.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), report);
+        System.out.printf("Pacing report written to %s%n", path.toAbsolutePath());
+    }
+
     /** Streams one CSV file into the producer and returns the CSV-side accounting for that file. */
-    private DataLoader.LoadStats replayFile(KafkaProducer<String, String> producer, Path csv, ReplayClock clock,
+    private DataLoader.LoadStats replayFile(KafkaProducer<String, String> producer, Path csv, ReplayPacer pacer,
+                                            boolean capture, List<TimingSample> samples, AtomicLong ordinal,
                                             AtomicLong submitted, AtomicLong failed, long runStartMs,
                                             AtomicLong lastProgressMs)
             throws IOException, CsvException {
         DataLoader.Counters counters = DataLoader.Counters.of();
-        new DataLoader(csv, config.eventZone(), config.priceFilter()).load(counters, event -> {
+        new DataLoader(csv, config.eventZone(), config.priceFilter(), capture).load(counters, event -> {
             try {
-                clock.pace(event.eventTimestampMs(), config.speedMultiplier(), config.maxSleepMs());
+                ReplayPacer.Pace pace = pacer.pace(event.captureTimestampMs(), event.eventTimestampMs());
+                long sourceOrdinal = ordinal.getAndIncrement();
+                TimingSample sample = null;
+                if (samples.size() < config.pacingSampleLimit()) {
+                    sample = new TimingSample(sourceOrdinal, pace, event.captureTimestampMs(),
+                            event.eventTimestampMs(), System.currentTimeMillis());
+                    samples.add(sample);
+                }
 
-                String key = event.key();
-                String payload = MAPPER.writeValueAsString(event.withEmitTimestamp(System.currentTimeMillis()));
+                RawPriceEvent outgoing = event.withEmitTimestamp(System.currentTimeMillis());
+                if (capture) {
+                    outgoing = outgoing.withSource(sourceOrdinal, event.captureTimestampMs());
+                }
+                String key = outgoing.key();
+                String payload = MAPPER.writeValueAsString(outgoing);
 
-                Long recordTimestamp = config.eventRecordTimestamp() ? event.eventTimestampMs() : null;
+                Long recordTimestamp = config.eventRecordTimestamp() ? outgoing.eventTimestampMs() : null;
                 ProducerRecord<String, String> record = new ProducerRecord<>(
                         config.topic(),
                         null,                            // let the partitioner hash the key
@@ -177,12 +343,15 @@ public class EventEmitter {
                         payload
                 );
 
+                TimingSample acknowledged = sample;
                 producer.send(record, (metadata, ex) -> {
                     if (ex != null) {
                         long failures = failed.incrementAndGet();
                         if (failures <= MAX_LOGGED_FAILURES) {
                             System.err.println("Emit failed for key " + key + ": " + ex.getMessage());
                         }
+                    } else if (acknowledged != null) {
+                        acknowledged.ackEpochMs = System.currentTimeMillis();
                     }
                 });
 
@@ -224,49 +393,6 @@ public class EventEmitter {
         // A dead broker should surface as an error instead of hanging the replay forever.
         props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, "120000");
         return props;
-    }
-
-    /**
-     * Drift-free pacing clock. Every sleep is measured against the fixed instant the
-     * replay started at rather than against the previous record, so the replay never
-     * accumulates scheduling drift even when individual sends are slow.
-     *
-     * <p>When a sleep is capped by {@code maxSleepMs}, the schedule is <em>re-based</em>
-     * (the start instant shifted forward by the skipped time): without that, every event
-     * after the gap would still measure itself against the un-capped target and sleep
-     * the full cap again, turning the post-gap burst into one capped sleep per event.
-     */
-    static final class ReplayClock {
-        private long firstEventTimeMs = -1L;
-        private long startNano;
-
-        /** Blocks until wall-clock time has caught up with this event's replay slot. */
-        void pace(long eventTimeMs, double speedFactor, long maxSleepMs) throws InterruptedException {
-            if (firstEventTimeMs < 0) {
-                firstEventTimeMs = eventTimeMs;
-                startNano = System.nanoTime();
-                return;
-            }
-            // Rows that are out of order in the file are emitted immediately.
-            long offsetMs = Math.max(0L, eventTimeMs - firstEventTimeMs);
-            long targetNanos = (long) (offsetMs * 1_000_000.0 / speedFactor);
-            long sleepNanos = targetNanos - (System.nanoTime() - startNano);
-            if (sleepNanos <= 0) {
-                return;
-            }
-            long capNanos = maxSleepMs > 0 ? maxSleepMs * 1_000_000L : Long.MAX_VALUE;
-            if (sleepNanos > capNanos) {
-                // Skip the gap instead of just shortening this one sleep: shift the schedule
-                // forward so the next events pace relative to the capped point, not the gap.
-                startNano -= sleepNanos - capNanos;
-                sleepNanos = capNanos;
-            }
-            TimeUnit.NANOSECONDS.sleep(sleepNanos);
-        }
-
-        long firstEventTimeMs() {
-            return firstEventTimeMs;
-        }
     }
 
     public static void main(String[] args) throws IOException, CsvException {
