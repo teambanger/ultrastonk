@@ -86,3 +86,11 @@ The team directed that the measurement programme finish within roughly two hours
 - **Ticket 12 (packaging).** Runs in parallel, and must label every reduced item and never present reduced-repeat results as equal-confidence evidence.
 
 Reduced-repeat and reduced-ladder results are directional evidence about the Sustainable limit and the worker comparison, not the three-repeat bracket the original plan specified.
+
+## Goal Reframing (2026-11-23, team decision)
+
+The team restated what the evidence is for, and this now governs priority: (1) analyse the dataset — done in ticket 02; (2) determine how the system behaves under different conditions, meaning the recorded peak and a sweep of offered volumes; (3) determine how scaling changes that behaviour, meaning one versus two TaskManagers; and (4) from those measurements predict how long a given workload takes and which resources it needs.
+
+Mapping onto the tickets: ticket 02 supplies the workload shapes; ticket 06 supplies the only direct whole-week end-to-end measurement (emitter `545,563` ev/s, `289,049,752` rows, separate ingestion/processing/drain timings) and the behaviour of the real source ordering; ticket 07 supplies behaviour at the recorded peak (pacing, tails, backlog, headroom); ticket 08 supplies the volume sweep and the scaling comparison; ticket 11 supplies the measured cost of a lateness-policy choice. Tickets 09 and 10 (symbol distribution and subscriber growth) are outside the reframed core and are deferred rather than pursued, because neither changes the week-processing time or the resource envelope the team wants to predict; their criteria are recorded as reduced or deferred with the reason.
+
+The reframing adds one deliverable that the original ticket set did not cover: a predictive capacity model (`benchmarks/capacity_model.py`, `benchmarks/tests/test_capacity_model.py`, `docs/capacity-model.md`) that fits the measured points — the week run and the volume/scaling ladder — and predicts wall time and resource need for a stated volume, with ranges and explicit statements of what the fit cannot support. Because the ladder is single-repetition and few-pointed, those predictions are bounds or interpolations between measured points, not a validated law, and the document must say so. Ticket 12's pack must include this model and label it at that confidence.
