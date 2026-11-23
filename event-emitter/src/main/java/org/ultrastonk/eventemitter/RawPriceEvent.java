@@ -28,13 +28,24 @@ public record RawPriceEvent(
         Double close,          // Closing price, null if absent
         long eventTimestampMs, // Original event time, epoch millis (for Flink watermarks)
         long emitTimestampMs,  // Wall-clock time when emitted to Kafka, epoch millis (latency tracking)
-        String tradingDate     // Date of last trade, dd-mm-yyyy
+        String tradingDate,    // Date of last trade, dd-mm-yyyy
+        Long captureTimestampMs, // Recorded system date/time, epoch millis (capture pacing only)
+        Long sourceOrdinal     // Row order in the replay, for capture-paced identity correlation
 ) {
 
     /** Copy of this event with the wall-clock emission timestamp filled in. */
     public RawPriceEvent withEmitTimestamp(long emitTimestampMs) {
         return new RawPriceEvent(id, secType, last, bid, ask, close,
-                eventTimestampMs, emitTimestampMs, tradingDate);
+                eventTimestampMs, emitTimestampMs, tradingDate, captureTimestampMs, sourceOrdinal);
+    }
+
+    /**
+     * Copy carrying the opt-in capture identity fields. The query event time is left untouched;
+     * these fields only let a capture-paced run correlate publication order with recorded gaps.
+     */
+    public RawPriceEvent withSource(long sourceOrdinal, Long captureTimestampMs) {
+        return new RawPriceEvent(id, secType, last, bid, ask, close,
+                eventTimestampMs, emitTimestampMs, tradingDate, captureTimestampMs, sourceOrdinal);
     }
 
     /** Kafka record key; events of the same instrument stay on the same partition. */

@@ -174,6 +174,13 @@ services:
       EVENT_TIME_ZONE: ${EVENT_TIME_ZONE:-Europe/Berlin}
       # Keep historical event time in the payload, not in Kafka's retention clock.
       RECORD_TIMESTAMP: append
+      # Opt-in capture-clock pacing; defaults keep exchange event-time pacing.
+      PACING: ${PACING:-event}
+      MISSING_CAPTURE_TIME: ${MISSING_CAPTURE_TIME:-event}
+      REPLAY_PREROLL_MS: ${REPLAY_PREROLL_MS:-0}
+      REPLAY_MEASURE_MS: ${REPLAY_MEASURE_MS:-0}
+      PACING_REPORT_PATH: ${PACING_REPORT_PATH:-}
+      PACING_SAMPLE_LIMIT: ${PACING_SAMPLE_LIMIT:-1000}
     volumes:
       - type: bind
         source: ${REPLAY_DATA_DIR:-./data}
@@ -181,6 +188,7 @@ services:
         read_only: true
         bind:
           create_host_path: false
+      - ./benchmarks/results:/results
     depends_on:
       kafka-init:
         condition: service_completed_successfully

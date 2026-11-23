@@ -225,9 +225,10 @@ public class DataLoader {
     private final Path path;
     private final ZoneId eventZone;
     private final PriceFilter priceFilter;
+    private final boolean captureTime;
 
     public DataLoader(Path path) {
-        this(path, ZoneOffset.UTC, PriceFilter.NONE);
+        this(path, ZoneOffset.UTC, PriceFilter.NONE, false);
     }
 
     /**
@@ -237,9 +238,19 @@ public class DataLoader {
      *                    run whose results or throughput numbers are meant to be authoritative
      */
     public DataLoader(Path path, ZoneId eventZone, PriceFilter priceFilter) {
+        this(path, eventZone, priceFilter, false);
+    }
+
+    /**
+     * @param captureTime when true, also parses the system date/time columns (2/3) so a
+     *                    capture-paced replay can preserve recorded publication gaps; the query
+     *                    event time is still the trading/system event timestamp
+     */
+    public DataLoader(Path path, ZoneId eventZone, PriceFilter priceFilter, boolean captureTime) {
         this.path = path;
         this.eventZone = eventZone == null ? ZoneOffset.UTC : eventZone;
         this.priceFilter = priceFilter == null ? PriceFilter.NONE : priceFilter;
+        this.captureTime = captureTime;
     }
 
     public DataLoader(String filename) {
@@ -276,7 +287,7 @@ public class DataLoader {
                 }
                 RawPriceEvent event;
                 try {
-                    event = extract(row, eventZone, counters);
+                    event = extract(row, eventZone, counters, captureTime);
                 } catch (RuntimeException e) {
                     // Unparseable event timestamp - skip instead of aborting the replay.
                     counters.droppedTimestamp++;
@@ -304,10 +315,15 @@ public class DataLoader {
 
     /** As {@link #extract(String[])}, interpreting the CSV date/time in the given zone. */
     public static RawPriceEvent extract(String[] row, ZoneId zone) {
-        return extract(row, zone, null);
+        return extract(row, zone, null, false);
     }
 
-    private static RawPriceEvent extract(String[] row, ZoneId zone, Counters counters) {
+    /** As {@link #extract(String[], ZoneId)}, optionally parsing the recorded capture time. */
+    public static RawPriceEvent extract(String[] row, ZoneId zone, boolean captureTime) {
+        return extract(row, zone, null, captureTime);
+    }
+
+    private static RawPriceEvent extract(String[] row, ZoneId zone, Counters counters, boolean captureTime) {
         String tradingDate = firstNonBlank(row[COL_TRADING_DATE], row[COL_DATE]);
         String tradingTime = firstNonBlank(row[COL_TRADING_TIME], row[COL_TIME]);
         long eventTimestamp;
@@ -326,8 +342,26 @@ public class DataLoader {
                 parsePrice(row[COL_CLOSE], counters),        // close
                 eventTimestamp,                             // event time, epoch millis
                 0L,                                          // emit time, filled in by the emitter
-                tradingDate                                  // trading date, dd-mm-yyyy
+                tradingDate,                                 // trading date, dd-mm-yyyy
+                captureTime ? parseCaptureTimestamp(row, zone) : null, // recorded system date/time
+                null                                         // source ordinal, filled in by the emitter
         );
+    }
+
+    /**
+     * Parses the system date/time pair (columns 2/3) that records when the exchange published the
+     * row. Returns {@code null} when either column is blank or unreadable; capture pacing then
+     * applies its missing-capture-time policy instead of inventing a gap.
+     */
+    public static Long parseCaptureTimestamp(String[] row, ZoneId zone) {
+        if (isBlank(row, COL_DATE) || isBlank(row, COL_TIME)) {
+            return null;
+        }
+        try {
+            return parseEventTimestamp(row[COL_DATE].trim(), row[COL_TIME].trim(), zone);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     /**
