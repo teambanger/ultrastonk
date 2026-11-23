@@ -1,0 +1,2074 @@
+{
+  "expected": [
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "price",
+      "value": 100,
+      "count": 2
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "price",
+      "value": 150,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "BUY",
+      "value": 250,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "EMA100",
+      "value": 4.95049505,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "EMA38",
+      "value": 12.820512821,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "price",
+      "value": 200,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "price",
+      "value": 250,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401900,
+      "type": "price",
+      "value": 999,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "EMA100",
+      "value": 10.793059504,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "EMA38",
+      "value": 27.547666009,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "price",
+      "value": 300,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "BUY",
+      "value": 50,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "EMA100",
+      "value": 0.99009901,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "EMA38",
+      "value": 2.564102564,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "price",
+      "value": 50,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "BUY",
+      "value": 39,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "EMA100",
+      "value": 0.772277228,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "EMA38",
+      "value": 2.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "price",
+      "value": 39,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "EMA100",
+      "value": 0.757182629,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "EMA38",
+      "value": 1.897948718,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "EMA100",
+      "value": 0.742386934,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "EMA38",
+      "value": 1.801130835,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "EMA100",
+      "value": 0.727884222,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "EMA38",
+      "value": 1.709277972,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "EMA100",
+      "value": 0.713668693,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "EMA38",
+      "value": 1.622135512,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "EMA100",
+      "value": 0.699734659,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "EMA38",
+      "value": 1.539461896,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "EMA100",
+      "value": 0.686076547,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "EMA38",
+      "value": 1.461027952,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "EMA100",
+      "value": 0.672688893,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "EMA38",
+      "value": 1.386616262,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "EMA100",
+      "value": 0.659566341,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "EMA38",
+      "value": 1.316020557,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "EMA100",
+      "value": 0.646703641,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "EMA38",
+      "value": 1.249045143,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "EMA100",
+      "value": 0.634095648,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "EMA38",
+      "value": 1.185504367,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "EMA100",
+      "value": 0.621737318,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "EMA38",
+      "value": 1.125222092,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "EMA100",
+      "value": 0.609623708,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "EMA38",
+      "value": 1.068031215,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "EMA100",
+      "value": 0.597749971,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "EMA38",
+      "value": 1.013773204,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "EMA100",
+      "value": 0.586111358,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "EMA38",
+      "value": 0.962297655,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "EMA100",
+      "value": 0.574703212,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "EMA38",
+      "value": 0.913461878,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "EMA100",
+      "value": 0.56352097,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "EMA38",
+      "value": 0.8671305,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "EMA100",
+      "value": 0.552560159,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "EMA38",
+      "value": 0.823175089,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "EMA100",
+      "value": 0.541816393,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "EMA38",
+      "value": 0.781473803,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "EMA100",
+      "value": 0.531285376,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "EMA38",
+      "value": 0.741911044,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "EMA100",
+      "value": 0.520962893,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "EMA38",
+      "value": 0.704377144,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "EMA100",
+      "value": 0.510844816,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "EMA38",
+      "value": 0.66876806,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "EMA100",
+      "value": 0.500927097,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "EMA38",
+      "value": 0.634985082,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "EMA100",
+      "value": 0.491205768,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "EMA38",
+      "value": 0.602934565,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "EMA100",
+      "value": 0.481676941,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "EMA38",
+      "value": 0.572527664,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "EMA100",
+      "value": 0.472336804,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "EMA38",
+      "value": 0.543680092,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "EMA100",
+      "value": 0.463181619,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "EMA38",
+      "value": 0.516311882,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "EMA100",
+      "value": 0.454207726,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "EMA38",
+      "value": 0.49034717,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "EMA100",
+      "value": 0.445411533,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "EMA38",
+      "value": 0.465713982,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "EMA100",
+      "value": 0.436789523,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "EMA38",
+      "value": 0.442344034,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "EMA100",
+      "value": 0.428338245,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "EMA38",
+      "value": 0.420172545,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "SELL",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "EMA100",
+      "value": 0.42005432,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "EMA38",
+      "value": 0.399138056,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "BUY",
+      "value": 1000,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "EMA100",
+      "value": 20.21371661,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "EMA38",
+      "value": 51.66072072,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "price",
+      "value": 1000,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH0.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH1.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH2.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH3.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH4.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH5.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1,
+      "count": 1
+    }
+  ],
+  "actual": [
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "price",
+      "value": 100.0,
+      "count": 2
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "price",
+      "value": 150.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "BUY",
+      "value": 250.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "EMA100",
+      "value": 4.95049505,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "EMA38",
+      "value": 12.820512821,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "price",
+      "value": 200.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401800,
+      "type": "price",
+      "value": 250.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444401900,
+      "type": "price",
+      "value": 999.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "EMA100",
+      "value": 10.793059504,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "EMA38",
+      "value": 27.547666009,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01A.FR",
+      "timestamp_emit": 1795444402200,
+      "type": "price",
+      "value": 300.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "BUY",
+      "value": 50.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "EMA100",
+      "value": 0.99009901,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "EMA38",
+      "value": 2.564102564,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01B.FR",
+      "timestamp_emit": 1795444401200,
+      "type": "price",
+      "value": 50.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "BUY",
+      "value": 39.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "EMA100",
+      "value": 0.772277228,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "EMA38",
+      "value": 2.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444401100,
+      "type": "price",
+      "value": 39.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "EMA100",
+      "value": 0.757182629,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "EMA38",
+      "value": 1.897948718,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444402100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "EMA100",
+      "value": 0.742386934,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "EMA38",
+      "value": 1.801130835,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444403100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "EMA100",
+      "value": 0.727884222,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "EMA38",
+      "value": 1.709277972,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444404100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "EMA100",
+      "value": 0.713668693,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "EMA38",
+      "value": 1.622135512,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444405100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "EMA100",
+      "value": 0.699734659,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "EMA38",
+      "value": 1.539461896,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444406100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "EMA100",
+      "value": 0.686076547,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "EMA38",
+      "value": 1.461027952,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444407100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "EMA100",
+      "value": 0.672688893,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "EMA38",
+      "value": 1.386616262,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444408100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "EMA100",
+      "value": 0.659566341,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "EMA38",
+      "value": 1.316020557,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444409100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "EMA100",
+      "value": 0.646703641,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "EMA38",
+      "value": 1.249045143,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444410100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "EMA100",
+      "value": 0.634095648,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "EMA38",
+      "value": 1.185504367,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444411100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "EMA100",
+      "value": 0.621737318,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "EMA38",
+      "value": 1.125222092,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444412100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "EMA100",
+      "value": 0.609623708,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "EMA38",
+      "value": 1.068031215,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444413100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "EMA100",
+      "value": 0.597749971,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "EMA38",
+      "value": 1.013773204,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444414100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "EMA100",
+      "value": 0.586111358,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "EMA38",
+      "value": 0.962297655,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444415100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "EMA100",
+      "value": 0.574703212,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "EMA38",
+      "value": 0.913461878,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444416100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "EMA100",
+      "value": 0.56352097,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "EMA38",
+      "value": 0.8671305,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444417100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "EMA100",
+      "value": 0.552560159,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "EMA38",
+      "value": 0.823175089,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444418100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "EMA100",
+      "value": 0.541816393,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "EMA38",
+      "value": 0.781473803,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444419100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "EMA100",
+      "value": 0.531285376,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "EMA38",
+      "value": 0.741911044,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444420100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "EMA100",
+      "value": 0.520962893,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "EMA38",
+      "value": 0.704377144,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444421100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "EMA100",
+      "value": 0.510844816,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "EMA38",
+      "value": 0.66876806,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444422100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "EMA100",
+      "value": 0.500927097,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "EMA38",
+      "value": 0.634985082,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444423100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "EMA100",
+      "value": 0.491205768,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "EMA38",
+      "value": 0.602934565,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444424100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "EMA100",
+      "value": 0.481676941,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "EMA38",
+      "value": 0.572527664,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444425100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "EMA100",
+      "value": 0.472336804,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "EMA38",
+      "value": 0.543680092,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444426100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "EMA100",
+      "value": 0.463181619,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "EMA38",
+      "value": 0.516311882,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444427100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "EMA100",
+      "value": 0.454207726,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "EMA38",
+      "value": 0.49034717,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444428100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "EMA100",
+      "value": 0.445411533,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "EMA38",
+      "value": 0.465713982,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444429100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "EMA100",
+      "value": 0.436789523,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "EMA38",
+      "value": 0.442344034,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444430100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "EMA100",
+      "value": 0.428338245,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "EMA38",
+      "value": 0.420172545,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "SELL",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444431100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "EMA100",
+      "value": 0.42005432,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "EMA38",
+      "value": 0.399138056,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444432100,
+      "type": "price",
+      "value": 0.01,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "BUY",
+      "value": 1000.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "EMA100",
+      "value": 20.21371661,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "EMA38",
+      "value": 51.66072072,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01C.FR",
+      "timestamp_emit": 1795444433100,
+      "type": "price",
+      "value": 1000.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH0.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH1.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH2.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH3.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH4.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FINISH5.FR",
+      "timestamp_emit": 1795444435000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH0.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH1.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH2.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH3.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH4.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "BUY",
+      "value": 1.0,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA100",
+      "value": 0.01980198,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "EMA38",
+      "value": 0.051282051,
+      "count": 1
+    },
+    {
+      "ticker": "Vevidence01FLUSH5.FR",
+      "timestamp_emit": 1795444434000,
+      "type": "price",
+      "value": 1.0,
+      "count": 1
+    }
+  ],
+  "missing": [],
+  "extra": [],
+  "run": "Vevidence01",
+  "crossover_ticker": "Vevidence01C.FR",
+  "base": 1795444401000,
+  "window_ms": 1000,
+  "dedup": "NONE",
+  "late": "DROP",
+  "quarantined": 2,
+  "websocket_clients": 3
+}

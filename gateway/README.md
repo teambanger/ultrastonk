@@ -43,7 +43,7 @@ Gateway → browser:
 
 All format rules live in [`src/protocol.js`](src/protocol.js).
 
-The integrated Flink job emits `price`, `EMA38`, `EMA100`, and crossover `BUY`/`SELL` records. The gateway forwards these records and does not compute signals itself. The browser matches a signal with EMA values from the same ticker and closing timestamp; set its window size to the deployed `WINDOW_SIZE_MS` to display the triggering window correctly. Synthetic benchmark messages are not evidence of Flink signals.
+The integrated Flink job emits `price`, `EMA38`, `EMA100`, and crossover `BUY`/`SELL` records. The gateway forwards these records and does not compute signals itself. The browser shows up to ten recent signals per subscribed ticker and matches each with EMA values from the same ticker and closing timestamp; set its window size to the deployed `WINDOW_SIZE_MS` to display the triggering window correctly. Synthetic benchmark messages are not evidence of Flink signals.
 
 ## Event age
 
