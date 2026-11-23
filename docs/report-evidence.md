@@ -230,36 +230,87 @@ report is finalised or label these numbers as note-only.
 
 ## 5. Scalability — volume and worker scaling
 
-**PENDING —** ticket 08 is queued behind ticket 07 and will fill this section with one ladder of offered
-rates (500/1000/2000/4000 originals/s, adding 8000 only if all lower points pass) at one and two
-TaskManagers with a single repetition each, per-point delivery correctness, backlog troughs, tails, drain,
-throttling, memory and aggregate worker CPU, and either highest-passing/first-failing bounds or an
-explicit `unbracketed` reason. The verdict rules were pre-registered and pinned by a test:
-`benchmarks/evidence/sustainable-limit/pre-registered-rules.json`.
+**MEASURED (trimmed, one repetition).** One ladder of offered rates at one and two TaskManagers with
+pre-registered, test-pinned verdict rules (`benchmarks/evidence/sustainable-limit/pre-registered-rules.json`),
+per-point delivery correctness, backlog troughs, tails, drain, throttling, memory and aggregate worker CPU,
+and an explicit `unbracketed` outcome. Headline: **the bracket did not separate** — the limit is
+unbracketed, 8,000/s is only a floor, and a second worker added no throughput at these rates.
 
-**REDUCED:** single repetition per point and a four-to-five point ladder, so the outcome is a directional
-bound, not the three-repeat bracket originally planned. Per-worker caps are fixed, so total resources
-grow with worker count and that is reported per point rather than hidden.
+**REDUCED:** a three-point ladder (1,000/4,000/8,000) instead of four-to-five, one repetition per point
+(no repeat spread), no fine confirmation run, and no 1.25×/cold conditions. Per-worker caps are fixed, so
+the two-worker point uses twice the aggregate quota; that is reported per point rather than hidden. A
+planned 500/s point was dropped from the trimmed set.
 
-### 5.1 What scaling can be predicted today (DERIVED / PREDICTED)
+**One integration defect this ticket found and fixed:** the benchmark driver's output contract rejected the
+`BUY` advisory records that ticket 03 added to the query, which made every point FAIL delivery on a
+contract violation rather than on lost data. The contract now accepts `BUY`/`SELL`, counts them separately
+from prices and EMAs, includes them in the WebSocket catch-up wait, and requires the WebSocket side to
+cover the committed advisory counts (count-level, not signature-level). The pre-fix run is preserved as
+`bracket-attempt2-contract-mismatch.json`, and an even earlier attempt that accidentally ran with **no**
+resource caps (`perworker=` passed literally) is preserved as `bracket-attempt1-uncapped.json` rather than
+deleted.
 
-`benchmarks/capacity_model.py` fits the measured week run and interpolates or bounds the rest:
+### 5.1 Measured volume and worker ladder (MEASURED, one repetition, trimmed)
 
-| Workload | Workers | Prediction (processing wall time) | Range |
-|---|---|---|---|
-| Official week (289.05 M rows) | 2 | 428 s (the measured point) | 342–514 s |
-| Official week | 1 | 856 s | 428–856 s (monotone bound) |
-| 3× the week (867.15 M rows) | 2 | 1,284 s | 1,027–1,541 s |
-| 3× the week | 1 | 1,284–2,568 s | bound |
-| Half the week | 2 | 214 s | 171–257 s |
+Trimmed bracket: rates 1000/4000/8000 originals/s at one and two TaskManagers, fixed per-worker cap
+`taskmanager:1:2g, kafka:2:2g, gateway:1:512m, benchmark:2:1g`, 20 s runs, 5 s warmup, one repetition,
+monitoring on, pinned pre-registered verdict rules, six points in two batches, 5 m 41 s end to end.
+Artifacts: `benchmarks/evidence/sustainable-limit/{bracket.json,run-ledger.jsonl,run-console-attempt3.log}`
+and raw matrix sessions `benchmarks/results/6092fc46e099-*`, `eb9c21b179e8-*`.
 
-Per-worker service rate implied by the measured point: 337,650 rows/s. Resource envelope: worker CPU/mem
-quota per point, broker disk `N × 57.11 MB per million rows`, output `N × 18.28 bytes`.
+| Workers | Offered/s | Verdict | Achieved input | Committed/s = WS/s | visible p99 / max (ms) | Drain (s) | Worker CPU / quota |
+|---|---|---|---|---|---|---|---|
+| 1 | 1000 | FAIL (backlog rule) | 999.996/s (99.9996%) | 952.9 | 1,116 / 1,298 | 0.13 | 0.999 / 1 core, throttled |
+| 1 | 4000 | PASS | 3,999.99 (99.9997%) | 3,937.1 | 1,129 / 1,310 | 0.72 | 0.997 / 1 core, throttled |
+| 1 | 8000 | PASS | 7,999.97 (99.9997%) | 7,666.9 | 3,361 / 3,910 | 0.38 | 0.999 / 1 core, throttled |
+| 2 | 1000 | FAIL (backlog rule) | 999.997 (99.9997%) | 968.6 | 1,070 / 1,231 | 0.42 | 1.997 / 2 cores, throttled |
+| 2 | 4000 | PASS | 3,999.99 (99.9997%) | 3,888.5 | 1,793 / 2,136 | 0.51 | 1.998 / 2 cores, throttled |
+| 2 | 8000 | PASS | 7,999.98 (99.9997%) | 7,793.2 | 3,530 / 4,447 | 0.58 | 2.000 / 2 cores, throttled |
 
-**What the report must say:** these are bounds or interpolations between measured points with a single
-repetition, so they are directional. Scaling efficiency between one and two workers stays PENDING until
-ticket 08 reports its second worker count; the 1.5× worker-capacity stretch check applies only where
-worker CPU saturation shows Flink is the limiter.
+Delivery was exact at every point: zero missing or unexpected prices on Kafka and on WebSocket, zero
+missing EMAs, and advisory counts matching the committed side (`websocket_missing_advisories = 0`);
+committed→WebSocket backlog was zero throughout and no producer backpressure occurred.
+
+**Findings the report must carry, stated exactly:**
+
+1. **The sustainable limit is not bracketed.** Both worker counts are `unbracketed` and
+   non-monotonic: the highest passing load is 8,000/s while 1,000/s FAILs, because the pinned backlog
+   rule judges growth from the first third of the series and the `elapsed = 0` startup sample drags that
+   mean down. The raw per-checkpoint troughs are flat at 1,000/s (≈942–950 at one worker, ≈627–630 at
+   two), so the FAIL is a **startup-transient artifact of the pinned rule, not lost or duplicated data
+   and not missing telemetry**. Consequence: within the tested range 8,000/s is a *floor*, not a ceiling,
+   and no sustainable-limit number can be quoted from this ladder.
+2. **Doubling the workers bought no throughput: 0.988× at 4,000/s and 1.016× at 8,000/s** (i.e. per-worker
+   scaling efficiency ≈ 0.50). Both counts saturate their worker CPU quota (throttled ratio 1.0) yet
+   deliver the same ~7.7–7.9 k/s, which points at a shared component — the single 2-core Kafka broker,
+   the single benchmark driver/consumer, or the gateway — rather than worker CPU. The 1.5× stretch check
+   is therefore **not met**, and the honest claim is "more TaskManagers did not raise measured throughput
+   in this configuration", not "the system does not scale".
+3. **Caveats that limit what this supports:** per-worker caps are fixed, so the two-worker point uses twice
+   the aggregate quota (2 cores / 4 GiB versus 1 core / 2 GiB) — the comparison is directional and not
+   iso-resource; one repetition per point means no spread; no rates between 1,000–4,000 or above 8,000
+   were probed; checkpoint failures of 4–6 per run occurred with zero job restarts and are **unexplained**;
+   and the workload is synthetic (1,000 symbols, Zipf 1.2, 1 s windows) rather than the real week's long
+   tail. "Sustainable limit" in the glossary sense is therefore **not established** by this ladder.
+
+### 5.2 What the model predicts (DERIVED / PREDICTED)
+
+`benchmarks/capacity_model.py` now ingests both the measured week run and the six ladder points, and
+reports a per-worker service rate of 337,650 rows/s with the week at 675,301 rows/s on two workers.
+
+| Workload | Workers | Processing wall (prediction) | Range | Resource envelope |
+|---|---|---|---|---|
+| Official week (289.05 M rows) | 2 | 428 s (the measured point) | 342–514 s | 2 cores / 4 GiB, 15.37 GiB broker |
+| Official week | 1 | 856 s | 428–856 s | 1 core / 2 GiB, 15.37 GiB broker |
+| 3× the week (867.15 M rows) | 2 | 1,284 s | 1,027–1,541 s | 2 cores / 4 GiB, 46.12 GiB broker |
+| 3× the week | 1 | 2,568 s | 1,284–2,568 s | 1 core / 2 GiB, 46.12 GiB broker |
+
+Read together with §5.1, the prediction carries a warning the report must repeat: because the ladder
+shows no throughput gain from a second worker at these rates, the "one worker takes about twice as long"
+half of this table is a monotone bound, not a measurement, and the two-worker figures are the ones
+actually measured. A model field named `scaling_efficiency` currently reports ≈0.99, which is the
+throughput *ratio* between two workers and one, **not** an efficiency fraction (the per-worker efficiency
+is ≈0.50); it must not be quoted as an efficiency without that clarification.
 
 ---
 

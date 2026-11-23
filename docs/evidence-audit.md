@@ -210,3 +210,27 @@ No artifacts; issue files only. Consistent with "reduced / deferred".
   lag, not a bad measurement. `docs/sustainable-limit.md` and tickets 07/08 now
   record the reduction, so only the peak doc remains stale. Recorded in the
   index's "Reduced scope" caution.
+
+## Update 2026-11-23 (after tickets 07 and 08 landed)
+
+- **Ticket 07 is MEASURED and resolved** (`benchmarks/evidence/live-peak/`, `docs/live-peak.md`): one valid
+  repetition at 1x capture pace, warm, 1,914,978-row slice, achieved pacing 0.99991, delivery exact
+  (195,061 = committed = WebSocket), latency and oracle numbers as recorded in the ticket. Recorded gaps:
+  Kafka broker and gateway consumer-group lag were not collected; one repetition only; the run exceeded its
+  40-minute cap by 1–2 minutes. Three harness defects were fixed and committed with the evidence
+  (`peak_slice.py --reorder capture`, `live_peak.py --pacings` and gateway history limit,
+  `capture_pilot.py` quadratic window check), so the measured numbers depend on committed code.
+- **Ticket 08 is MEASURED and resolved** (`benchmarks/evidence/sustainable-limit/`): six points, delivery
+  exact, achieved input ≈99.9997%, **unbracketed** at both worker counts, worker throughput gain ≈1.0×.
+  The first complete ladder run is preserved as `bracket-attempt2-contract-mismatch.json`; its FAILs were a
+  stale output contract (advisories), now fixed in `benchmarks/driver.py`. An earlier attempt that ran with
+  no resource caps is preserved as `bracket-attempt1-uncapped.json` and is not capacity evidence.
+- **Ambiguity found in the capacity model** (`benchmarks/capacity_model.py`, `docs/capacity-model.md`): the
+  field `scaling_efficiency` currently reports ≈0.99 for the two-worker ladder, but that value is the
+  throughput *ratio* between two workers and one worker, not an efficiency fraction — the per-worker
+  efficiency is ≈0.50. Either the field should be divided by the worker ratio to match the documented
+  `η(p) = (R(p)/R(m))/(p/m)` formula, or renamed. Until then it must not be quoted as an efficiency.
+  Unresolved at the time of writing; flagged rather than silently patched.
+- **Still open:** ticket 09 and 10 (deferred, outside the reframed goal), ticket 12's final pack (the
+  evidence index still marks 07/08 as PENDING and a teammate reproduction is outstanding), and the
+  checkpoint failures of 4–6 per capacity run with zero job restarts, which remain unexplained.
