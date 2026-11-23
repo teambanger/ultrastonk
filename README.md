@@ -1,9 +1,9 @@
 # Ultrastonk event processing
 
-Containerized Kafka messaging, a Java CSV replay emitter, and a Java 17 / Apache Flink 1.20.3 DataStream job. The gateway, frontend, crossover advisories, and report are outside this implementation. The dummy emitter and the synthetic producers/consumers under `benchmarks/` are test tools.
+Containerized Kafka messaging, a Java CSV replay emitter, and a Java 17 / Apache Flink 1.20.3 DataStream job. The integrated stack publishes its output to Kafka; it does not run a gateway or frontend. The dummy emitter and the synthetic producers/consumers under `benchmarks/` are test tools.
 
 ```text
-emitter -> price-events -> Flink validation -> keyed price/EMA processing -> events-processed -> gateway
+emitter -> price-events -> Flink validation -> keyed price/EMA processing -> events-processed
                                   |                     |
                                   +---- rejected/late --+--> price-events-rejected
 
@@ -62,13 +62,15 @@ Volumes remain after `down`. Use the same overlays when operating an existing de
 - `deploy/`: optional Compose overlays; `monitoring/`: dashboards and observability configuration.
 - `scripts/`: dataset download; `docs/`: benchmark, validation, and policy guides.
 
-## Emitter and gateway contracts
+For branch provenance, module entry points, and integration checks, see the [module integration reference](docs/module-integration.md).
+
+## Kafka contracts
 
 | Setting | Container network | Host |
 |---|---|---|
 | Kafka bootstrap server | `kafka:9092` | `localhost:9092` |
 | Emitter topic | `price-events` | same |
-| Gateway topic | `events-processed` | same |
+| Processed output topic | `events-processed` | same |
 | Audit topic | `price-events-rejected` | same |
 
 The CSV emitter publishes one raw JSON object per Kafka value, keyed by instrument ID, with `enable.idempotence=true` and `acks=all`. Flink keys its managed state by the same ticker. Example replay value:
@@ -85,9 +87,9 @@ Synthetic producers can still send the normalized test format:
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","sec_type":"E","price":28.5}
 ```
 
-`timestamp_emit` is a nonnegative integer of Unix epoch **milliseconds**. `sec_type` is a nonempty string; the pipeline processes all provided security types. Price must be finite and nonnegative. Malformed records are quarantined with `{"raw":"...","reason":"..."}` and processing continues.
+`timestamp_emit` is a nonnegative integer of Unix epoch **milliseconds**. `sec_type` is a nonempty string; the pipeline processes all provided security types. Price must be finite and nonnegative. Malformed records are quarantined with `{"raw":"...","reason":"..."}` and processing continues. Oversized raw values are shortened and tagged with `"truncated":true`.
 
-The gateway must use `isolation.level=read_committed` and consume values such as:
+Output consumers must use `isolation.level=read_committed` and accept values such as:
 
 ```json
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"price","value":28.5}
@@ -95,7 +97,7 @@ The gateway must use `isolation.level=read_committed` and consume values such as
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"EMA100","value":0.5643564356435644}
 ```
 
-The EMA100 name and period follow your clarification. There are exactly four fields in each output value. Raw prices retain their input timestamp; EMA records retain the closing tick's timestamp. `sec_type` is not included in processed events. Internal instrumentation fields are excluded from JSON.
+There are exactly four fields in each output value. Raw prices retain their input timestamp; EMA records retain the closing tick's timestamp. `sec_type` is not included in processed events. Internal instrumentation fields are excluded from JSON.
 
 Each accepted price produces a `price` event. Each completed, nonempty window produces an EMA38/EMA100 pair. Both EMA states start at zero:
 
@@ -122,7 +124,7 @@ See [policy design and comparison](docs/policies.md). Configure with `.env` and 
 | `ALLOWED_LATENESS_MS` | `30000` | Additional finalization delay under `GRACE` |
 | `WINDOW_SIZE_MS` | `300000` | Window duration, maximum one day |
 | `MAX_OUT_OF_ORDER_MS` | `5000` | Watermark delay |
-| `SOURCE_IDLE_TIMEOUT_MS` | `30000` | Source task idleness threshold |
+| `SOURCE_IDLE_TIMEOUT_MS` | `30000` | Kafka partition idleness threshold in continuous mode |
 | `CHECKPOINT_INTERVAL_MS` | `10000` | Transaction commit cadence |
 | `LOG_INTERVAL_MS` | `10000` | Per-task statistics log interval |
 
