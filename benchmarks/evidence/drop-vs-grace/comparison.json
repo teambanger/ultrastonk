@@ -1,0 +1,263 @@
+{
+  "matched": {
+    "fixture_digest": "f481616bfa972639eeed22c6dcac466112ace8945d9c9c4b0e39db323e237a4b",
+    "seed": 11,
+    "window_ms": 300000,
+    "max_out_of_order_ms": 5000,
+    "grace_ms": 30000,
+    "settings": {
+      "DEDUP_STRATEGY": "NONE",
+      "WINDOW_SIZE_MS": "300000",
+      "MAX_OUT_OF_ORDER_MS": "5000",
+      "ALLOWED_LATENESS_MS": "30000",
+      "FLINK_PARALLELISM": "2",
+      "CHECKPOINT_INTERVAL_MS": "1000",
+      "SOURCE_IDLE_TIMEOUT_MS": "1000"
+    }
+  },
+  "arms": {
+    "DROP": {
+      "policy": "DROP",
+      "sample": {
+        "committed": 34,
+        "truth": 35,
+        "expectation": 34,
+        "measurements": 1
+      },
+      "vs_truth": {
+        "match": false,
+        "counts": {
+          "missing": 1,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 2
+        },
+        "advisories": {
+          "missing": [
+            {
+              "symbol": "DG11.FR",
+              "window": 1700013000000,
+              "type": "BUY"
+            }
+          ],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": [
+            {
+              "symbol": "DG11.FR",
+              "window": 1700013000000,
+              "field": "ema38",
+              "expected": 51.68067651725481,
+              "actual": 0.3991380557163557
+            },
+            {
+              "symbol": "DG11.FR",
+              "window": 1700013000000,
+              "field": "ema100",
+              "expected": 20.221836497724354,
+              "actual": 0.42005431950653344
+            }
+          ]
+        }
+      },
+      "vs_policy": {
+        "match": true,
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 0
+        },
+        "advisories": {
+          "missing": [],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": []
+        }
+      },
+      "defects": {
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 0
+        },
+        "advisories": {
+          "missing": [],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": []
+        }
+      },
+      "expected_policy_differences": [
+        {
+          "symbol": "DG11.FR",
+          "window": 1700013000000,
+          "type": "BUY",
+          "in_truth": true,
+          "in_expectation": false
+        }
+      ],
+      "finalization_lag_ms": 0,
+      "delay": {
+        "finalization_ms": {
+          "count": 1,
+          "p50": 10172.817138671875,
+          "p95": 10172.817138671875,
+          "p99": 10172.817138671875,
+          "max": 10172.817138671875
+        },
+        "publication_ms": {
+          "count": 1,
+          "p50": 21880.505126953125,
+          "p95": 21880.505126953125,
+          "p99": 21880.505126953125,
+          "max": 21880.505126953125
+        }
+      },
+      "state": {
+        "checkpoint_id": 30,
+        "checkpoint_bytes": 78026,
+        "checkpointed_bytes": 67731,
+        "checkpoint_duration_ms": 61,
+        "completed_checkpoints": 30
+      },
+      "resources": {},
+      "passed": true
+    },
+    "GRACE": {
+      "policy": "GRACE",
+      "sample": {
+        "committed": 35,
+        "truth": 35,
+        "expectation": 35,
+        "measurements": 1
+      },
+      "vs_truth": {
+        "match": true,
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 0
+        },
+        "advisories": {
+          "missing": [],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": []
+        }
+      },
+      "vs_policy": {
+        "match": true,
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 0
+        },
+        "advisories": {
+          "missing": [],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": []
+        }
+      },
+      "defects": {
+        "counts": {
+          "missing": 0,
+          "extra": 0,
+          "wrong": 0,
+          "delayed": 0,
+          "ema_incorrect": 0
+        },
+        "advisories": {
+          "missing": [],
+          "extra": [],
+          "wrong": [],
+          "delayed": []
+        },
+        "ema": {
+          "missing": [],
+          "extra": [],
+          "incorrect": []
+        }
+      },
+      "expected_policy_differences": [],
+      "finalization_lag_ms": 30000,
+      "delay": {
+        "finalization_ms": {
+          "count": 1,
+          "p50": 804.0185546875,
+          "p95": 804.0185546875,
+          "p99": 804.0185546875,
+          "max": 804.0185546875
+        },
+        "publication_ms": {
+          "count": 1,
+          "p50": 804.07080078125,
+          "p95": 804.07080078125,
+          "p99": 804.07080078125,
+          "max": 804.07080078125
+        }
+      },
+      "state": {
+        "checkpoint_id": 23,
+        "checkpoint_bytes": 79126,
+        "checkpointed_bytes": 69268,
+        "checkpoint_duration_ms": 2608,
+        "completed_checkpoints": 23
+      },
+      "resources": {},
+      "passed": true
+    }
+  },
+  "recommendation": {
+    "default": "GRACE",
+    "reason": "grace preserves 3 late-trade difference(s) that drop loses against complete-input truth (truth loss drop=3, grace=0); cost: +30000 ms event-time finalization delay and +1100 bytes checkpoint state",
+    "evidence": {
+      "drop": {
+        "truth_loss": 3,
+        "defects": 0,
+        "finalization_lag_ms": 0,
+        "measured_finalization_p95_ms": 10172.817138671875
+      },
+      "grace": {
+        "truth_loss": 0,
+        "defects": 0,
+        "finalization_lag_ms": 30000,
+        "measured_finalization_p95_ms": 804.0185546875
+      }
+    }
+  }
+}

@@ -1,0 +1,534 @@
+{
+  "fixture": {
+    "seed": 11,
+    "window_ms": 300000,
+    "max_out_of_order_ms": 5000,
+    "grace_ms": 30000,
+    "symbol": "DG11.FR",
+    "base_ms": 1700003700000,
+    "steps": [
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700003701000,
+        "price": 39.0
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700004001000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700004301000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700004601000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700004901000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700005201000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700005501000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700005801000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700006101000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700006401000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700006701000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700007001000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700007301000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700007601000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700007901000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700008201000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700008501000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700008801000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700009101000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700009401000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700009701000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700010001000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700010301000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700010601000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700010901000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700011201000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700011501000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700011801000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700012101000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700012401000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700012701000,
+        "price": 0.01
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700013001000,
+        "price": 0.01
+      },
+      {
+        "kind": "sync",
+        "watermark_ms": 1700012995999
+      },
+      {
+        "kind": "advance",
+        "watermark_ms": 1700013314999
+      },
+      {
+        "kind": "sync",
+        "watermark_ms": 1700013314999
+      },
+      {
+        "kind": "trade",
+        "ticker": "DG11.FR",
+        "event_ms": 1700013002000,
+        "price": 1000.0,
+        "window": 1700013000000,
+        "window_index": 31
+      },
+      {
+        "kind": "advance",
+        "watermark_ms": 1700013329999
+      }
+    ],
+    "late_trade": {
+      "kind": "trade",
+      "ticker": "DG11.FR",
+      "event_ms": 1700013002000,
+      "price": 1000.0,
+      "window": 1700013000000,
+      "window_index": 31
+    }
+  },
+  "policy": "DROP",
+  "committed": [
+    {
+      "symbol": "DG11.FR",
+      "window": 1700003700000,
+      "type": "EMA",
+      "timestamp_ms": 1700003701000,
+      "ema38": 2.0,
+      "ema100": 0.7722772277227723
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700004000000,
+      "type": "EMA",
+      "timestamp_ms": 1700004001000,
+      "ema38": 1.8979487179487178,
+      "ema100": 0.7571826291540045
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700004300000,
+      "type": "EMA",
+      "timestamp_ms": 1700004301000,
+      "ema38": 1.8011308349769886,
+      "ema100": 0.7423869335271925
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700004600000,
+      "type": "EMA",
+      "timestamp_ms": 1700004601000,
+      "ema38": 1.7092779716448352,
+      "ema100": 0.7278842219721986
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700004900000,
+      "type": "EMA",
+      "timestamp_ms": 1700004901000,
+      "ema38": 1.6221355115604845,
+      "ema100": 0.7136686928242343
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700005200000,
+      "type": "EMA",
+      "timestamp_ms": 1700005201000,
+      "ema38": 1.5394618955830237,
+      "ema100": 0.6997346593029623
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700005500000,
+      "type": "EMA",
+      "timestamp_ms": 1700005501000,
+      "ema38": 1.4610279522197915,
+      "ema100": 0.6860765472375571
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700005800000,
+      "type": "EMA",
+      "timestamp_ms": 1700005801000,
+      "ema38": 1.3866162623623661,
+      "ema100": 0.6726888928368133
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700006100000,
+      "type": "EMA",
+      "timestamp_ms": 1700006101000,
+      "ema38": 1.3160205566001935,
+      "ema100": 0.6595663405034111
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700006400000,
+      "type": "EMA",
+      "timestamp_ms": 1700006401000,
+      "ema38": 1.249045143441209,
+      "ema100": 0.6467036406914624
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700006700000,
+      "type": "EMA",
+      "timestamp_ms": 1700006701000,
+      "ema38": 1.1855043668544802,
+      "ema100": 0.6340956478064829
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700007000000,
+      "type": "EMA",
+      "timestamp_ms": 1700007001000,
+      "ema38": 1.1252220916311735,
+      "ema100": 0.6217373181469485
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700007300000,
+      "type": "EMA",
+      "timestamp_ms": 1700007301000,
+      "ema38": 1.068031215137267,
+      "ema100": 0.6096237078866129
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700007600000,
+      "type": "EMA",
+      "timestamp_ms": 1700007601000,
+      "ema38": 1.0137732041045866,
+      "ema100": 0.597749971096779
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700007900000,
+      "type": "EMA",
+      "timestamp_ms": 1700007901000,
+      "ema38": 0.9622976551761463,
+      "ema100": 0.5861113578077338
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700008200000,
+      "type": "EMA",
+      "timestamp_ms": 1700008201000,
+      "ema38": 0.9134618779876259,
+      "ema100": 0.5747032121085708
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700008500000,
+      "type": "EMA",
+      "timestamp_ms": 1700008501000,
+      "ema38": 0.8671304996292861,
+      "ema100": 0.5635209702846387
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700008800000,
+      "type": "EMA",
+      "timestamp_ms": 1700008801000,
+      "ema38": 0.8231750893918868,
+      "ema100": 0.5525601589918735
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700009100000,
+      "type": "EMA",
+      "timestamp_ms": 1700009101000,
+      "ema38": 0.7814738027564054,
+      "ema100": 0.5418163934672819
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700009400000,
+      "type": "EMA",
+      "timestamp_ms": 1700009401000,
+      "ema38": 0.7419110436406923,
+      "ema100": 0.5312853757748605
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700009700000,
+      "type": "EMA",
+      "timestamp_ms": 1700009701000,
+      "ema38": 0.7043771439668106,
+      "ema100": 0.5209628930862493
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700010000000,
+      "type": "EMA",
+      "timestamp_ms": 1700010001000,
+      "ema38": 0.6687680596608203,
+      "ema100": 0.5108448159954325
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700010300000,
+      "type": "EMA",
+      "timestamp_ms": 1700010301000,
+      "ema38": 0.6349850822423168,
+      "ema100": 0.5009270968668101
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700010600000,
+      "type": "EMA",
+      "timestamp_ms": 1700010601000,
+      "ema38": 0.6029345652042493,
+      "ema100": 0.4912057682159822
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700010900000,
+      "type": "EMA",
+      "timestamp_ms": 1700010901000,
+      "ema38": 0.5725276644245442,
+      "ema100": 0.4816769411225964
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700011200000,
+      "type": "EMA",
+      "timestamp_ms": 1700011201000,
+      "ema38": 0.5436800918899521,
+      "ema100": 0.47233680367462416
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700011500000,
+      "type": "EMA",
+      "timestamp_ms": 1700011501000,
+      "ema38": 0.5163118820494418,
+      "ema100": 0.4631816194434435
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700011800000,
+      "type": "EMA",
+      "timestamp_ms": 1700011801000,
+      "ema38": 0.49034717014947043,
+      "ema100": 0.45420772598911785
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700012100000,
+      "type": "EMA",
+      "timestamp_ms": 1700012101000,
+      "ema38": 0.46571398193667707,
+      "ema100": 0.44541153339527395
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700012400000,
+      "type": "EMA",
+      "timestamp_ms": 1700012401000,
+      "ema38": 0.4423440341450526,
+      "ema100": 0.4367895228329913
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700012700000,
+      "type": "EMA",
+      "timestamp_ms": 1700012701000,
+      "ema38": 0.42017254521453706,
+      "ema100": 0.42833824515313007
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700013000000,
+      "type": "EMA",
+      "timestamp_ms": 1700013001000,
+      "ema38": 0.3991380557163557,
+      "ema100": 0.42005431950653344
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700003700000,
+      "type": "BUY"
+    },
+    {
+      "symbol": "DG11.FR",
+      "window": 1700012700000,
+      "type": "SELL"
+    }
+  ],
+  "measurements": {
+    "finalization_delay_ms": [
+      10172.817138671875
+    ],
+    "publication_delay_ms": [
+      21880.505126953125
+    ],
+    "samples": 1,
+    "state": {
+      "checkpoint_id": 30,
+      "checkpoint_bytes": 78026,
+      "checkpointed_bytes": 67731,
+      "checkpoint_duration_ms": 61,
+      "completed_checkpoints": 30
+    }
+  },
+  "settings": {
+    "DEDUP_STRATEGY": "NONE",
+    "WINDOW_SIZE_MS": "300000",
+    "MAX_OUT_OF_ORDER_MS": "5000",
+    "ALLOWED_LATENESS_MS": "30000",
+    "FLINK_PARALLELISM": "2",
+    "CHECKPOINT_INTERVAL_MS": "1000",
+    "SOURCE_IDLE_TIMEOUT_MS": "1000"
+  },
+  "audit": {
+    "count": 0,
+    "sample": []
+  }
+}
