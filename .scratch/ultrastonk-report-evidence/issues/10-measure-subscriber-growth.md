@@ -4,7 +4,7 @@
 
 **Blocked by:** 08 - Bracket the Sustainable limit with one and two workers.
 
-**Status:** ready-for-agent
+**Status:** wontfix
 
 - [ ] Run a baseline and 2x client count on one gateway at a verified baseline. Hold offered event load, symbols, subscriptions per client, subscription assignment method, and resource configuration fixed. Subscribe clients before the measurement interval.
 - [ ] Verify expected per-client live price and query delivery against read-committed output, with history separate. Record fan-out messages per second, sample counts, latency tails, gateway CPU/memory, send-queue or drop/disconnect evidence, and upstream backlog.

@@ -4,7 +4,7 @@
 
 **Blocked by:** 02 - Profile the official week and identify the real peak; 08 - Bracket the Sustainable limit with one and two workers.
 
-**Status:** ready-for-agent
+**Status:** wontfix
 
 - [ ] At a documented passing baseline rate, compare uniform traffic with a measured long-tail distribution derived from the verified dataset. Use comparable achieved input, exchange mix, symbols, subscribers, resources, and query settings.
 - [ ] Independently increase symbol count to 2x at the declared baseline; hold load, resource budget and subscription conditions fixed, and describe hot-key coverage and any intentional changes to rank weights.
