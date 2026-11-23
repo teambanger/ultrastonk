@@ -1,0 +1,13 @@
+{
+  "version": "sustainable-limit/1",
+  "min_achieved_input_ratio": 0.98,
+  "require_gateway_delivery": true,
+  "require_limits": true,
+  "require_hardware": true,
+  "require_worker_cpu": true,
+  "min_progress_samples": 5,
+  "backlog_growth_slack": 0.0,
+  "backlog_terminal_floor": 0.0,
+  "ignore_load_window_slack_s": 2.0,
+  "stretch_capacity_gain": 1.5
+}
