@@ -1,0 +1,1011 @@
+{
+  "bracket": {
+    "1": {
+      "first_failing": 1000.0,
+      "highest_passing": null,
+      "non_monotonic": false,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    },
+    "2": {
+      "first_failing": 1000.0,
+      "highest_passing": null,
+      "non_monotonic": false,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    }
+  },
+  "coarse_bracket": {
+    "1": {
+      "first_failing": 1000.0,
+      "highest_passing": null,
+      "non_monotonic": false,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    },
+    "2": {
+      "first_failing": 1000.0,
+      "highest_passing": null,
+      "non_monotonic": false,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    }
+  },
+  "flink_limiter": false,
+  "generated_at_epoch_seconds": 1795460457.0428176,
+  "plan_decisions": [
+    {
+      "ran": false,
+      "reason": "top coarse rate did not pass for every worker",
+      "stage": "coarse-extra"
+    }
+  ],
+  "points": [
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 1000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 1
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 4000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 1
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 1000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 2
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 4000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 2
+    }
+  ],
+  "rules": {
+    "backlog_growth_slack": 0.0,
+    "backlog_terminal_floor": 0.0,
+    "ignore_load_window_slack_s": 2.0,
+    "min_achieved_input_ratio": 0.98,
+    "min_progress_samples": 5,
+    "require_gateway_delivery": true,
+    "require_hardware": true,
+    "require_limits": true,
+    "require_worker_cpu": true,
+    "stretch_capacity_gain": 1.5,
+    "version": "sustainable-limit/1"
+  },
+  "runs": [
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 999.9971415580001,
+          "offered_per_second": 1000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.999997141558,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 295,
+              "first_third_mean": 356.0,
+              "growing": false,
+              "last_third_mean": 300.0,
+              "max": 1001,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                1001,
+                297,
+                298,
+                301,
+                299,
+                296,
+                298,
+                296,
+                298,
+                298,
+                299,
+                299,
+                299,
+                300,
+                302,
+                301,
+                300,
+                300,
+                302,
+                295
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": false,
+          "reason": "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct",
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 999.9971415580001,
+        "committed_prices_per_second": 963.7261702165512,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.752182415992138,
+        "input_to_committed_max": 1001,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 985.2471837200196,
+        "steady_websocket_per_second": 985.2471837200196,
+        "visible_latency_ms": {
+          "max": 1531.4419509959407,
+          "p50": 626.6407134899055,
+          "p95": 1072.6918015534463,
+          "p99": 1292.4715537740835
+        },
+        "websocket_latency_ms": {
+          "max": 1659.6954069973435,
+          "p50": 640.1454119986738,
+          "p95": 1097.0145779479935,
+          "p99": 1419.852954095549
+        },
+        "websocket_prices_per_second": 963.1831412534879,
+        "window_seconds": 20.000057169003412,
+        "worker_cpu_used_cores_max": 1.98955432275887,
+        "worker_cpu_utilization_ratio_max": 0.9987759762263569,
+        "worker_memory_working_set_bytes_max": 975323136.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 1000.0,
+      "reasons": [
+        "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "35a1834cbb70-000",
+      "verdict": "FAIL",
+      "workers": 2
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 3999.988427433721,
+          "offered_per_second": 4000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999971068584302,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -326,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 1034,
+              "first_third_mean": 5635.0,
+              "growing": false,
+              "last_third_mean": 1089.0,
+              "max": 12001,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                4001,
+                8001,
+                12001,
+                9321,
+                5140,
+                981,
+                1370,
+                1094,
+                1097,
+                1098,
+                1104,
+                1095,
+                1097,
+                1096,
+                1097,
+                1101,
+                1100,
+                1098,
+                1097,
+                1034
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": false,
+          "reason": "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct",
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 3999.988427433721,
+        "committed_prices_per_second": 3836.013960331208,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.8543253450043267,
+        "input_to_committed_max": 12001,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 3948.28857700914,
+        "steady_websocket_per_second": 3948.28857700914,
+        "visible_latency_ms": {
+          "max": 3291.415303989197,
+          "p50": 761.997440495179,
+          "p95": 2391.20694024532,
+          "p99": 3032.622283656815
+        },
+        "websocket_latency_ms": {
+          "max": 3243.0824330076575,
+          "p50": 765.7882404964766,
+          "p95": 2372.1212629978268,
+          "p99": 2999.760489766484
+        },
+        "websocket_prices_per_second": 3832.656201153653,
+        "window_seconds": 20.0000578629988,
+        "worker_cpu_used_cores_max": 0.9991745160363729,
+        "worker_cpu_utilization_ratio_max": 0.9991745160363729,
+        "worker_memory_working_set_bytes_max": 484577280.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 4000.0,
+      "reasons": [
+        "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "35a1834cbb70-001",
+      "verdict": "FAIL",
+      "workers": 1
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 3999.988206033445,
+          "offered_per_second": 4000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999970515083612,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 1992,
+              "first_third_mean": 2855.8571428571427,
+              "growing": false,
+              "last_third_mean": 1993.142857142857,
+              "max": 8001,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                4000,
+                8001,
+                2007,
+                1988,
+                1996,
+                1999,
+                1981,
+                1999,
+                1982,
+                1994,
+                1997,
+                1984,
+                1992,
+                1997,
+                1994,
+                1992,
+                1995,
+                1990,
+                1992,
+                1992
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": false,
+          "reason": "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct",
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 3999.988206033445,
+        "committed_prices_per_second": 3888.273284231493,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.5741158689925214,
+        "input_to_committed_max": 8001,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 3900.388499703212,
+        "steady_websocket_per_second": 3900.388499703212,
+        "visible_latency_ms": {
+          "max": 2547.3808320093667,
+          "p50": 669.5208945020568,
+          "p95": 1328.470765602106,
+          "p99": 2003.3190237586664
+        },
+        "websocket_latency_ms": {
+          "max": 2486.867441999493,
+          "p50": 673.1993084977148,
+          "p95": 1348.030152451975,
+          "p99": 2053.04579097341
+        },
+        "websocket_prices_per_second": 3884.7737936531553,
+        "window_seconds": 20.00005897000665,
+        "worker_cpu_used_cores_max": 1.9974559595627106,
+        "worker_cpu_utilization_ratio_max": 1.0012458135676956,
+        "worker_memory_working_set_bytes_max": 985411584.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 4000.0,
+      "reasons": [
+        "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "35a1834cbb70-002",
+      "verdict": "FAIL",
+      "workers": 2
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 999.9948530766479,
+          "offered_per_second": 1000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999948530766479,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [
+            "input_to_committed"
+          ],
+          "passed": false,
+          "reason": "sustained stage backlog growth: input_to_committed",
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 2135,
+              "first_third_mean": 334.2857142857143,
+              "growing": true,
+              "last_third_mean": 570.1428571428571,
+              "max": 2135,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                1001,
+                782,
+                140,
+                140,
+                138,
+                139,
+                141,
+                143,
+                143,
+                141,
+                141,
+                141,
+                142,
+                144,
+                142,
+                143,
+                145,
+                141,
+                1141,
+                2135
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": false,
+          "reason": "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct",
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 999.9948530766479,
+        "committed_prices_per_second": 646.9746258787998,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 10.912559620992397,
+        "input_to_committed_max": 2135,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 893.2454025107157,
+        "steady_websocket_per_second": 893.2454025107157,
+        "visible_latency_ms": {
+          "max": 12995.934317994397,
+          "p50": 651.6931715013925,
+          "p95": 12019.995855807792,
+          "p99": 12795.589905289817
+        },
+        "websocket_latency_ms": {
+          "max": 13020.347890997073,
+          "p50": 661.276128499594,
+          "p95": 12036.990173147933,
+          "p99": 12809.352891777666
+        },
+        "websocket_prices_per_second": 646.6665075825584,
+        "window_seconds": 20.00010293899686,
+        "worker_cpu_used_cores_max": 1.0029173108440022,
+        "worker_cpu_utilization_ratio_max": 1.0029173108440022,
+        "worker_memory_working_set_bytes_max": 502755328.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 1000.0,
+      "reasons": [
+        "delivery failed: committed Kafka delivery is not correct; WebSocket delivery is not correct"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "35a1834cbb70-003",
+      "verdict": "FAIL",
+      "workers": 1
+    }
+  ],
+  "source_sessions": [
+    "35a1834cbb70"
+  ],
+  "wall_seconds": 236.7179523720115,
+  "worker_capacity_gain": []
+}

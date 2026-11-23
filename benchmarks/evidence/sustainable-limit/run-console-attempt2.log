@@ -1,0 +1,37 @@
+{
+  "bracket": {
+    "2": {
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "highest_passing": null,
+      "first_failing": 1000.0,
+      "separated": false,
+      "non_monotonic": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    },
+    "1": {
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "FAIL"
+      },
+      "highest_passing": null,
+      "first_failing": 1000.0,
+      "separated": false,
+      "non_monotonic": false,
+      "unbracketed_reason": "unbracketed: no passing offered load"
+    }
+  },
+  "wall_seconds": 236.7179523720115,
+  "plan_decisions": [
+    {
+      "stage": "coarse-extra",
+      "ran": false,
+      "reason": "top coarse rate did not pass for every worker"
+    }
+  ],
+  "source_sessions": [
+    "35a1834cbb70"
+  ]
+}

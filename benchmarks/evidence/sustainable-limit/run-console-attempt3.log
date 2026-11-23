@@ -1,0 +1,40 @@
+{
+  "bracket": {
+    "2": {
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "highest_passing": 8000.0,
+      "first_failing": 1000.0,
+      "separated": false,
+      "non_monotonic": true,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    },
+    "1": {
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "highest_passing": 8000.0,
+      "first_failing": 1000.0,
+      "separated": false,
+      "non_monotonic": true,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    }
+  },
+  "wall_seconds": 339.123395061004,
+  "plan_decisions": [
+    {
+      "stage": "coarse-extra",
+      "ran": true,
+      "rate": 8000
+    }
+  ],
+  "source_sessions": [
+    "6092fc46e099",
+    "eb9c21b179e8"
+  ]
+}

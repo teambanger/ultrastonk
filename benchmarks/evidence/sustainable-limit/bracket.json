@@ -1,0 +1,1499 @@
+{
+  "bracket": {
+    "1": {
+      "first_failing": 1000.0,
+      "highest_passing": 8000.0,
+      "non_monotonic": true,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    },
+    "2": {
+      "first_failing": 1000.0,
+      "highest_passing": 8000.0,
+      "non_monotonic": true,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    }
+  },
+  "coarse_bracket": {
+    "1": {
+      "first_failing": 1000.0,
+      "highest_passing": 8000.0,
+      "non_monotonic": true,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    },
+    "2": {
+      "first_failing": 1000.0,
+      "highest_passing": 8000.0,
+      "non_monotonic": true,
+      "points": {
+        "1000.0": "FAIL",
+        "4000.0": "PASS",
+        "8000.0": "PASS"
+      },
+      "separated": false,
+      "unbracketed_reason": "unbracketed: first failing is below the highest passing load"
+    }
+  },
+  "flink_limiter": true,
+  "generated_at_epoch_seconds": 1795461051.7718532,
+  "plan_decisions": [
+    {
+      "ran": true,
+      "rate": 8000,
+      "stage": "coarse-extra"
+    }
+  ],
+  "points": [
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 1000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 1
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 1,
+        "max": 0,
+        "median": 0,
+        "min": 0,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "drain_seconds": {
+        "count": 1,
+        "max": 0.7188749880006071,
+        "median": 0.7188749880006071,
+        "min": 0.7188749880006071,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "input_to_committed_max": {
+        "count": 1,
+        "max": 4001,
+        "median": 4001,
+        "min": 4001,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "offered": 4000.0,
+      "passed": 1,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 1,
+        "max": 3937.1385071003897,
+        "median": 3937.1385071003897,
+        "min": 3937.1385071003897,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "steady_websocket_per_second": {
+        "count": 1,
+        "max": 3937.1385071003897,
+        "median": 3937.1385071003897,
+        "min": 3937.1385071003897,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "verdict": "PASS",
+      "visible_latency_p99_ms": {
+        "count": 1,
+        "max": 1129.2994954096498,
+        "median": 1129.2994954096498,
+        "min": 1129.2994954096498,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "websocket_latency_p99_ms": {
+        "count": 1,
+        "max": 1151.1211749645,
+        "median": 1151.1211749645,
+        "min": 1151.1211749645,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 1,
+        "max": 0.9968216247000806,
+        "median": 0.9968216247000806,
+        "min": 0.9968216247000806,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 1,
+        "max": 491204608.0,
+        "median": 491204608.0,
+        "min": 491204608.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 1,
+        "max": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "workers": 1
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 1,
+        "max": 0,
+        "median": 0,
+        "min": 0,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "drain_seconds": {
+        "count": 1,
+        "max": 0.3756434149981942,
+        "median": 0.3756434149981942,
+        "min": 0.3756434149981942,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "input_to_committed_max": {
+        "count": 1,
+        "max": 20935,
+        "median": 20935,
+        "min": 20935,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "offered": 8000.0,
+      "passed": 1,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 1,
+        "max": 7666.873575738277,
+        "median": 7666.873575738277,
+        "min": 7666.873575738277,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "steady_websocket_per_second": {
+        "count": 1,
+        "max": 7666.873575738277,
+        "median": 7666.873575738277,
+        "min": 7666.873575738277,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "verdict": "PASS",
+      "visible_latency_p99_ms": {
+        "count": 1,
+        "max": 3360.461542580153,
+        "median": 3360.461542580153,
+        "min": 3360.461542580153,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "websocket_latency_p99_ms": {
+        "count": 1,
+        "max": 3377.0709671995423,
+        "median": 3377.0709671995423,
+        "min": 3377.0709671995423,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 1,
+        "max": 0.9993919657545396,
+        "median": 0.9993919657545396,
+        "min": 0.9993919657545396,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 1,
+        "max": 494477312.0,
+        "median": 494477312.0,
+        "min": 494477312.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 1,
+        "max": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "workers": 1
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "drain_seconds": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "input_to_committed_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "offered": 1000.0,
+      "passed": 0,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "steady_websocket_per_second": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "verdict": "FAIL",
+      "visible_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "websocket_latency_p99_ms": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "workers": 2
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 1,
+        "max": 0,
+        "median": 0,
+        "min": 0,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "drain_seconds": {
+        "count": 1,
+        "max": 0.5092826030013384,
+        "median": 0.5092826030013384,
+        "min": 0.5092826030013384,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "input_to_committed_max": {
+        "count": 1,
+        "max": 5619,
+        "median": 5619,
+        "min": 5619,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "offered": 4000.0,
+      "passed": 1,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 1,
+        "max": 3888.5384419020083,
+        "median": 3888.5384419020083,
+        "min": 3888.5384419020083,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "steady_websocket_per_second": {
+        "count": 1,
+        "max": 3888.5384419020083,
+        "median": 3888.5384419020083,
+        "min": 3888.5384419020083,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "verdict": "PASS",
+      "visible_latency_p99_ms": {
+        "count": 1,
+        "max": 1793.0738906748584,
+        "median": 1793.0738906748584,
+        "min": 1793.0738906748584,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "websocket_latency_p99_ms": {
+        "count": 1,
+        "max": 1742.4736337078489,
+        "median": 1742.4736337078489,
+        "min": 1742.4736337078489,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 1,
+        "max": 0.9998458096975623,
+        "median": 0.9998458096975623,
+        "min": 0.9998458096975623,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 1,
+        "max": 984363008.0,
+        "median": 984363008.0,
+        "min": 984363008.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 1,
+        "max": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "workers": 2
+    },
+    {
+      "committed_to_websocket_max": {
+        "count": 1,
+        "max": 786,
+        "median": 786,
+        "min": 786,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "drain_seconds": {
+        "count": 1,
+        "max": 0.5802185710053891,
+        "median": 0.5802185710053891,
+        "min": 0.5802185710053891,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "input_to_committed_max": {
+        "count": 1,
+        "max": 24001,
+        "median": 24001,
+        "min": 24001,
+        "spread": 0,
+        "stdev": 0.0
+      },
+      "offered": 8000.0,
+      "passed": 1,
+      "producer_queue_full": {
+        "count": 0,
+        "max": null,
+        "median": null,
+        "min": null,
+        "spread": null,
+        "stdev": null
+      },
+      "runs": 1,
+      "steady_committed_per_second": {
+        "count": 1,
+        "max": 7793.22782281328,
+        "median": 7793.22782281328,
+        "min": 7793.22782281328,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "steady_websocket_per_second": {
+        "count": 1,
+        "max": 7793.22782281328,
+        "median": 7793.22782281328,
+        "min": 7793.22782281328,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "verdict": "PASS",
+      "visible_latency_p99_ms": {
+        "count": 1,
+        "max": 3529.851542958058,
+        "median": 3529.851542958058,
+        "min": 3529.851542958058,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "websocket_latency_p99_ms": {
+        "count": 1,
+        "max": 3420.8112415202713,
+        "median": 3420.8112415202713,
+        "min": 3420.8112415202713,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_cpu_utilization_ratio_max": {
+        "count": 1,
+        "max": 1.0047043714085735,
+        "median": 1.0047043714085735,
+        "min": 1.0047043714085735,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_memory_working_set_bytes_max": {
+        "count": 1,
+        "max": 981299200.0,
+        "median": 981299200.0,
+        "min": 981299200.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "worker_throttled_periods_ratio_max": {
+        "count": 1,
+        "max": 1.0,
+        "median": 1.0,
+        "min": 1.0,
+        "spread": 0.0,
+        "stdev": 0.0
+      },
+      "workers": 2
+    }
+  ],
+  "rules": {
+    "backlog_growth_slack": 0.0,
+    "backlog_terminal_floor": 0.0,
+    "ignore_load_window_slack_s": 2.0,
+    "min_achieved_input_ratio": 0.98,
+    "min_progress_samples": 5,
+    "require_gateway_delivery": true,
+    "require_hardware": true,
+    "require_limits": true,
+    "require_worker_cpu": true,
+    "stretch_capacity_gain": 1.5,
+    "version": "sustainable-limit/1"
+  },
+  "runs": [
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 999.9969889595092,
+          "offered_per_second": 1000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999969889595092,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [
+            "input_to_committed"
+          ],
+          "passed": false,
+          "reason": "sustained stage backlog growth: input_to_committed",
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 627,
+              "first_third_mean": 590.2857142857143,
+              "growing": true,
+              "last_third_mean": 629.0,
+              "max": 1000,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                1000,
+                627,
+                628,
+                627,
+                626,
+                624,
+                626,
+                628,
+                628,
+                628,
+                627,
+                626,
+                630,
+                630,
+                630,
+                629,
+                630,
+                628,
+                629,
+                627
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 999.9969889595092,
+        "committed_prices_per_second": 979.3782506318327,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.4203422050049994,
+        "input_to_committed_max": 1000,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 968.6470833556285,
+        "steady_websocket_per_second": 968.6470833556285,
+        "visible_latency_ms": {
+          "max": 1186.37123600638,
+          "p50": 588.3459854958346,
+          "p95": 1019.6244454004045,
+          "p99": 1070.0810300420558
+        },
+        "websocket_latency_ms": {
+          "max": 1231.2124669988407,
+          "p50": 601.4498209988233,
+          "p95": 1036.4971700495516,
+          "p99": 1099.5478080440068
+        },
+        "websocket_prices_per_second": 978.5406257524097,
+        "window_seconds": 20.000060220991145,
+        "worker_cpu_used_cores_max": 1.972770216501361,
+        "worker_cpu_utilization_ratio_max": 0.9998031101003356,
+        "worker_memory_working_set_bytes_max": 974958592.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 1000.0,
+      "reasons": [
+        "sustained stage backlog growth: input_to_committed"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "6092fc46e099-000",
+      "verdict": "FAIL",
+      "workers": 2
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 3999.988323635513,
+          "offered_per_second": 4000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999970809088783,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 1257,
+              "first_third_mean": 1525.857142857143,
+              "growing": false,
+              "last_third_mean": 1261.142857142857,
+              "max": 4001,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                4001,
+                1465,
+                1355,
+                1350,
+                1258,
+                1252,
+                1281,
+                1301,
+                1288,
+                1250,
+                1255,
+                1253,
+                1257,
+                1257,
+                1263,
+                1253,
+                1267,
+                1265,
+                1266,
+                1257
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 3999.988323635513,
+        "committed_prices_per_second": 3861.107566961616,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.7188749880006071,
+        "input_to_committed_max": 4001,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 3937.1385071003897,
+        "steady_websocket_per_second": 3937.1385071003897,
+        "visible_latency_ms": {
+          "max": 1310.3816509974422,
+          "p50": 614.9417554915999,
+          "p95": 1043.0906842055265,
+          "p99": 1129.2994954096498
+        },
+        "websocket_latency_ms": {
+          "max": 1314.5830480061704,
+          "p50": 629.7897745025693,
+          "p95": 1060.5999569983396,
+          "p99": 1151.1211749645
+        },
+        "websocket_prices_per_second": 3859.4350410797147,
+        "window_seconds": 20.000058381992858,
+        "worker_cpu_used_cores_max": 0.9968216247000806,
+        "worker_cpu_utilization_ratio_max": 0.9968216247000806,
+        "worker_memory_working_set_bytes_max": 491204608.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 4000.0,
+      "reasons": [],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "6092fc46e099-001",
+      "verdict": "PASS",
+      "workers": 1
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 3999.988110634564,
+          "offered_per_second": 4000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.999997027658641,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": -218.57142857142858,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                -1530,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 2229,
+              "first_third_mean": 2713.0,
+              "growing": false,
+              "last_third_mean": 2335.1428571428573,
+              "max": 5619,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                4000,
+                5619,
+                2345,
+                2347,
+                2345,
+                2335,
+                2346,
+                2350,
+                2348,
+                2354,
+                2351,
+                2350,
+                2344,
+                2345,
+                2347,
+                2350,
+                2354,
+                2361,
+                2360,
+                2229
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 3999.988110634564,
+        "committed_prices_per_second": 3900.559481770347,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.5092826030013384,
+        "input_to_committed_max": 5619,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 3888.5384419020083,
+        "steady_websocket_per_second": 3888.5384419020083,
+        "visible_latency_ms": {
+          "max": 2136.4012060075765,
+          "p50": 696.5060494912905,
+          "p95": 1182.4841344983724,
+          "p99": 1793.0738906748584
+        },
+        "websocket_latency_ms": {
+          "max": 2059.0961009875173,
+          "p50": 706.9646884992835,
+          "p95": 1176.4592638435715,
+          "p99": 1742.4736337078489
+        },
+        "websocket_prices_per_second": 3896.38608952524,
+        "window_seconds": 20.000059447003878,
+        "worker_cpu_used_cores_max": 1.9990462536532334,
+        "worker_cpu_utilization_ratio_max": 0.9998458096975623,
+        "worker_memory_working_set_bytes_max": 984363008.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 4000.0,
+      "reasons": [],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "6092fc46e099-002",
+      "verdict": "PASS",
+      "workers": 2
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 999.9960107160388,
+          "offered_per_second": 1000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999960107160387,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [
+            "input_to_committed"
+          ],
+          "passed": false,
+          "reason": "sustained stage backlog growth: input_to_committed",
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 942,
+              "first_third_mean": 822.0,
+              "growing": true,
+              "last_third_mean": 946.8571428571429,
+              "max": 1000,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                1000,
+                978,
+                943,
+                943,
+                945,
+                945,
+                946,
+                943,
+                946,
+                947,
+                946,
+                945,
+                947,
+                949,
+                946,
+                946,
+                947,
+                948,
+                950,
+                942
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 999.9960107160388,
+        "committed_prices_per_second": 993.6767106278659,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.12629826899501495,
+        "input_to_committed_max": 1000,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 952.8961986113134,
+        "steady_websocket_per_second": 952.8961986113134,
+        "visible_latency_ms": {
+          "max": 1297.5418860005448,
+          "p50": 567.6344470048207,
+          "p95": 1015.5158983106957,
+          "p99": 1115.9722955268803
+        },
+        "websocket_latency_ms": {
+          "max": 1304.0407950029476,
+          "p50": 579.6912494915887,
+          "p95": 1025.4723135047243,
+          "p99": 1128.4008723226718
+        },
+        "websocket_prices_per_second": 993.7219123449372,
+        "window_seconds": 20.000079785997514,
+        "worker_cpu_used_cores_max": 0.9991543986108048,
+        "worker_cpu_utilization_ratio_max": 0.9991543986108048,
+        "worker_memory_working_set_bytes_max": 479842304.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 1000.0,
+      "reasons": [
+        "sustained stage backlog growth: input_to_committed"
+      ],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "6092fc46e099-003",
+      "verdict": "FAIL",
+      "workers": 1
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 7999.977234466524,
+          "offered_per_second": 8000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999971543083156,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 112.28571428571429,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 786,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                786,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 4135,
+              "first_third_mean": 10512.42857142857,
+              "growing": false,
+              "last_third_mean": 4235.857142857143,
+              "max": 24001,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                8001,
+                16001,
+                24001,
+                15844,
+                5506,
+                4234,
+                4254,
+                4236,
+                4420,
+                4230,
+                4247,
+                4272,
+                4254,
+                4258,
+                4250,
+                4250,
+                4261,
+                4246,
+                4251,
+                4135
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 7999.977234466524,
+        "committed_prices_per_second": 7769.856403452564,
+        "committed_to_websocket_max": 786,
+        "drain_seconds": 0.5802185710053891,
+        "input_to_committed_max": 24001,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 7793.22782281328,
+        "steady_websocket_per_second": 7793.22782281328,
+        "visible_latency_ms": {
+          "max": 4447.172447005869,
+          "p50": 802.731035000761,
+          "p95": 2623.7428230509963,
+          "p99": 3529.851542958058
+        },
+        "websocket_latency_ms": {
+          "max": 4243.935783000779,
+          "p50": 799.789504497312,
+          "p95": 2593.414276406838,
+          "p99": 3420.8112415202713
+        },
+        "websocket_prices_per_second": 7765.094189078729,
+        "window_seconds": 20.00005691399565,
+        "worker_cpu_used_cores_max": 2.0002766779524026,
+        "worker_cpu_utilization_ratio_max": 1.0047043714085735,
+        "worker_memory_working_set_bytes_max": 981299200.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 8000.0,
+      "reasons": [],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "eb9c21b179e8-000",
+      "verdict": "PASS",
+      "workers": 2
+    },
+    {
+      "checks": {
+        "achieved_input": {
+          "achieved_per_second": 7999.97242769649,
+          "offered_per_second": 8000.0,
+          "passed": true,
+          "producer_queue_full": null,
+          "ratio": 0.9999965534620612,
+          "reason": null,
+          "required_ratio": 0.98
+        },
+        "backlog": {
+          "growing_stages": [],
+          "passed": true,
+          "reason": null,
+          "stages": {
+            "committed_to_websocket": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 0,
+              "first_third_mean": 0.0,
+              "growing": false,
+              "last_third_mean": 0.0,
+              "max": 0,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "input_to_committed": {
+              "bucket_width_samples": 1,
+              "checkpoint_buckets": 21,
+              "final": 6662,
+              "first_third_mean": 10402.142857142857,
+              "growing": false,
+              "last_third_mean": 6716.285714285715,
+              "max": 20935,
+              "samples": 21,
+              "spikes_suppressed": 0,
+              "troughs": [
+                0,
+                8001,
+                16001,
+                20935,
+                16100,
+                5007,
+                6771,
+                6731,
+                6720,
+                6742,
+                6720,
+                6727,
+                6733,
+                6732,
+                6733,
+                6714,
+                6717,
+                6731,
+                6727,
+                6730,
+                6662
+              ]
+            }
+          }
+        },
+        "delivery": {
+          "missing_emas": 0,
+          "missing_prices": 0,
+          "passed": true,
+          "reason": null,
+          "unexpected_prices": 0
+        },
+        "telemetry": {
+          "missing": [],
+          "passed": true,
+          "reason": null
+        }
+      },
+      "measurements": {
+        "achieved_originals_per_second": 7999.97242769649,
+        "committed_prices_per_second": 7852.309162708519,
+        "committed_to_websocket_max": 0,
+        "drain_seconds": 0.3756434149981942,
+        "input_to_committed_max": 20935,
+        "producer_queue_full": null,
+        "steady_committed_per_second": 7666.873575738277,
+        "steady_websocket_per_second": 7666.873575738277,
+        "visible_latency_ms": {
+          "max": 3910.067195989541,
+          "p50": 790.8985545000178,
+          "p95": 2644.406021152826,
+          "p99": 3360.461542580153
+        },
+        "websocket_latency_ms": {
+          "max": 3852.899994002655,
+          "p50": 803.470342005312,
+          "p95": 2611.581857056444,
+          "p99": 3377.0709671995423
+        },
+        "websocket_prices_per_second": 7856.831266578708,
+        "window_seconds": 20.00006893099635,
+        "worker_cpu_used_cores_max": 0.9993919657545396,
+        "worker_cpu_utilization_ratio_max": 0.9993919657545396,
+        "worker_memory_working_set_bytes_max": 494477312.0,
+        "worker_throttled_periods_ratio_max": 1.0
+      },
+      "offered": 8000.0,
+      "reasons": [],
+      "repetition": 0,
+      "resource_profile": "perworker",
+      "run_id": "eb9c21b179e8-001",
+      "verdict": "PASS",
+      "workers": 1
+    }
+  ],
+  "source_sessions": [
+    "6092fc46e099",
+    "eb9c21b179e8"
+  ],
+  "wall_seconds": 339.123395061004,
+  "worker_capacity_gain": [
+    {
+      "baseline_per_second": 3937.1385071003897,
+      "baseline_workers": 1,
+      "flink_limiter": true,
+      "gain": 0.987655993023681,
+      "offered": 4000.0,
+      "scaled_per_second": 3888.5384419020083,
+      "stretch_gain": 1.5,
+      "stretch_met": false,
+      "total_resource_multiplier": 2.0,
+      "workers": 2
+    },
+    {
+      "baseline_per_second": 7666.873575738277,
+      "baseline_workers": 1,
+      "flink_limiter": true,
+      "gain": 1.0164805439696891,
+      "offered": 8000.0,
+      "scaled_per_second": 7793.22782281328,
+      "stretch_gain": 1.5,
+      "stretch_met": false,
+      "total_resource_multiplier": 2.0,
+      "workers": 2
+    }
+  ]
+}
