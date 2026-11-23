@@ -26,6 +26,24 @@ class PriceIndicatorsTest {
                 .map(x -> (EventProcessed) ((StreamRecord<?>) x).getValue()).toList();
     }
 
+    @Test void emitsOnlyOnCrossoverIncludingInitialEquality() throws Exception {
+        try (var h = harness()) {
+            h.open();
+            send(h, 1000, "ZERO.FR", 0);
+            h.processWatermark(new Watermark(299999));
+            send(h, 301000, "ZERO.FR", 39);
+            for (int i = 0; i < 33; i++) {
+                send(h, (i + 1) * 300000L + 1000, "AAA.FR", i == 0 ? 39 : i < 32 ? 0.01 : 1000);
+                h.processWatermark(new Watermark((i + 2) * 300000L - 1));
+            }
+            var signals = events(h).stream().filter(e -> e.ticker.equals("AAA.FR") && (e.type.equals("BUY") || e.type.equals("SELL"))).toList();
+            assertEquals(List.of("BUY", "SELL", "BUY"), signals.stream().map(e -> e.type).toList());
+            assertEquals(List.of(301000L, 9301000L, 9901000L), signals.stream().map(e -> e.timestamp_emit).toList());
+            assertEquals(List.of(39.0, 0.01, 1000.0), signals.stream().map(e -> e.value).toList());
+            assertEquals(1, events(h).stream().filter(e -> e.ticker.equals("ZERO.FR") && e.type.equals("BUY")).count());
+        }
+    }
+
     @Test void closesByEventTimeAndKeepsTickersIndependent() throws Exception {
         try (var h = harness()) {
             h.open();
@@ -64,6 +82,34 @@ class PriceIndicatorsTest {
         }
     }
 
+    @Test void restoredPendingCrossoverEmitsOnceAndCannotReopen() throws Exception {
+        OperatorSubtaskState pending;
+        try (var h = harness()) {
+            h.open();
+            for (int i = 0; i < 30; i++) {
+                send(h, i * 300000L + 1000, "AAA.FR", i == 0 ? 39 : 0.01);
+                h.processWatermark(new Watermark((i + 1) * 300000L - 1));
+            }
+            send(h, 9001000, "AAA.FR", 0.01);
+            pending = h.snapshot(1, 1);
+        }
+        OperatorSubtaskState finalized;
+        try (var h = harness()) {
+            h.initializeState(pending);
+            h.open();
+            h.processWatermark(new Watermark(9299999));
+            assertEquals(1, events(h).stream().filter(e -> e.type.equals("SELL")).count());
+            finalized = h.snapshot(2, 2);
+        }
+        try (var h = harness()) {
+            h.initializeState(finalized);
+            h.open();
+            send(h, 9001000, "AAA.FR", 0.01);
+            h.processWatermark(new Watermark(9299999));
+            assertEquals(0, events(h).stream().filter(e -> e.type.equals("BUY") || e.type.equals("SELL")).count());
+        }
+    }
+
     @Test void lateTicksAreForwardedWithoutRevisingFinalizedEmaAndEmptyWindowsAreSkipped() throws Exception {
         try (var h = harness()) {
             h.open();
@@ -73,9 +119,9 @@ class PriceIndicatorsTest {
             send(h, 900000, "AAA.FR", 200);
             h.processWatermark(new Watermark(1199999));
             var result = events(h);
-            assertEquals(7, result.size());
+            assertEquals(8, result.size());
             assertEquals(2, result.stream().filter(e -> e.type.equals("EMA38")).count());
-            assertEquals(200 * 2.0 / 39 + 100 * 2.0 / 39 * (1 - 2.0 / 39), result.get(5).value, 1e-10);
+            assertEquals(200 * 2.0 / 39 + 100 * 2.0 / 39 * (1 - 2.0 / 39), result.get(6).value, 1e-10);
         }
     }
 

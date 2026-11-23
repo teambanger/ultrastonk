@@ -98,9 +98,10 @@ Output consumers must use `isolation.level=read_committed` and accept values suc
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"price","value":28.5}
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"EMA38","value":1.4615384615384615}
 {"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"EMA100","value":0.5643564356435644}
+{"timestamp_emit":1792152000100,"ticker":"RDSA.NL","type":"BUY","value":28.5}
 ```
 
-There are exactly four fields in each output value. Raw prices retain their input timestamp; EMA records retain the closing tick's timestamp. `sec_type` is not included in processed events. Internal instrumentation fields are excluded from JSON.
+There are exactly four fields in each output value. Raw prices retain their input timestamp; EMA and advisory records retain the closing tick's timestamp. Advisory values are the closing price. `sec_type` is not included in processed events. Internal instrumentation fields are excluded from JSON.
 
 Each accepted price produces a `price` event. Each completed, nonempty window produces an EMA38/EMA100 pair. Both EMA states start at zero:
 
@@ -108,6 +109,8 @@ Each accepted price produces a `price` event. Each completed, nonempty window pr
 alpha = 2 / (period + 1)
 EMA = alpha * window_closing_price + (1 - alpha) * previous_EMA
 ```
+
+A window also emits at most one advisory: BUY when the previous EMA38-minus-EMA100 difference was nonpositive and the new difference is positive, or SELL when the previous difference was nonnegative and the new difference is negative. Remaining on the same side or ending at equality emits no advisory.
 
 The closing price is the tick with the greatest event timestamp within the window; equal timestamps use the last accepted arrival. Empty windows do not advance the EMA. Five-minute windows align to epoch boundaries, which also align with midnight CEST at this duration. Changing the duration changes the window alignment rules accordingly.
 
@@ -196,6 +199,21 @@ The verifier advances synthetic event time and must not run on a live or replay 
   docker compose run --rm --no-deps --entrypoint python benchmark verify.py
 )
 ```
+
+For a live advisory and subscription-isolation demo, use the same isolated
+command above with these changes: also export `WINDOW_SIZE_MS=1000`,
+`MAX_OUT_OF_ORDER_MS=0`, and `GATEWAY_PORT=28080`; include `gateway` in the
+`docker compose up` services; and run `verify.py --gateway-url ws://gateway:8080`.
+The verifier checks the hand-checked 33-window sequence: BUY at window 0,
+SELL at window 30, and BUY at window 32, with no intervening advisories. It
+compares committed Kafka records, three live WebSocket subscriptions, and
+history separately. The shortened windows are a deterministic test fixture,
+not a historical latency measurement. The browser at `http://localhost:28080`
+must use a window size of `1000` for this demo.
+To retain the expected and read-committed actual records, append
+`--evidence /results/live-advisory-comparison.json` to the verifier command;
+the file appears in `benchmarks/results/`. Its empty `missing` and `extra`
+arrays apply to this fixture, not to arbitrary historical input.
 
 The matrix runner creates an isolated project and uses fresh topics, consumer groups, transaction prefixes, and a new job for each run. It randomizes experiment order, performs warmup, injects duplicates/delays, varies worker counts and offered load, checks the raw-price multiset against the selected dedup policy, and exports JSON, CSV, container logs, resource snapshots, and optional raw Prometheus time series. Run the load driver directly only against a disposable synthetic stack, not against a live or replay feed.
 

@@ -29,10 +29,10 @@ Use `git status --short --branch`, `git diff --name-status HEAD...origin/<branch
 | Setting | Default | Contract |
 |---|---|---|
 | `KAFKA_INPUT_TOPIC` | `price-events` | UTF-8 JSON, keyed by instrument ID/ticker. Replay uses `id`, `secType`, `eventTimestampMs`, and `last`; normalized test input uses `ticker`, `sec_type`, `timestamp_emit`, and `price`. |
-| `KAFKA_OUTPUT_TOPIC` | `events-processed` | UTF-8 ticker key; JSON value with `timestamp_emit`, `ticker`, `type`, and `value`. Types are `price`, `EMA38`, and `EMA100`. Consumers use `isolation.level=read_committed`; records become visible when the Flink sink transaction commits. |
+| `KAFKA_OUTPUT_TOPIC` | `events-processed` | UTF-8 ticker key; JSON value with `timestamp_emit`, `ticker`, `type`, and `value`. Types are `price`, `EMA38`, `EMA100`, `BUY`, and `SELL`; advisory values are the closing trade price. Consumers use `isolation.level=read_committed`; records become visible when the Flink sink transaction commits. |
 | `KAFKA_REJECTED_TOPIC` | `price-events-rejected` | Rejected inputs and policy-dependent late audits. JSON contains `raw` and `reason`, plus `truncated: true` for oversized raw payloads. |
 
-`timestamp_emit` in output is **event time in epoch milliseconds**, not transport latency. Replay uses the historical exchange timestamp; EMA records use the closing trade's timestamp. Quote-only rows advance replay event time without emitting a price. In continuous mode, input idleness does not finalize the last window; the bounded replay overlay waits for CSV publication, reads to captured Kafka end offsets, and finalizes pending windows. See the [README wire examples](../README.md#kafka-contracts).
+`timestamp_emit` in output is **event time in epoch milliseconds**, not transport latency. Replay uses the historical exchange timestamp; EMA and advisory records use the closing trade's timestamp. Quote-only rows advance replay event time without emitting a price. In continuous mode, input idleness does not finalize the last window; the bounded replay overlay waits for CSV publication, reads to captured Kafka end offsets, and finalizes pending windows. See the [README wire examples](../README.md#kafka-contracts).
 
 ## Integration Checks
 
