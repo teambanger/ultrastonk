@@ -1,0 +1,17 @@
+# Redirect the large broker log and Flink checkpoint state onto a disk-backed host
+# directory. The base stack keeps them in Docker named volumes, which live under the
+# container/image filesystem; a full-week replay needs tens of gigabytes there, so the
+# measured host must pass absolute paths on the disk-backed mount here.
+#
+#   KAFKA_DATA_DIR=/mnt/shared/.../kafka-data
+#   FLINK_STATE_DIR=/mnt/shared/.../flink-state
+services:
+  kafka:
+    volumes:
+      - ${KAFKA_DATA_DIR:-./.scratch-src/kafka-data}:/var/lib/kafka/data
+  jobmanager:
+    volumes:
+      - ${FLINK_STATE_DIR:-./.scratch-src/flink-state}:/opt/flink/state
+  taskmanager:
+    volumes:
+      - ${FLINK_STATE_DIR:-./.scratch-src/flink-state}:/opt/flink/state

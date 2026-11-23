@@ -42,6 +42,14 @@ def _first_non_blank(*values):
     return ""
 
 
+def exchange_of(symbol):
+    """Exchange is the final dot-separated symbol segment, uppercased."""
+    text = (symbol or "").strip()
+    if "." not in text:
+        return "UNKNOWN"
+    return text.rsplit(".", 1)[1].upper() or "UNKNOWN"
+
+
 def _wall_time(date, time, zone):
     """Parse a DEBS wall-clock pair, truncating fractional seconds to milliseconds."""
     text = time[:15]
@@ -131,6 +139,10 @@ def scan_source(path, zone, window_ms=DEFAULT_WINDOW_MS,
     query = collections.Counter(eligible_trades=0, invalid_symbol_rows=0,
                                 nonpositive_or_missing_last_rows=0)
     windows = collections.defaultdict(lambda: {"rows": 0, "trades": 0})
+    exchanges = collections.defaultdict(
+        lambda: {"emitted": 0, "eligible_trades": 0, "invalid_symbol_rows": 0,
+                 "nonpositive_or_missing_last_rows": 0,
+                 "windows": collections.defaultdict(lambda: {"rows": 0, "trades": 0})})
     reversals = collections.Counter(events=0, eligible_trades=0, beyond_disorder_budget=0)
     max_seen = {}
     reversal_max_ms = 0
@@ -148,6 +160,9 @@ def scan_source(path, zone, window_ms=DEFAULT_WINDOW_MS,
         symbol = row[0].strip()
         window = timestamp // window_ms * window_ms
         windows[window]["rows"] += 1
+        exchange = exchange_of(symbol)
+        exchanges[exchange]["emitted"] += 1
+        exchanges[exchange]["windows"][window]["rows"] += 1
         previous = max_seen.get(symbol)
         if previous is not None and timestamp < previous:
             delta = previous - timestamp
@@ -158,12 +173,16 @@ def scan_source(path, zone, window_ms=DEFAULT_WINDOW_MS,
         max_seen[symbol] = max(previous or timestamp, timestamp)
         if not SYMBOL.fullmatch(symbol):
             query["invalid_symbol_rows"] += 1
+            exchanges[exchange]["invalid_symbol_rows"] += 1
             continue
         price = parse_price(row[21])
         if price is None or price <= 0:
             query["nonpositive_or_missing_last_rows"] += 1
+            exchanges[exchange]["nonpositive_or_missing_last_rows"] += 1
             continue
         query["eligible_trades"] += 1
+        exchanges[exchange]["eligible_trades"] += 1
+        exchanges[exchange]["windows"][window]["trades"] += 1
         eligible_symbols.add(symbol)
         windows[window]["trades"] += 1
         if previous is not None and timestamp < previous:
@@ -185,6 +204,14 @@ def scan_source(path, zone, window_ms=DEFAULT_WINDOW_MS,
             "invalid_symbol_rows": query["invalid_symbol_rows"],
             "nonpositive_or_missing_last_rows": query["nonpositive_or_missing_last_rows"],
         },
+        "exchanges": {exchange: {
+            "emitted": counts["emitted"],
+            "eligible_trades": counts["eligible_trades"],
+            "invalid_symbol_rows": counts["invalid_symbol_rows"],
+            "nonpositive_or_missing_last_rows": counts["nonpositive_or_missing_last_rows"],
+            "windows": {str(window): window_counts
+                        for window, window_counts in sorted(counts["windows"].items())},
+        } for exchange, counts in sorted(exchanges.items())},
         "reversals": {
             "events": reversals["events"],
             "eligible_trades": reversals["eligible_trades"],
