@@ -343,10 +343,10 @@ the absolute figure is not a DEBS prediction.
 subscribed to the same full 200-symbol set before the interval, every client verified
 independently against committed output; a second, unmonitored pair agrees.
 
-| Clients | Fan-out frames/s | Per-client prices/s | Per-client delivery | Client p99 (ms) | Gateway CPU (cores) |
+| Clients | Fan-out frames/s | Per-client prices/s | Per-client delivery | Client p50 / p99 (ms) | Gateway CPU (cores) |
 |---:|---:|---:|---|---:|---:|
-| 2 | 8,475.1 | 3,845.8 | exact ×2 | 2,243–2,261 | 0.204 |
-| 4 | 17,022.3 | 3,861.1 | exact ×4 | 2,451–2,522 | 0.232 |
+| 2 | 8,475.1 | 3,845.8 | exact ×2 | 709–711 / 2,243–2,261 | 0.204 |
+| 4 | 17,022.3 | 3,861.1 | exact ×4 | 804–832 / 2,451–2,522 | 0.232 |
 
 Fan-out scaled **2.009×** (1.977× in the repeat) with zero missing prices, EMAs or
 advisories, zero errors and zero slow-client drops, while the gateway used 23% of one

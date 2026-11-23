@@ -15,10 +15,10 @@ argument; this file is the artifact inventory and the trusted numbers.
 
 Trusted numbers (monitored pair):
 
-| Clients | Fan-out frames/s | Per-client prices/s | Exact delivery | Gateway CPU (cores) | Drops |
-|---:|---:|---:|---|---:|---:|
-| 2 | 8,475.1 | 3,845.8 | both clients exact | 0.204 | 0 |
-| 4 | 17,022.3 | 3,861.1 | all four clients exact | 0.232 | 0 |
+| Clients | Fan-out frames/s | Per-client prices/s | Exact delivery | Client p50 / p99 (ms) | Gateway CPU (cores) | Drops |
+|---:|---:|---:|---|---:|---:|---:|
+| 2 | 8,475.1 | 3,845.8 | both clients exact | 709–711 / 2,243–2,261 | 0.204 | 0 |
+| 4 | 17,022.3 | 3,861.1 | all four clients exact | 804–832 / 2,451–2,522 | 0.232 | 0 |
 
 Fan-out ratio 2.009×, per-client rate ratio 1.004×. Scope: one gateway, broadcast
 subscription of a fixed 200-symbol set, one repetition per condition in each pair;

@@ -292,8 +292,7 @@ are not published.
   output; monitored pair plus an earlier unmonitored repeat.
 - **Headline numbers (monitored pair):** fan-out 8,475 → 17,022 frames/s
   (**2.009×**), per-client 3,845.8 → 3,861.1 prices/s (1.004×), all clients exact
-  (zero missing prices/EMAs/advisories, zero errors, zero slow-client drops), p99
-  2,243–2,261 → 2,451–2,522 ms, gateway CPU 0.204 → 0.232 cores of 1
+  (zero missing prices/EMAs/advisories, zero errors, zero slow-client drops), client p50/p99 709–711/2,243–2,261 → 804–832/2,451–2,522 ms, gateway CPU 0.204 → 0.232 cores of 1
   (throttle 4% → 8%), RSS ≈202 → 186 MB. The unmonitored repeat agrees
   (1.977×, exact, p99 2.9 → 2.8 s). TaskManager (0.997 core, all periods
   throttled) and Kafka (0.63, ~35% throttled) were the saturated components.

@@ -26,8 +26,8 @@ that missed anything fails the run rather than being masked by its peers.
 
 | Clients | Committed/s | Per-client prices/s | Fan-out frames/s | Client p50 / p99 (ms) | Gateway CPU (cores of 1) | Gateway throttle | Gateway RSS | Slow-client drops | Delivery |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| 2 | 3,845.7 | 3,845.8 | 8,475.1 | ≈674–730 / 2,243–2,261 | 0.204 | 0.04 | ≈202 MB | 0 | exact on both clients |
-| 4 | 3,860.8 | 3,861.1 | 17,022.3 | p99 2,451–2,522 | 0.232 | 0.08 | ≈186 MB | 0 | exact on all four clients |
+| 2 | 3,845.7 | 3,845.8 | 8,475.1 | 709–711 / 2,243–2,261 | 0.204 | 0.04 | ≈202 MB | 0 | exact on both clients |
+| 4 | 3,860.8 | 3,861.1 | 17,022.3 | 804–832 / 2,451–2,522 | 0.232 | 0.08 | ≈186 MB | 0 | exact on all four clients |
 
 **Fan-out doubled: 2.009×** (8,475 → 17,022 frames/s), with per-client price rate
 unchanged (1.004×), zero missing prices, zero missing EMAs, zero missing advisories, zero
