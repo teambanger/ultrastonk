@@ -1,0 +1,7 @@
+{
+  "rate": {"events_per_second": 100, "duration_seconds": 120},
+  "symbols": {"tickers": ["DEMO.FR", "DEMO.NL", "DEMO.ETR"], "distribution": "uniform"},
+  "price": {"model": "regime", "volatility": 0.0005, "drift_per_second": 0.02, "regime_seconds": 20},
+  "event_time": {"mode": "accelerated", "speed": 60},
+  "faults": {"duplicate_probability": 0, "delay_probability": 0}
+}

@@ -1,0 +1,5 @@
+{
+  "rate": {"events_per_second": 1000, "duration_seconds": 30},
+  "symbols": {"count": 100, "distribution": "uniform"},
+  "faults": {"duplicate_probability": 0, "delay_probability": 0, "invalid_probability": 0.1, "invalid_modes": ["malformed_json", "missing_price", "bad_price", "bad_ticker", "negative_timestamp", "tombstone"]}
+}

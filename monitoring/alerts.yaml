@@ -1,0 +1,36 @@
+groups:
+  - name: ultrastonk
+    rules:
+      - alert: FlinkScrapeUnavailable
+        expr: up{job=~"flink-.*"} == 0
+        for: 1m
+        labels: {severity: critical}
+        annotations: {summary: "Flink metrics endpoint unavailable"}
+      - alert: KafkaConsumerLagHigh
+        expr: sum(kafka_consumergroup_lag{consumergroup=~".*flink.*"}) > 100000
+        for: 2m
+        labels: {severity: warning}
+        annotations: {summary: "Flink Kafka consumer lag exceeds 100000 records"}
+      - alert: FlinkCheckpointFailures
+        expr: increase(flink_jobmanager_job_numberOfFailedCheckpoints[5m]) > 0
+        labels: {severity: warning}
+        annotations: {summary: "Flink checkpoint failure; inspect job logs"}
+      - alert: InvalidPriceEvents
+        expr: sum(rate(flink_taskmanager_job_task_operator_pipeline_invalidEvents[1m])) > 0
+        for: 1m
+        labels: {severity: warning}
+        annotations: {summary: "Invalid PriceEvents are being quarantined"}
+      - alert: LokiWalDiskFull
+        expr: increase(loki_ingester_wal_disk_full_failures_total[5m]) > 0
+        labels: {severity: critical}
+        annotations: {summary: "Loki WAL writes blocked by disk pressure; logs may be unavailable"}
+      - alert: ResourceCollectionFailed
+        expr: up{job="resources"} == 0 or pipeline_resource_collection_errors > 0
+        for: 30s
+        labels: {severity: warning}
+        annotations: {summary: "Container resource telemetry is missing or incomplete"}
+      - alert: PipelineCpuThrottled
+        expr: pipeline_container_cpu_throttled_periods_ratio{service=~"taskmanager|jobmanager|kafka|dummy-emitter"} > 0.25
+        for: 2m
+        labels: {severity: warning}
+        annotations: {summary: "Pipeline container throttled in more than 25% of CPU scheduling periods"}

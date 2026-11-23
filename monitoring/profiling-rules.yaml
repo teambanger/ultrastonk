@@ -1,0 +1,30 @@
+groups:
+  - name: profiling
+    interval: 5s
+    rules:
+      - record: pipeline:component_wall_seconds_per_call
+        expr: sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_wallNanos"}[1m])) / (sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_samples"}[1m])) > 0) * 1e-09
+      - record: pipeline:component_cpu_seconds_per_call
+        expr: sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_cpuNanos"}[1m])) / (sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_cpuSamples"}[1m])) > 0) * 1e-09
+      - record: pipeline:component_allocated_bytes_per_call
+        expr: sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_allocatedBytes"}[1m])) / (sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_allocationSamples"}[1m])) > 0) * 1
+      - record: pipeline:component_calls_per_second
+        expr: sum by (component) (rate({__name__=~"flink_taskmanager_job_task_operator(_user)?_profile_component_calls"}[1m]))
+      - record: pipeline:component_estimated_cpu_cores
+        expr: pipeline:component_cpu_seconds_per_call * pipeline:component_calls_per_second
+      - record: pipeline:task_busy_ratio
+        expr: flink_taskmanager_job_task_busyTimeMsPerSecond / 1000
+      - record: pipeline:task_backpressure_ratio
+        expr: flink_taskmanager_job_task_backPressuredTimeMsPerSecond / 1000
+      - record: pipeline:task_idle_ratio
+        expr: flink_taskmanager_job_task_idleTimeMsPerSecond / 1000
+      - record: pipeline:worker_cpu_seconds_per_input_record
+        expr: sum(rate(pipeline_container_cpu_seconds_total{service="taskmanager"}[1m])) / (sum(rate(flink_taskmanager_job_task_operator_pipeline_receivedEvents[1m])) > 0)
+      - record: pipeline:worker_network_bytes_per_input_record
+        expr: sum(rate(pipeline_container_network_rx_bytes_total{service="taskmanager"}[1m]) + rate(pipeline_container_network_tx_bytes_total{service="taskmanager"}[1m])) / (sum(rate(flink_taskmanager_job_task_operator_pipeline_receivedEvents[1m])) > 0)
+      - record: pipeline:worker_block_bytes_per_input_record
+        expr: sum(rate(pipeline_container_block_read_bytes_total{service="taskmanager"}[1m]) + rate(pipeline_container_block_write_bytes_total{service="taskmanager"}[1m])) / (sum(rate(flink_taskmanager_job_task_operator_pipeline_receivedEvents[1m])) > 0)
+      - record: pipeline:worker_inputs_per_allocated_core_second
+        expr: sum(rate(flink_taskmanager_job_task_operator_pipeline_receivedEvents[1m])) / (sum(pipeline_container_cpu_capacity_cores{service="taskmanager"}) > 0)
+      - record: pipeline:component_cpu_share
+        expr: pipeline:component_estimated_cpu_cores / scalar(sum(pipeline:component_estimated_cpu_cores))

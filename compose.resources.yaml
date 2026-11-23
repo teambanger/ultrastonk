@@ -1,0 +1,17 @@
+# Optional fixed budgets for resource-normalized comparisons. Process isolation is still per container.
+services:
+  jobmanager:
+    cpus: ${JOBMANAGER_CPUS:-1}
+    mem_limit: ${JOBMANAGER_MEMORY:-1536m}
+  taskmanager:
+    cpus: ${TASKMANAGER_CPUS:-1}
+    mem_limit: ${TASKMANAGER_MEMORY:-2048m}
+  kafka:
+    cpus: ${KAFKA_CPUS:-2}
+    mem_limit: ${KAFKA_MEMORY:-1536m}
+  dummy-emitter:
+    cpus: ${EMITTER_CPUS:-1}
+    mem_limit: ${EMITTER_MEMORY:-256m}
+  benchmark:
+    cpus: ${BENCHMARK_CPUS:-1}
+    mem_limit: ${BENCHMARK_MEMORY:-512m}

@@ -1,0 +1,5 @@
+{
+  "rate": {"duration_seconds": 90, "schedule": [{"duration_seconds": 30, "events_per_second": 1000}, {"duration_seconds": 30, "events_per_second": 10000}, {"duration_seconds": 30, "events_per_second": 30000}]},
+  "symbols": {"count": 1000, "distribution": "zipf", "zipf_exponent": 1.2},
+  "faults": {"duplicate_probability": 0, "delay_probability": 0}
+}

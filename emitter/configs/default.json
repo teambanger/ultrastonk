@@ -1,0 +1,6 @@
+{
+  "rate": {"events_per_second": 1000, "duration_seconds": 60},
+  "symbols": {"count": 100, "distribution": "zipf", "zipf_exponent": 1.2},
+  "price": {"model": "random_walk"},
+  "faults": {"duplicate_probability": 0.05, "delay_probability": 0.05, "delay_max_ms": 5000}
+}
