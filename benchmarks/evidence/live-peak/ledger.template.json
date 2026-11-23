@@ -1,0 +1,6 @@
+{
+  "phase": "scored",
+  "created_at_epoch_seconds": 0,
+  "entries": [],
+  "template_note": "One entry per attempt, appended by live_peak.py. status is valid, invalid or failed; failed and invalid attempts are kept with their reasons. This is an empty template, not a result."
+}
