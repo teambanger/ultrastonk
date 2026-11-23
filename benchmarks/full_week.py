@@ -22,10 +22,13 @@ import json
 import math
 import os
 import re
+import shutil
 import sqlite3
 import subprocess
 import sys
+import threading
 import time
+import uuid
 from datetime import datetime, timezone as dt_timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -332,6 +335,107 @@ def evaluate(manifest):
         "no_errors": not errors,
     }
     return all(checks.values()), checks
+
+
+# ---------------------------------------------------------------------------
+# Parallel per-partition drain
+
+def dump_parallel(bootstrap, topic, output_path, timeout=1800, slack=4):
+    """Consume a committed topic with one reader per partition, then concatenate in order.
+
+    Mirrors reconcile_replay.dump_topic's read_committed completeness rule per partition:
+    transaction control records occupy offsets but are not delivered, so completion allows a
+    small control tail. A separate consumer per partition removes the single-consumer drain
+    bottleneck for the 60M+ record out topic.
+    """
+    try:
+        from confluent_kafka import Consumer, TopicPartition
+    except ImportError as exc:
+        raise ValueError("confluent_kafka is required for dump; run inside the benchmark image") from exc
+
+    probe = Consumer({"bootstrap.servers": bootstrap, "group.id": "fullweek-probe-" + uuid.uuid4().hex[:8]})
+    try:
+        metadata = probe.list_topics(topic, timeout=15)
+        if topic not in metadata.topics:
+            raise ValueError(f"topic does not exist: {topic}")
+        partitions = sorted(metadata.topics[topic].partitions)
+        bounds = {partition: probe.get_watermark_offsets(TopicPartition(topic, partition), timeout=10)
+                  for partition in partitions}
+    finally:
+        probe.close()
+
+    results = {}
+    errors = {}
+    started = time.monotonic()
+
+    def worker(partition):
+        low, high = bounds[partition]
+        consumer = Consumer({"bootstrap.servers": bootstrap,
+                             "group.id": f"fullweek-part-{uuid.uuid4().hex[:8]}",
+                             "enable.auto.commit": False, "isolation.level": "read_committed",
+                             "auto.offset.reset": "earliest"})
+        path = f"{output_path}.p{partition}"
+        records = 0
+        last = low
+        last_progress = time.monotonic()
+        deadline = started + timeout
+        complete = drained = False
+        try:
+            consumer.assign([TopicPartition(topic, partition, low)])
+            with Path(path).open("w", encoding="utf-8") as target:
+                while time.monotonic() < deadline:
+                    message = consumer.poll(0.5)
+                    if message is None:
+                        reached = last >= max(low, high - slack)
+                        if reached and drained:
+                            complete = True
+                            break
+                        drained = reached
+                        if time.monotonic() - last_progress > 30:
+                            break
+                        continue
+                    drained = False
+                    if message.error():
+                        raise ValueError(str(message.error()))
+                    target.write(message.value().decode("utf-8") + "\n")
+                    records += 1
+                    last = max(last, message.offset() + 1)
+                    last_progress = time.monotonic()
+        except Exception as exc:  # surfaced after join
+            errors[partition] = str(exc)
+        finally:
+            consumer.close()
+        if not complete:
+            complete = last >= max(low, high - slack)
+        results[partition] = {"low": low, "high": high, "records": records, "last": last,
+                              "complete": complete, "output": path}
+
+    threads = [threading.Thread(target=worker, args=(partition,)) for partition in partitions]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    if errors:
+        raise ValueError(f"parallel dump failed: {errors}")
+
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    total = 0
+    with Path(output_path).open("w", encoding="utf-8") as target:
+        for partition in partitions:
+            total += results[partition]["records"]
+            with Path(results[partition]["output"]).open(encoding="utf-8") as part:
+                shutil.copyfileobj(part, target)
+            Path(results[partition]["output"]).unlink()
+    return {"topic": topic, "output": str(output_path),
+            "partitions": {str(p): {k: results[p][k] for k in
+                                    ("low", "high", "records", "last", "complete")}
+                           for p in partitions},
+            "records": total,
+            "high_total": sum(value[1] for value in bounds.values()),
+            "low_total": sum(value[0] for value in bounds.values()),
+            "control_slack": slack,
+            "complete": all(results[p]["complete"] for p in partitions),
+            "seconds": round(time.monotonic() - started, 3)}
 
 
 # ---------------------------------------------------------------------------
@@ -707,8 +811,20 @@ def main(argv=None):
     export.add_argument("--manifest", required=True)
     export.add_argument("--output-dir", required=True)
 
+    dump = commands.add_parser("dump-parallel", help="drain a committed topic per partition")
+    dump.add_argument("--bootstrap", required=True)
+    dump.add_argument("--topic", required=True)
+    dump.add_argument("--output", required=True)
+    dump.add_argument("--timeout", type=int, default=1800)
+    dump.add_argument("--slack", type=int, default=4)
+
     args = parser.parse_args(argv)
     try:
+        if args.command == "dump-parallel":
+            meta = dump_parallel(args.bootstrap, args.topic, args.output, args.timeout, args.slack)
+            _print({key: meta[key] for key in ("topic", "records", "high_total",
+                                               "complete", "seconds")})
+            return 0 if meta["complete"] else 1
         if args.command == "compare":
             report_value = compare_full(args.expected, args.actual, args.db,
                                         ZoneInfo(args.timezone), args.sample_limit)
