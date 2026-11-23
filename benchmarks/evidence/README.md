@@ -257,13 +257,50 @@ are not published.
   (achieved input < 0.98 of offered) → FAIL (incorrect delivery) → FAIL
   (sustained stage-backlog growth) → PASS.
 
-## Tickets 09 and 10 — Growth effects (pending / reduced)
+## Ticket 09 — Long-tail and symbol growth (MEASURED, resolved)
 
-- **09:** long-tail vs uniform traffic and 2× symbol count at a documented
-  passing baseline. **10:** baseline vs 2× subscribers on one gateway at a
-  verified baseline. Both artifacts: none yet;
-  issues `09-measure-long-tail-and-symbol-growth.md`,
-  `10-measure-subscriber-growth.md`. In the reduced scope these are conditional.
+- **Question:** At one documented passing baseline, does a measured long-tail
+  symbol distribution behave differently from uniform traffic, and what changes
+  when the symbol population doubles?
+- **Artifacts:** `benchmarks/growth.py`, `benchmarks/tests/test_growth.py`,
+  `docs/long-tail.md`, `benchmarks/evidence/long-tail/{README.md,summary.json,symbol-weights-1000.json,symbol-weights-2000.json,runs/}`.
+- **Mode:** 4,000 offered/s, one TaskManager, `DEDUP_STRATEGY=NONE`,
+  `LATE_EVENT_STRATEGY=DROP`, 1 s windows, 100 ms disorder, 20 s measured after
+  5 s warmup, seed 42, one repetition per condition, no gateway.
+  `longtail-2000` keeps ranks 1–1,000 identical and appends measured tail weights.
+- **Headline numbers:** delivery exact in all three conditions
+  (80,000/80,000, zero missing/extra, drain 0.38–0.81 s); committed 3,924.7
+  (uniform-1000), 3,843.8 (longtail-1000, −2.1%), 3,853.9 (longtail-2000, +0.3%);
+  measured per-partition input max/mean 1.122 → **1.692** → 1.103 (CV 0.094 →
+  0.320 → 0.108). Hot-symbol skew concentrates Kafka partition load; a larger
+  symbol population spreads the same hot set across partitions at unchanged
+  throughput.
+- **Limits:** one repetition per condition; visible latency is 1 s-checkpoint
+  commit visibility, not the live disorder path; partition counts are measured on
+  the generator's synthetic keys (internally comparable, not a DEBS prediction);
+  exchange mix is the generator's fixed round-robin; no gateway.
+
+## Ticket 10 — Subscriber growth on one gateway (MEASURED, resolved)
+
+- **Question:** With upstream load, symbols and per-client subscriptions fixed,
+  what does doubling subscribers (2 → 4) do to one live gateway?
+- **Artifacts:** `benchmarks/growth.py`, `benchmarks/tests/test_growth.py`,
+  `docs/subscriber-growth.md`, `benchmarks/evidence/subscribers/{README.md,summary.json,symbol-weights-200.json,runs/}`.
+- **Mode:** same 4,000/s baseline, 200 measured symbols, gateway cap
+  `gateway:1:512m`, broadcast subscription of the full ticker set to every client
+  before measurement, every client verified independently against committed
+  output; monitored pair plus an earlier unmonitored repeat.
+- **Headline numbers (monitored pair):** fan-out 8,475 → 17,022 frames/s
+  (**2.009×**), per-client 3,845.8 → 3,861.1 prices/s (1.004×), all clients exact
+  (zero missing prices/EMAs/advisories, zero errors, zero slow-client drops), p99
+  2,243–2,261 → 2,451–2,522 ms, gateway CPU 0.204 → 0.232 cores of 1
+  (throttle 4% → 8%), RSS ≈202 → 186 MB. The unmonitored repeat agrees
+  (1.977×, exact, p99 2.9 → 2.8 s). TaskManager (0.997 core, all periods
+  throttled) and Kafka (0.63, ~35% throttled) were the saturated components.
+- **Limits:** one repetition per condition within each pair; broadcast fan-out
+  grows linearly by construction; 2–4 subscribers are far below
+  `MAX_CLIENTS=1000`; the upstream saturates at this baseline, so no gateway
+  limit is established.
 
 ## Ticket 11 — Quantify the drop-versus-grace trade-off (done)
 
@@ -358,9 +395,9 @@ report states confidence honestly rather than implying the full plan ran.
   repetition**, both worker counts in one batch, and at most one fine
   confirmation; 45-minute cap. Bounds may therefore be loose or `unbracketed`,
   and that outcome is reported as such instead of being tightened away.
-- **Tickets 09 and 10 (growth):** reduced to single-condition comparisons run
-  only if the clock allows; otherwise reported as reduced or deferred with the
-  reason.
+- **Tickets 09 and 10 (growth):** originally reduced to conditional single-condition
+  comparisons; both were subsequently run (each at one baseline, one repetition per
+  condition in the one-day extension) and are reported as directional.
 - **Ticket 12 (packaging):** runs in parallel and must label every reduced item;
   reduced-repeat and reduced-ladder results are directional evidence, **not** the
   three-repeat bracket the original plan specified.

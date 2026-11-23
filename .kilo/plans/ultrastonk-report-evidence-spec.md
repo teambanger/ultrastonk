@@ -94,3 +94,15 @@ The team restated what the evidence is for, and this now governs priority: (1) a
 Mapping onto the tickets: ticket 02 supplies the workload shapes; ticket 06 supplies the only direct whole-week end-to-end measurement (emitter `545,563` ev/s, `289,049,752` rows, separate ingestion/processing/drain timings) and the behaviour of the real source ordering; ticket 07 supplies behaviour at the recorded peak (pacing, tails, backlog, headroom); ticket 08 supplies the volume sweep and the scaling comparison; ticket 11 supplies the measured cost of a lateness-policy choice. Tickets 09 and 10 (symbol distribution and subscriber growth) are outside the reframed core and are deferred rather than pursued, because neither changes the week-processing time or the resource envelope the team wants to predict; their criteria are recorded as reduced or deferred with the reason.
 
 The reframing adds one deliverable that the original ticket set did not cover: a predictive capacity model (`benchmarks/capacity_model.py`, `benchmarks/tests/test_capacity_model.py`, `docs/capacity-model.md`) that fits the measured points — the week run and the volume/scaling ladder — and predicts wall time and resource need for a stated volume, with ranges and explicit statements of what the fit cannot support. Because the ladder is single-repetition and few-pointed, those predictions are bounds or interpolations between measured points, not a validated law, and the document must say so. Ticket 12's pack must include this model and label it at that confidence.
+
+### Extension (2026-11-23, after the programme)
+
+The two-hour constraint ended with tickets 01-08 and 11 resolved. The user then asked to
+run the deferred growth experiments, so tickets 09 and 10 were executed as the reduced
+pairs already written into those tickets: each at the ticket-08 baseline of 4,000
+offered originals/s with one TaskManager, one repetition per condition (09: uniform vs
+measured long-tail vs 2x symbols; 10: 2 vs 4 subscribers on one gateway, plus an
+unmonitored repeat). Runner: `benchmarks/growth.py`. Evidence:
+`benchmarks/evidence/{long-tail,subscribers}/`, argument in `docs/long-tail.md` and
+`docs/subscriber-growth.md`, folded into `docs/report-evidence.md` §5.3. Both results are
+directional, not limits.

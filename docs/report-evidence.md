@@ -312,6 +312,49 @@ actually measured. A model field named `scaling_efficiency` currently reports �
 throughput *ratio* between two workers and one, **not** an efficiency fraction (the per-worker efficiency
 is ≈0.50); it must not be quoted as an efficiency without that clarification.
 
+### 5.3 Composition and subscribers at the baseline (MEASURED, one repetition)
+
+Two short contrasts at the same documented passing baseline as §5.1 (4,000 offered/s,
+one TaskManager, same caps and policies), run after the ladder as tickets 09 and 10.
+They are **directional**: one repetition per condition in each pair; they show whether
+skew, symbol count or subscriber count moved delivery and load shape at this baseline,
+not a limit or a scaling law.
+
+**Long-tail traffic and a larger symbol universe (ticket 09).** Uniform traffic versus
+the week's measured symbol shares at 1,000 symbols, then the same measured shares
+extended to 2,000 symbols with ranks 1–1,000 unchanged. Delivery was exact in all three
+conditions (80,000/80,000, zero missing, zero extra).
+
+| Condition | Symbols | Committed/s | p95 / p99 visible (ms) | Partition max/mean | Partition CV |
+|---|---:|---:|---:|---:|---:|
+| uniform | 1,000 | 3,924.7 | 1,856.8 / 2,654.3 | 1.122 | 0.094 |
+| measured long-tail | 1,000 | 3,843.8 | 1,966.0 / 2,699.3 | **1.692** | **0.320** |
+| measured long-tail | 2,000 | 3,853.9 | 1,413.8 / 2,199.3 | 1.103 | 0.108 |
+
+Skew cost 2.1% of committed throughput and concentrated load: one of six Kafka
+partitions carried 28.2% of the input (max/mean 1.69 versus 1.12 uniform). Doubling the
+symbol population at the same offered load kept throughput and exact delivery and
+smoothed partition load back to 1.10 — the appended tail tickers spread keys, even
+though the hot symbols and their weights are unchanged. Partition counts are measured at
+the producer on the generator's synthetic keys, so the comparison is internally valid but
+the absolute figure is not a DEBS prediction.
+
+**Subscriber growth on one gateway (ticket 10).** Two versus four live clients, each
+subscribed to the same full 200-symbol set before the interval, every client verified
+independently against committed output; a second, unmonitored pair agrees.
+
+| Clients | Fan-out frames/s | Per-client prices/s | Per-client delivery | Client p99 (ms) | Gateway CPU (cores) |
+|---:|---:|---:|---|---:|---:|
+| 2 | 8,475.1 | 3,845.8 | exact ×2 | 2,243–2,261 | 0.204 |
+| 4 | 17,022.3 | 3,861.1 | exact ×4 | 2,451–2,522 | 0.232 |
+
+Fan-out scaled **2.009×** (1.977× in the repeat) with zero missing prices, EMAs or
+advisories, zero errors and zero slow-client drops, while the gateway used 23% of one
+core at four subscribers. The pipeline was still limited upstream (TaskManager at 0.997
+of its core with essentially every period throttled; Kafka at 0.63 with ~35% throttling),
+so this does not establish a gateway limit — it shows that at the verified baseline the
+gateway is not the subscriber-growth bottleneck.
+
 ---
 
 ## 6. Evaluation and performance analysis (the argument, not the numbers)
@@ -362,9 +405,11 @@ Recorded in full in `.kilo/plans/ultrastonk-report-evidence-spec.md`:
   replaces it (ticket 06).
 - Peak measurement reduced to 1× and warm only with fewer repeats (ticket 07).
 - Capacity ladder reduced to a single repetition and four-to-five points (ticket 08).
-- Symbol-distribution and subscriber-growth experiments are **deferred** as outside the reframed goal
-  (tickets 09, 10); they do not change week-processing time or the resource envelope.
-- Latency predictions are absent until ticket 07 reports; the model carries a PENDING latency path.
+- Symbol-distribution and subscriber-growth experiments were originally deferred; they were later run
+  as two short pairs at the §5.1 baseline (tickets 09, 10, §5.3). Each condition is a **single
+  repetition**, so those results are directional and change neither week-processing time nor the
+  resource envelope.
+- The capacity model still carries no latency path; latency is reported from measurement (§4.2, §5.1).
 
 Never claimed anywhere in this pack: a validated capacity law, a live Sustainable limit before ticket 08,
 a latency figure before ticket 07, absolute wall times without a range, or strategy profitability.
@@ -380,8 +425,9 @@ a latency figure before ticket 07, absolute wall times without a range, or strat
 | F3 | Peak-rate profile with the 1,223,873-row five-minute peak | `results/week-rates.jsonl` | ready |
 | T1 | Full-week coverage and error table (capture order vs ordered day) | `<run2>`, `<run3>` `compare.json` | ready |
 | T2 | DROP vs GRACE trade-off (correctness, delay, state) | `benchmarks/evidence/drop-vs-grace/comparison.json` | ready |
-| T3 | Volume/worker ladder and Sustainable-limit bounds | `benchmarks/evidence/sustainable-limit/` | PENDING (08) |
-| T4 | Latency tails at the recorded peak with sample sizes | `benchmarks/evidence/live-peak/` | PENDING (07) |
+| T3 | Volume/worker ladder and Sustainable-limit bounds | `benchmarks/evidence/sustainable-limit/` | ready |
+| T4 | Latency tails at the recorded peak with sample sizes | `benchmarks/evidence/live-peak/` | ready |
+| T5 | Long-tail/symbol and subscriber growth pairs | `benchmarks/evidence/{long-tail,subscribers}/` | ready |
 | F4 | Predicted wall time and resource envelope versus volume | `docs/capacity-model.md` | ready |
 
 ---
@@ -398,9 +444,9 @@ Ownership as recorded in the tickets (each member fills their own three rubric r
 | 04 | Reference-slice reconciliation | `benchmarks/reference-slice.md` |
 | 05 | Capture-paced measurement path | `docs/capture-pilot-evidence.md` |
 | 06 | Whole-week processing and correctness | `/mnt/shared/data/ultrastonk-full-week/`, `INVALID-RUN.md` |
-| 07 | Peak behaviour | PENDING |
-| 08 | Volume and scaling | PENDING |
-| 09, 10 | Growth experiments | DEFERRED |
+| 07 | Peak behaviour | `benchmarks/evidence/live-peak/` |
+| 08 | Volume and scaling | `benchmarks/evidence/sustainable-limit/` |
+| 09, 10 | Growth experiments | `benchmarks/evidence/long-tail/`, `benchmarks/evidence/subscribers/` |
 | 11 | Lateness policy comparison | `benchmarks/evidence/drop-vs-grace/` |
 | 12 | Audit and packaging | `docs/evidence-audit.md`, `benchmarks/evidence/README.md` |
 
@@ -420,6 +466,10 @@ python3 scripts/profile_week.py --data-dir /mnt/shared/data/official-week-Ij8jlf
 
 # capacity and volume predictions (DERIVED)
 python3 benchmarks/capacity_model.py
+
+# growth pairs (tickets 09, 10; one repetition each, ~2 min per condition)
+python3 benchmarks/growth.py --tickets 09
+python3 benchmarks/growth.py --tickets 10 --monitoring
 
 # audit of this pack
 sed -n '1,80p' docs/evidence-audit.md

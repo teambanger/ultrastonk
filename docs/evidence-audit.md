@@ -234,3 +234,22 @@ No artifacts; issue files only. Consistent with "reduced / deferred".
 - **Still open:** ticket 09 and 10 (deferred, outside the reframed goal), ticket 12's final pack (the
   evidence index still marks 07/08 as PENDING and a teammate reproduction is outstanding), and the
   checkpoint failures of 4–6 per capacity run with zero job restarts, which remain unexplained.
+
+**Update 2026-11-23 (after the two-hour programme, extension runs).**
+
+- **Tickets 09 and 10 are MEASURED and resolved**, and the index, dossier (§5.3) and audit no longer mark
+  them pending: `benchmarks/growth.py` drives both pairs through `matrix.py` at the same documented
+  4,000/s/one-worker baseline as ticket 08. Ticket 09: exact delivery in uniform/long-tail/long-tail-2×
+  conditions, committed 3,924.7 / 3,843.8 / 3,853.9 prices/s, partition input max/mean 1.122 / 1.692 /
+  1.103 — skew concentrates partition load, a larger symbol population spreads it. Ticket 10: fan-out
+  8,475 → 17,022 frames/s (2.009×; 1.977× in an unmonitored repeat), every client exact on both runs, zero
+  slow-client drops, gateway at 0.204 → 0.232 cores, upstream (TaskManager 0.997 core throttled, Kafka 0.63)
+  the saturated components. Both tickets are **one repetition per condition** and labelled directional.
+- **Harness changes** committed with the evidence: `driver.py` gained an independent per-client
+  verification path (each subscriber checked against committed output, per-client latency and errors),
+  a `--distribution-file` measured-weight input, measured per-partition input counts from the producer's
+  delivery callbacks, and a client-count-aware drain; `matrix.py` passes `--distribution-file`/`--clients`
+  through; `benchmarks/growth.py` and 15 tests are new. `benchmarks/tests` totals 278 tests.
+- **Still open:** the checkpoint failures of 4–6 per capacity run (zero restarts) remain unexplained; the
+  capacity-model `scaling_efficiency` label is still a throughput ratio, not an efficiency; ticket 12's
+  teammate reproduction is outstanding.
