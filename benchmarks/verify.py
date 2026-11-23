@@ -65,13 +65,30 @@ def flush_timestamp(window_end, max_out_of_order, grace):
     return window_end + max_out_of_order + grace
 
 
+def run_identifier(value):
+    if not re.fullmatch(r"[A-Za-z0-9]{1,10}", value):
+        raise ValueError("run identifier must contain 1-10 ASCII letters or digits")
+    return "V" + value
+
+
+def wait_for_file(path, timeout):
+    deadline = time.monotonic() + timeout
+    while not os.path.isfile(path):
+        if time.monotonic() >= deadline:
+            raise TimeoutError(f"timed out waiting for {path}")
+        time.sleep(0.1)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gateway-url", help="WebSocket URL for live subscription isolation checks")
     parser.add_argument("--evidence", help="write expected and observed committed Kafka comparison as JSON")
+    parser.add_argument("--run-id", help="deterministic 1-10 character alphanumeric fixture identifier")
+    parser.add_argument("--wait-for-file", help="wait up to 120 seconds for this file before publishing")
     args = parser.parse_args()
     try:
         topic_in, topic_out, rejected = isolated_topics(os.environ)
+        run = run_identifier(args.run_id if args.run_id is not None else uuid.uuid4().hex[:10])
     except ValueError as error:
         raise SystemExit(str(error)) from None
     from confluent_kafka import Consumer
@@ -92,7 +109,6 @@ def main():
         raise RuntimeError(f"unknown policy: dedup={dedup}, late={policy}")
     grace = grace if policy == "GRACE" else 0
     wait_for_job()
-    run = "V" + uuid.uuid4().hex[:10]
     a, b, c = run + "A.FR", run + "B.FR", run + "C.FR"
     # A repeatable verifier starts above existing watermarks in this test deployment.
     # It advances synthetic event time and must be used on isolated test topics.
@@ -125,6 +141,8 @@ def main():
                         history = json.loads(socket.recv(timeout=30))
                         assert history == {"type": "history", "ticker": ticker, "events": []}, history
                     sockets.append((socket, tickers))
+            if args.wait_for_file:
+                wait_for_file(args.wait_for_file, 120)
             verify(consumer, brokers, topic_in, topic_out, rejected, dedup, policy, checkpoint,
                    run, a, b, c, base, window, advance, finish, sockets, args.gateway_url, args.evidence)
     finally:

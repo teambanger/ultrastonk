@@ -214,6 +214,10 @@ To retain the expected and read-committed actual records, append
 `--evidence /results/live-advisory-comparison.json` to the verifier command;
 the file appears in `benchmarks/results/`. Its empty `missing` and `extra`
 arrays apply to this fixture, not to arbitrary historical input.
+For a browser that subscribes before publication, `--run-id evidence01` fixes
+the crossover ticker to `Vevidence01C.FR`; `--wait-for-file` holds publication
+until the specified file appears (up to 120 seconds). Use a fresh shared mount
+for this gate and remove any old gate file before starting.
 
 The matrix runner creates an isolated project and uses fresh topics, consumer groups, transaction prefixes, and a new job for each run. It randomizes experiment order, performs warmup, injects duplicates/delays, varies worker counts and offered load, checks the raw-price multiset against the selected dedup policy, and exports JSON, CSV, container logs, resource snapshots, and optional raw Prometheus time series. Run the load driver directly only against a disposable synthetic stack, not against a live or replay feed.
 
