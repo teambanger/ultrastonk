@@ -6,6 +6,9 @@ This is the index for the Ultrastonk report-evidence pack (tracker
 question it answers, the exact artifacts, the reproduce command, the
 mode/configuration used, the measured headline numbers and the stated limits.
 
+For the same evidence organized by the course rubric, see the
+[Evaluation Criteria Answer Sheet](../../docs/evaluation-criteria-answer-sheet.md).
+
 Status legend: **done** = artifact exists and was checked; **partial** = the run
 exists but a required acceptance step is missing; **pending** = no measurement
 yet, recorded as a plan only. Tickets closed after the audit carry the stronger
@@ -199,23 +202,35 @@ are not published.
   raw JSON and the committed-record dump stay outside Git by design.
 - **Mode:** 1x capture pace (`PACING=capture`, `SPEED_MULTIPLIER=1`), warm state,
   **one** repetition, `FLINK_BOUNDED_REPLAY=false`, 2 TaskManagers,
-  `WINDOW_SIZE_MS=300000`, `MAX_OUT_OF_ORDER_MS=5000`, pre-roll 300 s /
-  trailing 180 s, offered as a 1,914,978-row slice in the fixture's documented
+  `WINDOW_SIZE_MS=300000`, `MAX_OUT_OF_ORDER_MS=5000`, 10 s checkpoints,
+  pre-roll 120 s / trailing 90 s, offered as a 1,914,978-row slice in the fixture's documented
   capture-time order (ties by source ordinal).
 - **Headline numbers:** achieved pacing on the measured segment `0.99991`
   (max lag 35 ms); measured segment reproduced exactly (FR `651,418` /
   NL `411,885` / ETR `160,570`); delivery exact — `195,061` price records
   expected = committed = WebSocket, zero missing/extra, no EMA-pair gaps;
   trade enqueue→WebSocket p50 `5,060` / p95 `9,063` / p99 `9,225` ms (n=195,061),
-  transport-only committed→WebSocket p50 `15.5` / p99 `134` ms, enqueue→ack
-  p50 `34` / p99 `58` ms (n=5,000); window-finalization→advisory receipt
-  p50 `240,962` / p99 `241,192` ms (n=3,154); drain `7.08` s; `0` restarts,
+   enqueue→committed Kafka observation p99 `9,206` ms; committed-reader-to-WebSocket
+   observation gap p50 `15.5` / p99 `134` ms; enqueue→ack p50 `34` / p99 `58`
+   ms (n=5,000); estimated window eligibility→advisory receipt p50 `240,940` /
+   p99 `241,126` ms (n=3,154; not timed from the actual Flink timer); drain `7.08` s; `0` restarts,
   `0` OOMs. Oracle on the slice: expected `9,649` vs live `6,308`, missing
   `3,341` all in the single final unclosed window (boundary effect), split
   policy `3,309` / transport `18` / unexplained `14`.
-- **Limits:** the p99 is dominated by the deliberate 5 s disorder budget, so the
-  stated 1 s p99 project target is unachievable while that policy holds (transport
-  and acknowledgement are sub-100 ms); Kafka broker and gateway consumer-group lag
+- **Interpretation:** Trade prices emit without waiting for the window watermark.
+  The 10 s checkpoint cadence gates visibility to read-committed consumers and
+  is the leading explanation for the trade tail, not the 5 s window allowance.
+  In the [synthetic follow-up](live-peak/price-latency-comparison.json), WebSocket
+  price p99 fell from 10.004 s to 1.028 s with 1 s checkpoints, but stayed at
+  9.991 s when only the watermark allowance was shortened. All three short arms
+  delivered exactly 40,000 prices. See [method and reproduction](../../docs/live-peak.md#synthetic-price-latency-comparison).
+- **Cadence sweep:** Eight additional runs held the watermark allowance at 5 s
+  and varied only checkpoint cadence (500 ms, 1 s, 2.5 s, 10 s; two trials each).
+  All delivered exactly 40,000 prices. At 1 s, WebSocket p99 was 1.027–1.030 s;
+  500 ms lowered it to 0.536–0.556 s at about 2.3 times the reported checkpoint
+  bytes/s. See [raw-derived evidence](live-peak/checkpoint-interval-sweep.json)
+  and [trade-off and reproduction](../../docs/live-peak.md#checkpoint-interval-sweep).
+- **Limits:** Kafka broker and gateway consumer-group lag
   were not collected; one repetition only; the run exceeded its 40-minute cap by
   1–2 minutes. Three harness defects were fixed and committed with the evidence
   (`peak_slice.py --reorder capture`; `live_peak.py --pacings` plus a gateway

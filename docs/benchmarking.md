@@ -35,6 +35,11 @@ Add `--gateway` to measure the full synthetic producer → Kafka → Flink → K
 
 The gateway mode reports raw-price delivery rate and latency from the driver's first enqueue attempt for that price identity to WebSocket receipt, using the same monotonic clock as Kafka visibility latency. Exact copies share the first attempt timestamp. Both boundaries include Kafka transaction visibility. The driver compares WebSocket price and EMA multisets against committed Kafka output observed during the run and fails on missing, extra, or invalid deliveries. It does not force the final windows to close or establish a browser-rendering or multi-client capacity result. For synthetic fan-out load, use the separate [gateway benchmark](../gateway/README.md#performance-results).
 
+`--checkpoint-ms` and `--max-out-of-order-ms` set checkpoint cadence and the
+event-time watermark allowance independently. The matrix defaults are 1,000 ms
+and 100 ms respectively. See the [price latency comparison](live-peak.md#synthetic-price-latency-comparison)
+for the one-setting-at-a-time experiment and reproduction commands.
+
 Per-run files:
 
 | Artifact | Contents |

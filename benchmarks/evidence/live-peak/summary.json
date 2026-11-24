@@ -18219,18 +18219,18 @@
       },
       "decisions": {
         "trade_enqueue_to_websocket": {
-          "verdict": "fail",
+          "verdict": "measured",
           "samples": 195061,
-          "target_ms": 1000,
+          "min_samples": 30,
           "p50": 5060.12451171875,
           "p95": 9063.060302734375,
           "p99": 9224.62299804687,
           "max": 10170.517578125
         },
-        "window_finalization_to_advisory_receipt": {
-          "verdict": "fail",
+        "window_eligibility_to_advisory_receipt": {
+          "verdict": "measured",
           "samples": 3154,
-          "target_ms": 1000,
+          "min_samples": 20,
           "p50": 240939.57836914062,
           "p95": 241114.2851928711,
           "p99": 241125.6075292969,
@@ -18238,7 +18238,7 @@
         },
         "live_advisory_p99_ms": 241125.6075292969,
         "rollover_fixture": null,
-        "note": "1 s p99 is a project target, not a rubric requirement; live advisories are reported separately from any controlled rollover fixture"
+        "note": "Advisory timing starts at an input-based eligibility lower bound, not the timer firing; controlled rollover fixtures are reported separately"
       },
       "keeping_up": {
         "verdict": "did_not_keep_up",

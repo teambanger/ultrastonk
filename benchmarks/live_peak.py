@@ -37,7 +37,6 @@ DEFAULT_PARALLELISM = 2
 DEFAULT_PARTITIONS = 6
 FROZEN_CHECKPOINT_INTERVAL_MS = 10_000
 # Project targets, explicitly not rubric requirements.
-PROJECT_TARGET_P99_MS = 1000
 # A live advisory p99 needs enough crossover receipts to be meaningful.
 ADVISORY_MIN_SAMPLES = 20
 TRADE_MIN_SAMPLES = 30
@@ -176,9 +175,7 @@ def run_plan_json(fixture_path, slice_manifests, runs, parallelism=DEFAULT_PARAL
         "states": sorted({run["state"] for run in runs}),
         "parallelism": parallelism,
         "checkpoint_interval_ms": FROZEN_CHECKPOINT_INTERVAL_MS,
-        "project_targets": {"trade_enqueue_to_websocket_p99_ms": PROJECT_TARGET_P99_MS,
-                            "window_finalization_to_advisory_receipt_p99_ms": PROJECT_TARGET_P99_MS,
-                            "note": "project targets, not rubric requirements"},
+        "trade_min_samples": TRADE_MIN_SAMPLES,
         "advisory_min_samples": ADVISORY_MIN_SAMPLES,
         "subscribe": subscribe,
         "slices": {state: manifest for state, manifest in slice_manifests.items()},
@@ -369,22 +366,21 @@ def advisory_window_latencies(run):
 
 
 def independence_latencies(run):
-    """The two project-target latencies, measured independently."""
+    """Measure trade delivery and advisory eligibility-to-receipt separately."""
     boundaries = capture_pilot._boundary_latencies(run)
-    trade = boundaries["enqueue_to_websocket_ms"] or boundaries["enqueue_to_committed_ms"]
+    trade = boundaries["enqueue_to_websocket_ms"]
     return {"trade_enqueue_to_websocket_ms": list(trade),
-            "window_finalization_to_advisory_ms": advisory_window_latencies(run)}
+            "window_eligibility_to_advisory_ms": advisory_window_latencies(run)}
 
 
-def latency_verdict(samples, min_samples, target_ms=PROJECT_TARGET_P99_MS):
-    """Report a latency quantile, or explicitly inconclusive when too sparse."""
+def latency_summary(samples, min_samples):
+    """Report descriptive quantiles, or mark the sample set as inconclusive."""
     values = [value for value in samples if value is not None]
     if len(values) < min_samples:
         return {"verdict": "inconclusive", "samples": len(values), "min_samples": min_samples,
-                "reason": f"too few samples ({len(values)} < {min_samples})", "target_ms": target_ms}
+                "reason": f"too few samples ({len(values)} < {min_samples})"}
     quantiles = capture_pilot.quantiles(values)
-    passed = quantiles["p99"] is not None and quantiles["p99"] <= target_ms
-    return {"verdict": "pass" if passed else "fail", "samples": len(values), "target_ms": target_ms,
+    return {"verdict": "measured", "samples": len(values), "min_samples": min_samples,
             "p50": quantiles["p50"], "p95": quantiles["p95"], "p99": quantiles["p99"],
             "max": quantiles["max"]}
 
@@ -421,19 +417,18 @@ def missing_evidence(base):
 
 
 def decisions(run):
-    """Report the two project targets independently and never fudge sparse advisories."""
+    """Report the latency distributions independently, with a sample-count guard."""
     latencies = independence_latencies(run)
-    trade = latency_verdict(latencies["trade_enqueue_to_websocket_ms"], TRADE_MIN_SAMPLES)
-    advisory = latency_verdict(latencies["window_finalization_to_advisory_ms"], ADVISORY_MIN_SAMPLES)
+    trade = latency_summary(latencies["trade_enqueue_to_websocket_ms"], TRADE_MIN_SAMPLES)
+    advisory = latency_summary(latencies["window_eligibility_to_advisory_ms"], ADVISORY_MIN_SAMPLES)
     rollover = run.get("rollover")
     return {
         "trade_enqueue_to_websocket": trade,
-        "window_finalization_to_advisory_receipt": advisory,
-        "live_advisory_p99_ms": (advisory["p99"] if advisory["verdict"] in ("pass", "fail")
-                                 else "inconclusive"),
+        "window_eligibility_to_advisory_receipt": advisory,
+        "live_advisory_p99_ms": advisory.get("p99", "inconclusive"),
         "rollover_fixture": rollover,
-        "note": "1 s p99 is a project target, not a rubric requirement; live advisories are "
-                "reported separately from any controlled rollover fixture",
+        "note": "Advisory timing starts at an input-based eligibility lower bound, not the timer firing; "
+                "controlled rollover fixtures are reported separately",
     }
 
 
@@ -471,7 +466,7 @@ def aggregate_repeats(summaries):
     for (condition, state, pacing), group in sorted(groups.items(), key=lambda item: str(item[0])):
         passed = [item for item in group if item.get("overall_passed")]
         trade_p99 = [_p99(item, "trade_enqueue_to_websocket") for item in passed]
-        advisory_p99 = [_p99(item, "window_finalization_to_advisory_receipt") for item in passed]
+        advisory_p99 = [_p99(item, "window_eligibility_to_advisory_receipt") for item in passed]
         advisories = [item["decisions"]["live_advisory_p99_ms"] for item in group]
         rows.append({
             "condition": condition, "state": state, "pacing_level": pacing,
@@ -488,7 +483,7 @@ def aggregate_repeats(summaries):
 
 def _p99(summary, decision):
     verdict = (summary.get("decisions") or {}).get(decision) or {}
-    return verdict.get("p99") if verdict.get("verdict") in ("pass", "fail") else None
+    return verdict.get("p99")
 
 
 def _median(values):

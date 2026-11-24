@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-24",
+  "scope": "Controlled synthetic price path, one repetition per arm; not Historical replay or advisory timing",
+  "provenance": {
+    "base_git_commit": "2df2f423a4d5e46a695cd00bb1b61176d0a77b30",
+    "matrix_py_sha256_at_run": "21ba559c07bf8d28ae784d9a51c9af2a0355c0b4e07061fd3fd36c526fd1517a",
+    "docker_server_version": "29.10.0",
+    "host_logical_cpus": 12,
+    "host_memory_bytes": 33216712704,
+    "local_raw_artifacts": "benchmarks/results/<run_id>.json and <session>-manifest.json; raw artifacts stay outside Git"
+  },
+  "fixed_configuration": {
+    "offered_originals_per_second": 1000,
+    "warmup_seconds": 12,
+    "measured_seconds": 40,
+    "repetitions_per_arm": 1,
+    "synthetic_symbols": 200,
+    "symbol_skew": 1.2,
+    "ticker_prefix": "B",
+    "seed": 42,
+    "input_partitions": 6,
+    "taskmanagers": 2,
+    "window_ms": 300000,
+    "dedup": "NONE",
+    "late_policy": "DROP",
+    "injected_duplicate_rate": 0,
+    "injected_late_rate": 0,
+    "websocket_clients": 1,
+    "resource_profile": "default (no benchmark-specific caps)"
+  },
+  "arms": [
+    {
+      "name": "baseline",
+      "run_id": "96cd579f2a03-000",
+      "raw_sha256": "ae08bb2e1596bb933d2f7422f9115d9a44e751c49eed00dfc005d0c73c38ce73",
+      "checkpoint_ms": 10000,
+      "max_out_of_order_ms": 5000,
+      "achieved_originals_per_second": 999.998218228157,
+      "prices": {"expected": 40000, "committed": 40000, "websocket": 40000},
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_kafka_observation_ms": {"count": 40000, "p50": 5101.644, "p95": 9593.232, "p99": 9970.437, "max": 10187.142},
+      "enqueue_to_websocket_ms": {"count": 40000, "p50": 5133.789, "p95": 9618.748, "p99": 10003.742, "max": 10199.405}
+    },
+    {
+      "name": "short-checkpoint",
+      "run_id": "4702ee0ef736-000",
+      "raw_sha256": "d3a330d09f6eb98a0462c0ce34f5a472ceeac60f656a3167aba911a23409fe6b",
+      "checkpoint_ms": 1000,
+      "max_out_of_order_ms": 5000,
+      "achieved_originals_per_second": 999.9972796824172,
+      "prices": {"expected": 40000, "committed": 40000, "websocket": 40000},
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_kafka_observation_ms": {"count": 40000, "p50": 532.207, "p95": 979.709, "p99": 1020.070, "max": 1068.394},
+      "enqueue_to_websocket_ms": {"count": 40000, "p50": 541.568, "p95": 987.474, "p99": 1028.239, "max": 1060.922}
+    },
+    {
+      "name": "short-watermark",
+      "run_id": "5192d706bf9e-000",
+      "raw_sha256": "bfda422399b0d4976a4d2a6bd44329ecfb861560d3a0d29ca4a2bc8098bcbd8d",
+      "checkpoint_ms": 10000,
+      "max_out_of_order_ms": 100,
+      "achieved_originals_per_second": 999.9981530784231,
+      "prices": {"expected": 40000, "committed": 40000, "websocket": 40000},
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_kafka_observation_ms": {"count": 40000, "p50": 5104.675, "p95": 9589.039, "p99": 9985.725, "max": 10192.847},
+      "enqueue_to_websocket_ms": {"count": 40000, "p50": 5126.828, "p95": 9599.931, "p99": 9990.608, "max": 10188.138}
+    }
+  ]
+}

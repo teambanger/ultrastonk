@@ -170,28 +170,33 @@ class DeliveryAndBacklogTests(unittest.TestCase):
 
 
 class LatencyDecisionTests(unittest.TestCase):
-    def test_latency_verdict_is_inconclusive_below_min_samples(self):
-        verdict = live_peak.latency_verdict([100, 200], min_samples=20)
+    def test_latency_summary_is_inconclusive_below_min_samples(self):
+        verdict = live_peak.latency_summary([100, 200], min_samples=20)
         self.assertEqual(verdict["verdict"], "inconclusive")
         self.assertEqual(verdict["samples"], 2)
 
-    def test_latency_verdict_passes_and_fails_at_the_target(self):
-        passing = live_peak.latency_verdict([100.0] * 30, min_samples=30, target_ms=1000)
-        self.assertEqual(passing["verdict"], "pass")
-        failing = live_peak.latency_verdict([1500.0] * 30, min_samples=30, target_ms=1000)
-        self.assertEqual(failing["verdict"], "fail")
+    def test_latency_summary_reports_quantiles_without_a_threshold(self):
+        for value in (100.0, 1500.0):
+            summary = live_peak.latency_summary([value] * 30, min_samples=30)
+            self.assertEqual(summary["verdict"], "measured")
+            self.assertEqual(summary["p99"], value)
 
-    def test_trade_target_is_reported_independently_of_advisory_target(self):
+    def test_trade_latency_is_reported_independently_of_advisory_latency(self):
         run = sample_run()
         decisions = live_peak.decisions(run)
         self.assertIn("trade_enqueue_to_websocket", decisions)
-        self.assertIn("window_finalization_to_advisory_receipt", decisions)
+        self.assertIn("window_eligibility_to_advisory_receipt", decisions)
         self.assertNotEqual(decisions["trade_enqueue_to_websocket"]["min_samples"],
-                            decisions["window_finalization_to_advisory_receipt"]["min_samples"])
+                            decisions["window_eligibility_to_advisory_receipt"]["min_samples"])
+
+    def test_trade_latency_does_not_substitute_kafka_receipt(self):
+        run = sample_run()
+        run["websocket"] = []
+        self.assertEqual(live_peak.independence_latencies(run)["trade_enqueue_to_websocket_ms"], [])
 
     def test_sparse_live_advisories_are_reported_inconclusive_not_fudged(self):
         decisions = live_peak.decisions(sample_run())
-        self.assertEqual(decisions["window_finalization_to_advisory_receipt"]["verdict"], "inconclusive")
+        self.assertEqual(decisions["window_eligibility_to_advisory_receipt"]["verdict"], "inconclusive")
         self.assertEqual(decisions["live_advisory_p99_ms"], "inconclusive")
 
     def test_advisory_latency_uses_the_window_eligibility_bound(self):
@@ -283,7 +288,7 @@ class AggregateTests(unittest.TestCase):
         return {
             "condition": "warm@1x", "state": "warm", "pacing_level": 1.0, "overall_passed": passed,
             "decisions": {"trade_enqueue_to_websocket": {"verdict": verdict, "p99": p99},
-                          "window_finalization_to_advisory_receipt": {"verdict": "inconclusive"},
+                          "window_eligibility_to_advisory_receipt": {"verdict": "inconclusive"},
                           "live_advisory_p99_ms": "inconclusive"},
             "failures": [] if passed else [{"check": "delivery", "reason": "missing"}],
         }

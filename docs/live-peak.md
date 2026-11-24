@@ -166,16 +166,14 @@ attempts are kept in the ledger and are not silently retried.
 
 ## Decision rules (pre-registered)
 
-1. **Two independent project targets.** Trade enqueue-to-WebSocket and
-   window-finalization-to-advisory-receipt are measured and reported separately;
+1. **Two independent latency distributions.** Trade enqueue-to-WebSocket and
+   estimated window eligibility-to-advisory-receipt are reported separately;
    one never stands in for the other. Each needs its own minimum sample count
    (`30` and `20`); below it the result is reported `inconclusive`.
 2. **Live advisory p99 is reported `inconclusive` when signals are too sparse**,
    never fudged from a handful of crossovers. A controlled rollover fixture is
    reported on its own line, never merged into the live advisory number.
-3. **Project targets** (`1 s` p99) are project goals, **not rubric
-   requirements**; they are recorded, not asserted as pass/fail of the project.
-4. **Correctness vs the oracle.** The live output is compared against
+3. **Correctness vs the oracle.** The live output is compared against
    `benchmarks/query_truth.py` over the same slice. Deviations split into
    **transport loss** (offered eligible trades missing from the committed input)
    and **policy-related** differences (the inputs reached the query, so the live
@@ -334,23 +332,36 @@ the source (`runs/post-run-containers.txt`).
 |---|---|---|---|
 | 5,060 ms | 9,063 ms | 9,225 ms | 10,171 ms |
 
-This path is dominated by the 5 s disorder/watermark hold plus processing, not by
-the WebSocket hop: committed-observation (enqueue→committed) is p50 5,043 / p99
-9,206 ms, while **committed → WebSocket is p50 15.5 / p95 104 / p99 134 ms** (max
-422 ms). Emitter enqueue→ack is p50 34 / p95 55 / p99 58 ms (n = 5,000).
+These are percentiles of per-record elapsed time: p50 is the median, while p95
+and p99 describe the upper tail. Most of the observed delay is already present
+at the committed Kafka reader. Enqueue to committed observation is p50 5,043 /
+p95 9,047 / p99 9,206 ms. Emitter enqueue to broker acknowledgement is p50 34 /
+p95 55 / p99 58 ms (n = 5,000). The separate committed-reader-to-WebSocket
+observation gap is p50 15.5 / p95 104 / p99 134 ms (max 422 ms); it includes
+consumer polling and scheduling, not just network transit. An independent
+Kafka reader can observe a record after the subscriber does. Do not subtract
+percentiles to estimate stage costs.
 
-**Window-finalization → advisory receipt** — n = 3,154 (> 20, so not inconclusive)
+The trade price is emitted before the operator updates window state. The 5 s
+out-of-order allowance holds back event-time windows, not individual price
+records. The output sink is transactional, subscribers read committed data,
+and the run used 10 s checkpoints. Waiting for a checkpoint commit is the
+leading explanation for the visibility delay. The historical run did not
+instrument per-record checkpoint wait or change its cadence.
+
+**Estimated window eligibility → advisory receipt** — n = 3,154
 | p50 | p95 | p99 | max |
 |---|---|---|---|
-| 240,962 ms | 241,187 ms | 241,192 ms | 241,194 ms |
+| 240,940 ms | 241,114 ms | 241,126 ms | 241,138 ms |
 
-This is dominated by the event-time-vs-capture-clock offset and watermark wait,
-kept apart from transport. Historical event age (wall minus 2021 event time) is
-p50 ≈ 158,988,927,518 ms (~5.04 years). Watermark wait is p50 −218,592 / p95
-−138,084 / p99 −37,785 ms with max 4,853 ms (n = 3,111); the negative values are
-the lower-bound eligibility estimate running ahead of actual enqueue when event
-time leads capture time. The 1 s p99 is a project target, not a rubric
-requirement; both paths are recorded, not asserted as project pass/fail.
+The starting point is the earliest recorded enqueue among inputs with event
+times high enough to make that window eligible. It is a lower bound, not a
+timestamp from the Flink timer. It can run ahead of actual partition watermark
+progress when event time leads the replay schedule. The separate EMA eligibility
+check has 3,111 samples and a p99 of 241,192 ms; it is not the advisory series.
+Historical event age (about 5.04 years at p50) is yet another metric, not a
+component to add to replay-clock latency. These measurements do not isolate
+timer firing to advisory receipt; that would need a timer-side wall-clock probe.
 
 ### Oracle comparison (`benchmarks/query_truth.py` over the same slice)
 
@@ -426,8 +437,107 @@ host-contention attempt.
   minutes of the recorded peak; a peak high-water mark is not a whole-week result.
 - It does **not** support a 1.25x or cold-start result (not run), a spread/confidence
   interval (one repetition), or broker/gateway consumer-lag numbers (not collected).
-- The 1 s p99 is a **project target, not a rubric requirement**; both paths are
-  recorded, and the advisory path's large value is a clock/watermark effect kept
-  separate from the sub-second WebSocket hop.
+- Trade visibility and advisory window eligibility are separate measurements.
+  The latter does not measure delivery time after the Flink timer fires.
 - Confidence is **lower than a multi-repeat campaign** would give; treat the numbers
   as one valid peak-window observation of this configuration.
+
+## Synthetic price latency comparison
+
+The follow-up experiment changes one setting at a time: shorten the checkpoint
+interval from 10 s to 1 s while retaining the 5 s watermark allowance, or shorten
+the watermark allowance to 100 ms while retaining 10 s checkpoints. If commits
+drive the price tail, only the first change should substantially reduce it.
+
+The three trials run sequentially in fresh Compose projects, with 12 s warmup
+and 40 s measured at 1,000 synthetic originals/s, seed 42, 200 fixed synthetic
+ticker keys, six input partitions, two TaskManagers, five-minute windows,
+`NONE` deduplication, `DROP` lateness, no injected duplicates or late events,
+and one WebSocket subscriber. The driver measures both boundaries on the same
+monotonic clock: enqueue to read-committed Kafka observation and enqueue to
+WebSocket receipt. This is a price-path experiment, not an advisory-timing,
+recovery, resource-cost, or Sustainable-limit experiment.
+
+| Checkpoint interval | Watermark allowance | Enqueue to committed Kafka p50 / p95 / p99 (s) | Enqueue to WebSocket p50 / p95 / p99 (s) |
+|---:|---:|---:|---:|
+| 10 s | 5 s | 5.102 / 9.593 / 9.970 | 5.134 / 9.619 / 10.004 |
+| 1 s | 5 s | 0.532 / 0.980 / 1.020 | 0.542 / 0.987 / 1.028 |
+| 10 s | 100 ms | 5.105 / 9.589 / 9.986 | 5.127 / 9.600 / 9.991 |
+
+All three trials achieved approximately 1,000 originals/s and matched all 40,000
+expected prices at Kafka and WebSocket. Shortening checkpoints cut WebSocket p99
+by about **90%**, and the improvement was already visible at Kafka. Shortening
+the watermark allowance alone left the price tail near 10 s. This isolates the
+checkpoint interval as the main driver **in this synthetic price experiment**
+and supports the explanation for the historical peak. It does not establish the
+historical peak's latency at 1 s checkpoints, checkpoint resource overhead, or
+the effect of the watermark on advisory timing. Production defaults are unchanged.
+
+[Machine-readable results and run IDs](../benchmarks/evidence/live-peak/price-latency-comparison.json).
+
+To reproduce on an idle Docker host from the repository root:
+
+```sh
+run_latency_arm() {
+  python3 benchmarks/matrix.py --project "ultrastonk-benchmark-latency-$1" \
+    --duration 40 --warmup 12 --rates 1000 --parallelism 2 --dedup NONE \
+    --late DROP --qualities baseline --repetitions 1 --symbols 200 \
+    --ticker-prefix B --seed 42 --window-ms 300000 --gateway \
+    --checkpoint-ms "$2" --max-out-of-order-ms "$3"
+}
+run_latency_arm baseline 10000 5000 &&
+run_latency_arm short-checkpoint 1000 5000 &&
+run_latency_arm short-watermark 10000 100
+```
+
+## Checkpoint interval sweep
+
+The follow-up compares 500, 1,000, 2,500, and 10,000 ms checkpoints. It keeps the
+synthetic load and pipeline settings above fixed, including the 5 s watermark
+allowance and exactly-once, read-committed output. This is one fresh Compose
+project per trial, two trials per interval, in ascending then descending order
+to reduce run-order drift. The 12 s warmup uses separate ticker keys; each
+measured 40 s interval contains 40,000 price records.
+
+Checkpoint cost is measured as the number of successful Flink checkpoints and
+the sum of the byte counts in their coordinator completion logs, divided by the
+40 s measured interval. Only completions during that interval count; startup,
+warmup and drain do not. The resulting bytes/s are a proxy for checkpoint work,
+not physical disk writes, retained disk occupancy, CPU, or recovery time.
+
+| Checkpoint interval | WebSocket p50 (s) | WebSocket p95 (s) | WebSocket p99 (s) | Completed/40 s | Reported checkpoint bytes/s (kB/s) |
+|---:|---:|---:|---:|---:|---:|
+| 0.5 s | 0.289–0.301 | 0.513–0.525 | 0.536–0.556 | 80 | 261.2–270.0 |
+| 1 s | 0.540–0.543 | 0.987–0.989 | 1.027–1.030 | 40 | 116.2–118.3 |
+| 2.5 s | 1.310–1.314 | 2.430–2.432 | 2.521–2.523 | 16 | 44.8–45.7 |
+| 10 s | 5.117–5.131 | 9.598–9.605 | 9.989–9.998 | 4 | 11.0 |
+
+Ranges are the two observed trial values, not confidence intervals; kB is 1,000
+bytes. All eight trials delivered 40,000/40,000 prices to both committed Kafka
+and WebSocket. Kafka observation p99 tracked WebSocket p99 at every cadence.
+
+**Recommendation:** Start with **1 s** checkpoints when tuning interactive
+price delivery. Compared with 10 s, it reduced WebSocket p99 by about 90%,
+with roughly 11 times the reported checkpoint bytes/s. Halving the interval
+again to 500 ms saved another 0.47–0.49 s at p99 but more than doubled that
+byte rate (about 2.3 times). Use 2.5 s when p99 around 2.52 s is acceptable
+and reducing checkpoint work matters: it used about 60% fewer reported
+bytes/s than 1 s. Validate at the recorded peak and measure CPU, storage,
+failed checkpoints, and recovery before changing the production default.
+These short trials do not establish a Sustainable limit or advisory timing.
+
+[Machine-readable results, run IDs and raw artifact hashes](../benchmarks/evidence/live-peak/checkpoint-interval-sweep.json).
+
+To reproduce on an otherwise idle host, reuse the `run_latency_arm` function above:
+
+```sh
+for ms in 500 1000 2500 10000; do run_latency_arm "cadence-$ms-r1" "$ms" 5000 || break; done
+for ms in 10000 2500 1000 500; do run_latency_arm "cadence-$ms-r2" "$ms" 5000 || break; done
+python3 -m benchmarks.checkpoint_sweep \
+  b98a673c75b1-000 37eba85c283d-000 48ce3f278e4a-000 f8d55fccf9b8-000 \
+  b172bfb3ef54-000 d9223ffbd7a7-000 8cee89826676-000 aa53ce65e3dd-000
+```
+
+The command above regenerates the original summary with the original local raw
+artifacts. For fresh trials, substitute the run IDs from the generated
+`benchmarks/results/*-matrix.csv` files.

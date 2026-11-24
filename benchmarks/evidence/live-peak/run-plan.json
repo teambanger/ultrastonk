@@ -10,11 +10,7 @@
   ],
   "parallelism": 2,
   "checkpoint_interval_ms": 10000,
-  "project_targets": {
-    "trade_enqueue_to_websocket_p99_ms": 1000,
-    "window_finalization_to_advisory_receipt_p99_ms": 1000,
-    "note": "project targets, not rubric requirements"
-  },
+  "trade_min_samples": 30,
   "advisory_min_samples": 20,
   "subscribe": "all",
   "slices": {

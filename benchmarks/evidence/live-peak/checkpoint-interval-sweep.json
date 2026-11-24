@@ -1,0 +1,308 @@
+{
+  "runs": [
+    {
+      "run_id": "b98a673c75b1-000",
+      "project": "ultrastonk-benchmark-cadence-500-r1",
+      "checkpoint_ms": 500,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.998,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795538671.1499333,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 295.341,
+        "p95": 519.371,
+        "p99": 550.289,
+        "max": 670.449
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 300.7,
+        "p95": 524.511,
+        "p99": 555.54,
+        "max": 681.408
+      },
+      "checkpoint_work": {
+        "completed": 80,
+        "reported_bytes": 10449940,
+        "reported_bytes_per_second": 261248.5,
+        "median_duration_ms": 31.5
+      },
+      "raw_sha256": "558832cc134f84f87d6b924e1fb4bdd1be3eecfe50be5ee46545b05fdc5d3bef",
+      "log_sha256": "886b03394ee43ca10f1b9f8d91431a7cd938243cedaad845c166c58195870ecb"
+    },
+    {
+      "run_id": "37eba85c283d-000",
+      "project": "ultrastonk-benchmark-cadence-1000-r1",
+      "checkpoint_ms": 1000,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.998,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795538757.1453717,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 531.785,
+        "p95": 978.744,
+        "p99": 1019.1,
+        "max": 1055.606
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 540.029,
+        "p95": 986.699,
+        "p99": 1026.948,
+        "max": 1057.135
+      },
+      "checkpoint_work": {
+        "completed": 40,
+        "reported_bytes": 4733065,
+        "reported_bytes_per_second": 118326.625,
+        "median_duration_ms": 19.0
+      },
+      "raw_sha256": "07575fad1c3461692c70dc330449fca8bc0b3bdf526f50a501ea3c288341d385",
+      "log_sha256": "8c582a52554708328b7be7d86198e942a55d47ccd27f7f98e56447412239490f"
+    },
+    {
+      "run_id": "48ce3f278e4a-000",
+      "project": "ultrastonk-benchmark-cadence-2500-r1",
+      "checkpoint_ms": 2500,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.999,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795538838.3403122,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 1293.009,
+        "p95": 2415.736,
+        "p99": 2512.8,
+        "max": 2578.042
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 1309.705,
+        "p95": 2429.873,
+        "p99": 2521.254,
+        "max": 2591.337
+      },
+      "checkpoint_work": {
+        "completed": 16,
+        "reported_bytes": 1792113,
+        "reported_bytes_per_second": 44802.825,
+        "median_duration_ms": 19.5
+      },
+      "raw_sha256": "351bf1991ba8835a3c75bebcd67cd45416fda9a4a3a2d0f4fc536cb9c4067f0d",
+      "log_sha256": "3912bef0661dae83a06d5fd4ede48532c752c602c960e8a4f24df48db2ef171a"
+    },
+    {
+      "run_id": "f8d55fccf9b8-000",
+      "project": "ultrastonk-benchmark-cadence-10000-r1",
+      "checkpoint_ms": 10000,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.997,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795538920.995311,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 5093.504,
+        "p95": 9566.829,
+        "p99": 9954.485,
+        "max": 10149.31
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 5130.926,
+        "p95": 9597.564,
+        "p99": 9989.1,
+        "max": 10173.299
+      },
+      "checkpoint_work": {
+        "completed": 4,
+        "reported_bytes": 438795,
+        "reported_bytes_per_second": 10969.875,
+        "median_duration_ms": 25.5
+      },
+      "raw_sha256": "6c47cf8fb1600f145f804544b7e534eb05c524d6824327ffdcd571de7cc0f0c1",
+      "log_sha256": "70d0b5379a4aeb318d385c12483ce03ff0afb16486d0786ca4482c0fc10b0437"
+    },
+    {
+      "run_id": "b172bfb3ef54-000",
+      "project": "ultrastonk-benchmark-cadence-10000-r2",
+      "checkpoint_ms": 10000,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.998,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795539018.6664019,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 5104.944,
+        "p95": 9586.813,
+        "p99": 9978.602,
+        "max": 10180.056
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 5117.235,
+        "p95": 9605.348,
+        "p99": 9998.09,
+        "max": 10198.9
+      },
+      "checkpoint_work": {
+        "completed": 4,
+        "reported_bytes": 440730,
+        "reported_bytes_per_second": 11018.25,
+        "median_duration_ms": 23.5
+      },
+      "raw_sha256": "fe1c0e317727f8951fb9b088c2b7da4fb9790a2ef8b65b355dd8983ddd136d95",
+      "log_sha256": "85f51cc95c7df3896b4166f6a6fcf8ace98ef70ec335e3ce475b10471f220ccf"
+    },
+    {
+      "run_id": "d9223ffbd7a7-000",
+      "project": "ultrastonk-benchmark-cadence-2500-r2",
+      "checkpoint_ms": 2500,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.998,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795539113.7234223,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 1297.805,
+        "p95": 2417.381,
+        "p99": 2513.916,
+        "max": 2598.985
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 1313.628,
+        "p95": 2431.6,
+        "p99": 2523.451,
+        "max": 2590.684
+      },
+      "checkpoint_work": {
+        "completed": 16,
+        "reported_bytes": 1829382,
+        "reported_bytes_per_second": 45734.55,
+        "median_duration_ms": 22.0
+      },
+      "raw_sha256": "9b05b38f24d219144c03c3b75ac6b6ca08a5cffc82b95d5cc88bca3c4580adb1",
+      "log_sha256": "ddcb385496eec87361e3547d11ad3e1eb6f0e90eb636905fa086e041571b9e7d"
+    },
+    {
+      "run_id": "8cee89826676-000",
+      "project": "ultrastonk-benchmark-cadence-1000-r2",
+      "checkpoint_ms": 1000,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.996,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795539199.3266478,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 534.894,
+        "p95": 981.401,
+        "p99": 1022.143,
+        "max": 1097.313
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 543.35,
+        "p95": 989.489,
+        "p99": 1030.372,
+        "max": 1109.793
+      },
+      "checkpoint_work": {
+        "completed": 40,
+        "reported_bytes": 4646156,
+        "reported_bytes_per_second": 116153.9,
+        "median_duration_ms": 17.0
+      },
+      "raw_sha256": "d32bfe8741907301d8f9eeab02b4a5c8854664904ccc15f293ae25f1bdf95fc5",
+      "log_sha256": "188ff63cebae998a630585b98f21760e508a0f9896959a33fd8f73b18071c0d9"
+    },
+    {
+      "run_id": "aa53ce65e3dd-000",
+      "project": "ultrastonk-benchmark-cadence-500-r2",
+      "checkpoint_ms": 500,
+      "watermark_allowance_ms": 5000,
+      "offered_originals_per_second": 1000,
+      "warmup_seconds": 12.0,
+      "achieved_originals_per_second": 999.997,
+      "measured_seconds": 40.0,
+      "measured_start_epoch_seconds": 1795539280.3899155,
+      "expected_prices": 40000,
+      "committed_prices": 40000,
+      "websocket_prices": 40000,
+      "price_correctness_passed": true,
+      "gateway_correctness_passed": true,
+      "enqueue_to_committed_ms": {
+        "count": 40000,
+        "p50": 283.134,
+        "p95": 507.366,
+        "p99": 530.611,
+        "max": 570.896
+      },
+      "enqueue_to_websocket_ms": {
+        "count": 40000,
+        "p50": 288.764,
+        "p95": 512.596,
+        "p99": 535.901,
+        "max": 578.402
+      },
+      "checkpoint_work": {
+        "completed": 80,
+        "reported_bytes": 10801500,
+        "reported_bytes_per_second": 270037.5,
+        "median_duration_ms": 19.5
+      },
+      "raw_sha256": "041ecea519710fd48efb3b8028526c03ea60e56966498c8328dcf79792644588",
+      "log_sha256": "2628c35ae31c77922b44800f2e90a42ebbea4874594e27baca1cc96bab930fa3"
+    }
+  ]
+}

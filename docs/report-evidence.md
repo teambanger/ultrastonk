@@ -170,7 +170,7 @@ uncapped containers, and 165× is a batch-drain bound, not a live-latency headro
 
 Mode: 1× capture pace (`SPEED_MULTIPLIER=1`, `PACING=capture`), warm state, one repetition,
 `FLINK_BOUNDED_REPLAY=false`. The offered slice is the 5-minute peak plus support: 1,914,978 rows =
-300 s pre-roll + the 1,223,873-row measured segment + 180 s trailing, offered in the fixture's
+120 s pre-roll + the 1,223,873-row measured segment + 90 s trailing, offered in the fixture's
 documented capture-time order (ties broken by source ordinal) because the raw physical order starts
 after the measured start — a harness property that must be stated, since it is not the physical file
 order. Artifacts: `benchmarks/evidence/live-peak/` (`summary.json`,
@@ -183,20 +183,29 @@ order. Artifacts: `benchmarks/evidence/live-peak/` (`summary.json`,
 | Measured segment reproduced | 1,223,873 rows, FR 651,418 / NL 411,885 / ETR 160,570 — verification passed |
 | Price records: expected = committed = WebSocket | **195,061 = 195,061 = 195,061**, zero missing, zero extra, no EMA-pair gaps |
 | Trade enqueue→WebSocket (n=195,061) | p50 **5,060 ms**, p95 9,063 ms, p99 **9,225 ms**, max 10,171 ms |
-| Committed→WebSocket (transport only) | p50 **15.5 ms**, p99 134 ms |
+| Enqueue→committed Kafka observation (n=195,061) | p50 5,043 ms, p95 9,047 ms, p99 9,206 ms |
+| Committed-reader observation→WebSocket receipt (n=195,061) | p50 **15.5 ms**, p95 104 ms, p99 134 ms |
 | Enqueue→broker acknowledgement (n=5,000) | p50 34 ms, p99 58 ms |
-| Window finalization→advisory receipt (n=3,154) | p50 240,962 ms, p95 241,187 ms, p99 241,192 ms |
+| Estimated window eligibility→advisory receipt (n=3,154) | p50 240,940 ms, p95 241,114 ms, p99 241,126 ms |
 | Drain | 7.08 s |
 | Restarts / OOM kills | 0 / 0 |
 
-**Interpretation the report must carry:** the enqueue→WebSocket figure is dominated by the deliberate
-5 s out-of-order budget held before windows are finalized, not by transport — the transport-only leg is
-p50 15.5 ms / p99 134 ms and broker acknowledgement is p50 34 ms. The advisory figure is dominated by
-the historical event time versus the replay's capture clock (event age p50 ≈ 158,988,927,518 ms, about
-5.04 years), with watermark waiting reported separately (p50 −218,592 ms, max 4,853 ms). Consequently the
-**1 s p99 project target is not met for the trade path, and as stated it is not achievable** while a 5 s
-disorder budget is in force: the target and the budget conflict, and the honest reading is that transport
-and acknowledgement are sub-100 ms while end-to-end visibility is bounded by the chosen watermark policy.
+**Trade visibility:** Most of the latency is already present when the committed Kafka reader sees the
+price. Trade prices emit before window processing; the 5 s out-of-order allowance governs EMA/advisory
+finalization, not price delivery. With an exactly-once sink, read-committed consumers and 10 s checkpoints,
+checkpoint-gated visibility is the leading explanation. The reader-to-WebSocket number includes polling
+and scheduling, not just transport, and stage percentiles cannot be subtracted to obtain stage costs.
+
+**Controlled follow-up:** At 1,000 synthetic originals/s and a fixed 5 s watermark allowance,
+shortening checkpoints from 10 s to 1 s reduced WebSocket price p99 from **10.004 s to 1.028 s**.
+Shortening only the watermark allowance to 100 ms left p99 at **9.991 s**. All three arms delivered
+all 40,000 prices. Cite the [comparison and reproduction commands](live-peak.md#synthetic-price-latency-comparison)
+as supporting evidence for checkpoint-gated visibility, not as a second historical peak run.
+
+**Advisory timing:** The harness starts the clock at the earliest enqueue that could advance the window,
+not at the actual Flink timer firing. Partition watermark progress, capture/event-time skew, checkpoint
+visibility and delivery are all between that estimate and receipt. Historical event age is a separate
+clock comparison. The advisory percentiles above are not post-finalization delivery times.
 
 **Oracle comparison on the slice:** expected 9,649 window keys versus 6,308 live records — missing 3,341,
 extra 0, incorrect 0, duplicate 0; every live record matched. The exhaustive split is policy 3,309 /
@@ -392,6 +401,11 @@ Each item is an extension beyond the minimal brief, with its artifact:
   quantified rather than hidden (ticket 06).
 - Policy-aware expectations in the DROP/GRACE comparison, so expected policy differences are separated
   from processing defects (`benchmarks/evidence/drop-vs-grace/comparison.json`).
+- [Checkpoint interval sweep](live-peak.md#checkpoint-interval-sweep): two trials each at 500 ms,
+  1 s, 2.5 s and 10 s with the 5 s watermark allowance fixed. All eight trials delivered all prices;
+  1 s cut price p99 by about 90% versus 10 s. Going to 500 ms bought another 0.47–0.49 s at p99 for
+  about 2.3 times the reported checkpoint bytes/s of 1 s. Recommend starting at 1 s for interactive
+  delivery and validating under historical peak load before changing deployment defaults.
 - A capacity model that turns two measured points into wall-time and resource predictions with ranges
   (`docs/capacity-model.md`).
 - A live terminal dashboard that reads container, replay, Kafka and Flink state in one view

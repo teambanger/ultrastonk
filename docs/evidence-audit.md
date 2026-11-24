@@ -256,3 +256,11 @@ No artifacts; issue files only. Consistent with "reduced / deferred".
 - **Still open:** the checkpoint failures of 4–6 per capacity run (zero restarts) remain unexplained; the
   capacity-model `scaling_efficiency` label is still a throughput ratio, not an efficiency; ticket 12's
   teammate reproduction is outstanding.
+
+**2026-11-24 latency clarification.** The [three-arm synthetic comparison](../benchmarks/evidence/live-peak/price-latency-comparison.json)
+supports checkpoint-gated visibility as the main driver of price latency in the
+tested setup: shortening the checkpoint interval moved price p99 at both Kafka
+and WebSocket, while shortening only the watermark allowance did not. The
+recorded peak was not rerun. The [peak runbook](live-peak.md#latency-p50p95p99-with-sample-sizes-two-paths-reported-independently)
+now distinguishes per-price commit visibility from the advisory eligibility
+estimate, which is not timed from the actual Flink timer firing.

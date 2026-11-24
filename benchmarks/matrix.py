@@ -80,6 +80,8 @@ def main():
     parser.add_argument("--late-delay-ms", type=int, default=2000)
     parser.add_argument("--window-ms", type=int, default=1000)
     parser.add_argument("--grace-ms", type=int, default=2000)
+    parser.add_argument("--checkpoint-ms", type=int, default=1000)
+    parser.add_argument("--max-out-of-order-ms", type=int, default=100)
     parser.add_argument("--project", help="unused Compose project name (default: ultrastonk-benchmark-<session>)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--monitoring", action="store_true")
@@ -107,6 +109,8 @@ def main():
         parser.error("host ports must be in 0..65535")
     if args.repetitions <= 0 or args.symbols <= 0:
         parser.error("repetitions and symbols must be positive")
+    if args.checkpoint_ms <= 0 or args.max_out_of_order_ms < 0:
+        parser.error("checkpoint interval must be positive and disorder allowance nonnegative")
     if args.clients <= 0 or (args.clients > 1 and not args.gateway):
         parser.error("--clients must be positive and above 1 only with --gateway")
     qualities = args.qualities.split(",")
@@ -128,8 +132,9 @@ def run_matrix(args, qualities, session):
     env = os.environ | {"COMPOSE_PROJECT_NAME": args.project, "KAFKA_PORT": str(args.kafka_port or 9092),
         "GATEWAY_PORT": "0", "GATEWAY_KAFKA_FROM_BEGINNING": "true", "GATEWAY_HISTORY_LIMIT": "500",
         "FLINK_UI_PORT": str(args.flink_port), "PROMETHEUS_PORT": str(args.prometheus_port),
-        "GRAFANA_PORT": str(args.grafana_port), "SOURCE_IDLE_TIMEOUT_MS": "1000", "MAX_OUT_OF_ORDER_MS": "100",
-        "CHECKPOINT_INTERVAL_MS": "1000", "FLINK_RESTORE_PATH": "", "FLINK_BOUNDED_REPLAY": "false",
+        "GRAFANA_PORT": str(args.grafana_port), "SOURCE_IDLE_TIMEOUT_MS": "1000",
+        "MAX_OUT_OF_ORDER_MS": str(args.max_out_of_order_ms),
+        "CHECKPOINT_INTERVAL_MS": str(args.checkpoint_ms), "FLINK_RESTORE_PATH": "", "FLINK_BOUNDED_REPLAY": "false",
         "KAFKA_PARTITIONS": "6",
         "KAFKA_REPLICATION_FACTOR": "1", "KAFKA_MIN_ISR": "1",
         "WINDOW_SIZE_MS": str(args.window_ms), "ALLOWED_LATENESS_MS": str(args.grace_ms),
