@@ -8,7 +8,9 @@ mode/configuration used, the measured headline numbers and the stated limits.
 
 Status legend: **done** = artifact exists and was checked; **partial** = the run
 exists but a required acceptance step is missing; **pending** = no measurement
-yet, recorded as a plan only.
+yet, recorded as a plan only. Tickets closed after the audit carry the stronger
+**MEASURED, resolved** label (07–10); ticket 12 is **open** because its teammate
+reproduction is outstanding.
 
 Paths in this file are relative to the repository root unless marked absolute.
 Raw CSVs, Kafka data and scratch databases deliberately live **outside Git** and
@@ -137,24 +139,25 @@ are not published.
   correlation. **Caveat: no raw run JSON is retained — the pilot numbers are
   prose in the doc, not re-derivable from a committed artifact.**
 
-## Ticket 06 — Verify both queries over the entire week (partial, in progress)
+## Ticket 06 — Verify both queries over the entire week (MEASURED, resolved)
 
 - **Question:** Which rows were processed over the whole week, and did the query
   match independent truth?
+- **Repo pack (committed):** `benchmarks/evidence/full-week/{README.md,summary.json}`
+  plus `capture-order/` and `reference-day08/`
+  `{manifest,gate,comparison,source,timings,retention}.json`.
 - **Artifacts (outside Git, absolute paths):**
   `/mnt/shared/data/ultrastonk-full-week/run2/evidence/{compare.json,normalize.json,offsets.json,expected.jsonl,actual.jsonl,audit.jsonl,output.jsonl}`,
   `/mnt/shared/data/ultrastonk-full-week/run2/logs/{emitter.log,input_leo_check.txt,leo-*.json}`,
   `/mnt/shared/data/ultrastonk-full-week/run1/INVALID-RUN.md` (preserved gate
-  failure), `/mnt/shared/data/ultrastonk-full-week/run3/` (bounded ordered
-  reference replay, **not finished**).
-  Harness (on branch `full-week-queries`, **not merged into
-  `integration/report-evidence`**):
-  `.kilo/worktrees/full-week-queries/benchmarks/full_week.py`,
-  `.../benchmarks/sort_week.py`, launcher `/mnt/shared/data/ultrastonk-full-week/run_fullweek.sh`,
-  analysis `/mnt/shared/data/ultrastonk-full-week/analyze_run.sh`.
+  failure), and the bounded ordered reference replay under
+  `/mnt/shared/data/ultrastonk-full-week/run3/` (**finished**, day 08).
+- **Harness (committed on this branch):** `benchmarks/full_week.py`,
+  `benchmarks/sort_week.py`, launcher `/mnt/shared/data/ultrastonk-full-week/run_fullweek.sh`,
+  analysis `/mnt/shared/data/ultrastonk-full-week/analyze_run.sh` (the two scripts
+  are run scratch).
 - **Reproduce:** `run_fullweek.sh` (fresh bind-mount wipe, LEO==0 pre-emit
-  assertion, post-emit LEO==submitted assertion) then `analyze_run.sh`; both are
-  run scratch, not committed.
+  assertion, post-emit LEO==submitted assertion) then `analyze_run.sh`.
 - **Mode/configuration (run 2):** capture-order bounded Historical replay of all
   seven files; `DEDUP_STRATEGY=NONE`, `LATE_EVENT_STRATEGY=SIDE_OUTPUT`,
   `WINDOW_SIZE_MS=300000`, `MAX_OUT_OF_ORDER_MS=5000`,
@@ -179,8 +182,6 @@ are not published.
   **zero** eligible late exclusions (the dump ran, `complete: true`). Exact
   full-week correctness in capture order is **not claimed**; the ordered
   whole-week replay was dropped by team decision (see reduced scope).
-- **Repo pack:** `benchmarks/evidence/full-week/{README.md,summary.json}` plus
-  `capture-order/` and `reference-day08/` `{manifest,gate,comparison,source,timings,retention}.json`.
 - **Run 1 (invalid):** replayed the week but the bind-mounted broker retained a
   stale `53,635,606`-record prefix; `input.records (342,685,358) !=
   emitter.acknowledged (289,049,752)`, rejected by the gate. Kept as
@@ -297,7 +298,9 @@ are not published.
   output; monitored pair plus an earlier unmonitored repeat.
 - **Headline numbers (monitored pair):** fan-out 8,475 → 17,022 frames/s
   (**2.009×**), per-client 3,845.8 → 3,861.1 prices/s (1.004×), all clients exact
-  (zero missing prices/EMAs/advisories, zero errors, zero slow-client drops), client p50/p99 709–711/2,243–2,261 → 804–832/2,451–2,522 ms, gateway CPU 0.204 → 0.232 cores of 1
+  (zero missing prices/EMAs/advisories, zero errors, zero slow-client drops);
+  client p50/p99 709–711/2,243–2,261 → 804–832/2,451–2,522 ms; gateway CPU
+  0.204 → 0.232 cores of 1
   (throttle 4% → 8%), RSS ≈202 → 186 MB. The unmonitored repeat agrees
   (1.977×, exact, p99 2.9 → 2.8 s). TaskManager (0.997 core, all periods
   throttled) and Kafka (0.63, ~35% throttled) were the saturated components.
@@ -335,10 +338,18 @@ are not published.
   latency claim; recovery, side outputs and `TIMESTAMP`/`EXACT` dedup not
   exercised.
 
-## Ticket 12 — Audit and package (this document)
+## Ticket 12 — Audit and package (this document; **open**)
 
 - **Artifacts:** `benchmarks/evidence/README.md` (this index),
-  `docs/evidence-audit.md` (the audit report).
+  `docs/evidence-audit.md` (the audit report), `docs/report-evidence.md` (the
+  report-ready dossier).
+- **Status:** the index and audit are current as of the last update — tickets 01–08
+  and 11 are measured and resolved, tickets 09 and 10 were run in the extension and
+  are folded in above, and the dossier's §5 carries the peak, ladder and growth
+  results with the model predictions. **Still open:** a teammate must reproduce one
+  table or figure from this pack alone, and the audit's unresolved items (checkpoint
+  failures of 4–6 per capacity run; the capacity model's `scaling_efficiency` label)
+  are documented rather than fixed.
 
 ---
 
@@ -362,9 +373,12 @@ The pack is layered; each layer needs the one below it.
 6. **Peak and capacity (tickets 07, 08):** `benchmarks/live_peak.py` and
    `benchmarks/capacity_bracket.py` on an **otherwise idle host** (see the
    command blocks in `docs/live-peak.md` and `docs/sustainable-limit.md`).
-7. **Policy comparison (ticket 11):** `benchmarks/drop_vs_grace.py` (README
+7. **Growth pairs (tickets 09, 10):** `python3 benchmarks/growth.py --tickets 09`
+   and `python3 benchmarks/growth.py --tickets 10 --monitoring` on an otherwise
+   idle host (each condition is a short 4,000/s run at the ticket-08 baseline).
+8. **Policy comparison (ticket 11):** `benchmarks/drop_vs_grace.py` (README
    commands).
-8. **Audit (ticket 12):** re-read the raw artifacts against this index and
+9. **Audit (ticket 12):** re-read the raw artifacts against this index and
    `docs/evidence-audit.md`.
 
 Raw CSVs, Kafka contents and scratch databases stay outside Git; only the
@@ -385,12 +399,12 @@ report states confidence honestly rather than implying the full plan ran.
   mode with quantified deviations**: `10,669,014` eligible late exclusions at the
   5 s out-of-order budget, `376,584` missing `(symbol, window)` closes,
   `1,482,724` numeric, `6,228` extra, `0` duplicate, `0` wrong-direction, final
-  window present, all source rows accounted for, input accounting exact. A
-  bounded ordered reference (≤ one day, hard-capped at 20 minutes) may be added
-  as a labeled reference-mode check; if skipped, complete-input correctness rests
-  on ticket 04's ordered reference slice (zero mismatches) plus this deviation
-  report. **No step may present the capture-order run as exact full-input
-  correctness.**
+  window present, all source rows accounted for, input accounting exact. The
+  bounded ordered reference **was run** (day 08, well inside the 20-minute cap) and
+  passed exactly, so complete-input correctness rests on that labeled
+  reference-mode day plus ticket 04's ordered reference slice (zero mismatches);
+  the ordered *whole-week* replay remains dropped. **No step may present the
+  capture-order run as exact full-input correctness.**
 - **Ticket 07 (live peak):** `1x` capture pace and warm state only; the `1.25x`
   condition and the cold variant are dropped; pre-roll 120 s and trailing 90 s;
   one or two repeats decided by measured run cost; 40-minute wall-clock cap.
@@ -406,10 +420,10 @@ report states confidence honestly rather than implying the full plan ran.
   reduced-repeat and reduced-ladder results are directional evidence, **not** the
   three-repeat bracket the original plan specified.
 
-> Caution for report writers: `docs/live-peak.md` still shows the **pre-registered,
-> un-reduced** plan (`1x`/`1.25x`, "three valid repeats each", `--repeats 3`). Only
-> ticket 07's comment records the downscale, so the reduced conditions above, not
-> the doc's plan, are what applies to anything presented as executed.
-> `docs/sustainable-limit.md` **does** now carry the scoped plan
-> ("Scoped scored plan": `500/1000/2000/4000`, single repetition, 45-minute cap)
-> alongside the non-scoped reference schedule. See `docs/evidence-audit.md`.
+> Caution for report writers: both measurement docs carry the pre-registered plan
+> **and** the executed, reduced conditions — `docs/live-peak.md` states the scoped
+> conditions up front and records the repeats actually run and what was not run,
+> and `docs/sustainable-limit.md` carries the scoped plan (`500/1000/2000/4000`,
+> single repetition, 45-minute cap) alongside the non-scoped schedule. Where a doc's
+> plan and the reduced conditions above differ, the executed conditions are what
+> applies to anything presented as run. See `docs/evidence-audit.md`.
