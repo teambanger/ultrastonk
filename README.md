@@ -23,7 +23,7 @@ docker compose logs -f jobmanager taskmanager
 
 The Flink image build runs the Java correctness tests; the event-emitter image build runs its pacing and CSV tests. Two TaskManagers, each with one slot, run a job with parallelism two. Kafka uses KRaft, six partitions per topic, durable volumes, and explicit topic initialization. Flink starts automatically after topic initialization. [Flink dashboard](http://localhost:8081).
 
-Open the [gateway test page](http://localhost:8080) and subscribe to a ticker such as `RDSA.NL`. The gateway reads committed records from `KAFKA_OUTPUT_TOPIC` and sends recent in-memory history followed by live events for the selected ticker. `/health` reports the gateway and its Kafka source status. Set `GATEWAY_PORT` to change the loopback port. See the [gateway README](gateway/README.md) for WebSocket messages and tests.
+Open the [gateway test page](http://localhost:8080) and subscribe to a ticker such as `RDSA.NL`. The gateway reads committed records from `KAFKA_OUTPUT_TOPIC` and sends recent in-memory history followed by live events for the selected ticker. **The base stack does not start an emitter.** On a fresh stack the page stays empty until a producer sends trades and Flink commits its output. Set `GATEWAY_PORT` to change the loopback port. See the [gateway README](gateway/README.md) for WebSocket messages and tests.
 
 **Replay real data.** Put the DEBS CSV under `data/src/` (or run `bash scripts/download_src_data.sh` for the default trading day), then start the stack with the real emitter:
 
@@ -33,6 +33,15 @@ docker compose logs -f event-emitter
 ```
 
 The replay exits at the end of the input. Set `CSV_PATH` to a path inside `/data` (or a comma-separated list in replay order), `SPEED_MULTIPLIER` to accelerate replay, or `MAX_SLEEP_MS` to cap long gaps. `REPLAY_DATA_DIR` selects the read-only host directory mounted at `/data`. The base stack without an emitter profile is suitable for isolated synthetic verification and benchmarks. Do not mix replay and synthetic workloads on the same input topic: synthetic timestamps can advance the watermark past historical events.
+
+**See replay output sooner.** The default CSV starts with non-trade updates around 01:01 and does not contain a trade until around 07:00. At the default 1x speed with no gap cap, that is nearly six hours before the first price. For a local demo with the default CSV, start replay like this instead (this deliberately changes pacing; do not use it for a 1x measurement):
+
+```bash
+SPEED_MULTIPLIER=100 MAX_SLEEP_MS=20 docker compose --profile emitter up -d --build
+curl -fsS http://localhost:8080/health
+```
+
+Check `totals.in` again after the first trade and a successful Flink checkpoint (10-second cadence by default). `source.status: running` only means the gateway consumer is running, not that it has received output. If `totals.in` is increasing but the page is empty, subscribe to a ticker in the replay, such as `INCAS.FR` for the default CSV. Prices do not wait for an event-time window to close; EMAs and BUY/SELL advisories do. To stop the replay while leaving the stack up, run `docker compose --profile emitter stop event-emitter`.
 
 **Capture-paced replay (opt-in).** By default the emitter paces by exchange event time and the payload, Kafka record and query all share that clock. Set `PACING=capture` to pace by the recorded system "Date"/"Time" columns (2/3) instead, so a replay reproduces the publication order and gaps of a live capture. The payload still carries the exchange `eventTimestampMs`; Flink keeps processing event time, and the four-field output contract is unchanged.
 
